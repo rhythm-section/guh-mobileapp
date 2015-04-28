@@ -1,0 +1,47 @@
+# Gulp #
+########
+.sass-cache
+.tmp
+www
+
+# Ionic #
+#########
+platforms
+plugins
+*.keystore
+*.sw*
+platforms/^.*
+plugins/^.*
+
+# Node (https://github.com/github/gitignore/blob/master/Node.gitignore) #
+#########################################################################
+node_modules
+logs
+*.log
+pids
+*.pid
+*.seed
+lib-cov
+coverage
+build/Release
+.lock-wscript
+
+# Bower #
+#########
+bower_components
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

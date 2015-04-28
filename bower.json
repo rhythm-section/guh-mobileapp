@@ -1,0 +1,81 @@
+{
+  "name": "guh-mobileapp",
+  "version": "1.0.0",
+  "homepage": "https://github.com/guh/guh-mobileapp",
+  "authors": [
+    "Lukas Mayerhofer <lukas.mayerhofer@guh.guru>"
+  ],
+  "description": "A hybrid app for guh written with AngularJS, Ionic and Cordova.",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "guh",
+    "guh-mobileapp",
+    "angularjs",
+    "ionic"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "dev"
+  ],
+  "dependencies": {
+    "ionic": "driftyco/ionic-bower#1.0.0-rc.3",
+    "js-data": "~1.8.0",
+    "js-data-angular": "~2.4.0"
+  },
+  "devDependencies": {},
+  "overrides": {
+    "angular": {
+      "main": [
+        "./angular.js",
+        "./angular.min.js",
+        "./angular.min.js.map"
+      ]
+    },
+    "angular-animate": {
+      "main": [
+        "./angular-animate.js",
+        "./angular-animate.min.js",
+        "./angular-animate.min.js.map"
+      ]
+    },
+    "angular-sanitize": {
+      "main": [
+        "./angular-sanitize.js",
+        "./angular-sanitize.min.js",
+        "./angular-sanitize.min.js.map"
+      ]
+    },
+    "angular-ui-router": {
+      "ignore": true
+    },
+    "ionic": {
+      "main": [
+        "./css/ionic.min.css",
+        "./fonts/*",
+        "./js/ionic.bundle.min.js",
+        "./scss/*"
+      ]
+    },
+    "js-data": {
+      "main": [
+        "./dist/js-data.js",
+        "./dist/js-data.min.js",
+        "./dist/js-data.min.map"
+      ]
+    },
+    "js-data-angular": {
+      "main": [
+        "./dist/js-data-angular.js",
+        "./dist/js-data-angular.min.js",
+        "./dist/js-data-angular.min.map"
+      ]
+    }
+  }
+}
