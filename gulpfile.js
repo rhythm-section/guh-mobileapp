@@ -196,25 +196,6 @@ gulp.task('scripts', function() {
     .pipe(browserSync.reload({stream: true}));
 });
 
-/* Inject server
- * Inject server dependency */
-gulp.task('injectServer', function(done) {
-  // Server html config
-  gulp
-    .src(config.appFiles.index, { cwd: dest.root })
-    .pipe(
-      plugins
-        .inject(gulp.src('../config/server.html', { cwd: dest.root }), {
-          starttag: '<!-- inject:server:html -->',
-          transform: function (filePath, file) {
-            // return file contents as string 
-            return file.contents.toString('utf8')
-          }
-        }))
-    .pipe(gulp.dest(dest.root))
-    .on('end', done);
-});
-
 /* Inject
  * Inject all dependencies into index.html */
 gulp.task('inject', ['markup'], function(done) {
@@ -297,7 +278,6 @@ gulp.task('default', function(done) {
         'scripts'
       ],
       'sourcemaps',
-      production ? 'noop' : 'injectServer',
       'inject',
       production ? 'noop' : 'server',
       done
