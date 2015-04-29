@@ -159,7 +159,6 @@ gulp.task('styles', function() {
     .pipe(plugins.plumber.stop())
     .pipe(gulp.dest(dest.assets.css))
     .pipe(browserSync.reload({stream: true}));
-    // .on('end', done);
 });
 
 /* Scripts
@@ -195,16 +194,14 @@ gulp.task('scripts', function() {
     .pipe(plugins.plumber.stop())
     .pipe(gulp.dest(dest.app))
     .pipe(browserSync.reload({stream: true}));
-    // .on('end', done)
 });
 
 /* Inject server
  * Inject server dependency */
 gulp.task('injectServer', function(done) {
   // Server html config
-  // var serverMarkupConfig = config.pluginSettings.inject.getConfig('../config/server.html', 'server', 'html');
   gulp
-    .src(config.appFiles.html, { cwd: dest.root })
+    .src(config.appFiles.index, { cwd: dest.root })
     .pipe(
       plugins
         .inject(gulp.src('../config/server.html', { cwd: dest.root }), {
@@ -220,9 +217,9 @@ gulp.task('injectServer', function(done) {
 
 /* Inject
  * Inject all dependencies into index.html */
-gulp.task('inject', function(done) {
+gulp.task('inject', ['markup'], function(done) {
   // Make stream to preserve order of lib scripts
-  var libScriptsStream = gulp.src(config.libFiles.js, { cwd: dest.root });
+  var libScriptsStream = gulp.src(config.libFiles.js, { cwd: dest.root, read: false });
   var libScriptsStreamQueue = plugins.streamqueue(config.pluginSettings.streamQueue, libScriptsStream);
   var libScriptsConfig = config.pluginSettings.inject.getConfig(libScriptsStreamQueue, 'libs', 'js');
 
@@ -236,34 +233,31 @@ gulp.task('inject', function(done) {
     // App js config
     var appScriptsConfig = config.pluginSettings.inject.getConfig('app/app.min-*.js', 'app', 'js');
 
-    gulp.src(config.appFiles.html, { cwd: dest.root })
+    gulp.src(config.appFiles.index, { cwd: dest.root })
 
       // Add lib files
-      .pipe(plugins.inject(gulp.src(libStylesConfig.src, { cwd: dest.root }), libStylesConfig.config))
+      .pipe(plugins.inject(gulp.src(libStylesConfig.src, { cwd: dest.root, read: false }), libStylesConfig.config))
       .pipe(plugins.inject(libScriptsConfig.src, libScriptsConfig.config))
 
       // Add app files
-      .pipe(plugins.inject(gulp.src(appStylesConfig.src, { cwd: dest.root }), appStylesConfig.config))
-      .pipe(plugins.inject(gulp.src(appScriptsConfig.src, { cwd: dest.root }), appScriptsConfig.config))
+      .pipe(plugins.inject(gulp.src(appStylesConfig.src, { cwd: dest.root, read: false }), appStylesConfig.config))
+      .pipe(plugins.inject(gulp.src(appScriptsConfig.src, { cwd: dest.root, read: false }), appScriptsConfig.config))
 
       .pipe(gulp.dest(dest.root))
       .on('end', done);
   } else {
-    var appScriptsStream = gulp.src(config.appFiles.js, { cwd: dest.root });
+    var appScriptsStream = gulp.src(config.appFiles.js, { cwd: dest.root + '/**', read: false });
     var appScriptsStreamQueue = plugins.streamqueue(config.pluginSettings.streamQueue, appScriptsStream);
     var appScriptsConfig = config.pluginSettings.inject.getConfig(appScriptsStreamQueue, 'app', 'js');
 
-    gulp.src(config.appFiles.html, { cwd: dest.root })
-
-      // Add html partial files
-      // .pipe(plugins.inject(gulp.src(serverMarkupConfig.src, { cwd: dest.root }), serverMarkupConfig.config))
+    gulp.src(config.appFiles.index, { cwd: dest.root })
 
       // Add lib files
-      .pipe(plugins.inject(gulp.src(libStylesConfig.src, { cwd: dest.root }), libStylesConfig.config))
+      .pipe(plugins.inject(gulp.src(libStylesConfig.src, { cwd: dest.root, read: false }), libStylesConfig.config))
       .pipe(plugins.inject(libScriptsConfig.src, libScriptsConfig.config))
 
       // Add app files
-      .pipe(plugins.inject(gulp.src(appStylesConfig.src, { cwd: dest.root }), appStylesConfig.config))
+      .pipe(plugins.inject(gulp.src(appStylesConfig.src, { cwd: dest.root, read: false }), appStylesConfig.config))
       .pipe(plugins.inject(appScriptsConfig.src, appScriptsConfig.config))
 
       .pipe(gulp.dest(dest.root))
@@ -287,7 +281,7 @@ gulp.task('server', function(done) {
     .init(config.pluginSettings.browserSync);
 
   // Watch for file changes
-  gulp.watch(['./dev/index.html', './dev/app/**/*.html'], ['markup']);
+  gulp.watch(['./dev/index.html', './dev/app/**/*.html'], ['inject']);
   gulp.watch('./dev/app/**/*.js', ['scripts']);
   gulp.watch('./dev/app/**/*.scss', ['styles']);
 });
@@ -299,7 +293,6 @@ gulp.task('default', function(done) {
       'clean',
       [
         'bower',
-        'markup',
         'styles',
         'scripts'
       ],

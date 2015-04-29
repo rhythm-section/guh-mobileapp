@@ -58,13 +58,19 @@ module.exports = {
   },
 
   sourcemapFiles: [
+    'assets/libs/angular/angular.js',
     'assets/libs/angular/angular.min.js.map',
+
+    'assets/libs/angular-animate/angular-animate.js',
     'assets/libs/angular-animate/angular-animate.min.js.map',
+
+    'assets/libs/angular-sanitize/angular-sanitize.js',
     'assets/libs/angular-sanitize/angular-sanitize.min.js.map'
   ],
 
   appFiles: {
-    html: 'index.html',
+    html: '**/*.html',
+    index: 'index.html',
     js: [
       // Components: Filters
 
@@ -78,10 +84,16 @@ module.exports = {
       'app/app-controller.js',
 
       // App: Dashboard
+      'app/**/dashboard-module.js',
+      'app/**/dashboard-controller.js',
 
       // App: Devices
+      'app/**/devices-module.js',
+      'app/**/devices-master-controller.js',
 
       // App: Rules
+      'app/**/rules-module.js',
+      'app/**/rules-master-controller.js'
     ],
     scss: 'app/app.scss'
   },
@@ -139,9 +151,9 @@ module.exports = {
     inject: {
       getConfig: function(src, tag, ext) {
         var config = {
-          starttag: '<!-- inject:' + tag + ':' + ext + ' -->',
-          read: false,
-          addRootSlash: false
+          addRootSlash: false,
+          relative: true,
+          starttag: '<!-- inject:' + tag + ':' + ext + ' -->'
         };
         var injectParameters = {
           src: src,
