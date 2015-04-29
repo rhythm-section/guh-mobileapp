@@ -145,7 +145,8 @@ module.exports = {
     browserSync: {
       open: false,
       port: 1234,
-      proxy: 'localhost:3000'
+      proxy: 'localhost:3000',
+      reloadDelay: 500
     },
     concat: {},
     inject: {

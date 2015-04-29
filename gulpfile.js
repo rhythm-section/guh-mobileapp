@@ -246,25 +246,35 @@ gulp.task('inject', ['markup'], function(done) {
   }
 });
 
+/* Ionic:Emulate
+ * Wrapper for ionics emulate task */
+gulp.task('ionic:emulate', plugins.shell.task([
+  'ionic emulate ' + emulate + ' --livereload --consolelogs'
+]));
+
 /* No-op
  * Empty function */
-gulp.task('noop', function(done) {
-  plugins
-    .util
-    .noop()
-    .on('end', done);
-});
+gulp.task('noop', function() {});
+// gulp.task('noop', function(done) {
+//   plugins
+//     .util
+//     .noop()
+//     .on('end', done);
+// });
 
 /* BrowserSync
  * Start development server and watch changed files */
-gulp.task('server', function(done) {
-  browserSync
-    .init(config.pluginSettings.browserSync);
+gulp.task('server', function() {
+  if(!production) {
+    browserSync
+      .init(config.pluginSettings.browserSync);
+  }
 
-  // Watch for file changes
-  gulp.watch(['./dev/index.html', './dev/app/**/*.html'], ['inject']);
-  gulp.watch('./dev/app/**/*.js', ['scripts']);
-  gulp.watch('./dev/app/**/*.scss', ['styles']);
+  if(!production || emulate) {
+    gulp.watch(['./dev/index.html', './dev/app/**/*.html'], ['inject']);
+    gulp.watch('./dev/app/**/*.js', ['scripts']);
+    gulp.watch('./dev/app/**/*.scss', ['styles']);
+  }
 });
 
 /* Default
@@ -280,6 +290,8 @@ gulp.task('default', function(done) {
       'sourcemaps',
       'inject',
       production ? 'noop' : 'server',
+      emulate ? ['ionic:emulate', 'server'] : 'noop',
+      run ? 'ionic:run' : 'noop',
       done
     );
 });
