@@ -48,7 +48,7 @@
       views: {
         dashboard: {
           controller: 'DashboardCtrl as dashboard',
-          templateUrl: 'app/dashboard/dashboard.html'
+          templateUrl: 'app/components/dashboard/dashboard.html'
         }
       }
     });
@@ -66,7 +66,7 @@
     $stateProvider.state('guh.devices.master', {
       controller: 'DevicesMasterCtrl as devices',
       url: '',
-      templateUrl: 'app/devices/master/devices-master.html'
+      templateUrl: 'app/components/devices/master/devices-master.html'
     });
 
     // Rules
@@ -82,7 +82,7 @@
     $stateProvider.state('guh.rules.master', {
       controller: 'RulesMasterCtrl as rules',
       url: '',
-      templateUrl: 'app/rules/master/rules-master.html'
+      templateUrl: 'app/components/rules/master/rules-master.html'
     });
     
   }
