@@ -255,12 +255,6 @@ gulp.task('ionic:emulate', plugins.shell.task([
 /* No-op
  * Empty function */
 gulp.task('noop', function() {});
-// gulp.task('noop', function(done) {
-//   plugins
-//     .util
-//     .noop()
-//     .on('end', done);
-// });
 
 /* BrowserSync
  * Start development server and watch changed files */
