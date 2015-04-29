@@ -12,6 +12,8 @@ plugins
 *.sw*
 platforms/^.*
 plugins/^.*
+resources/android/*
+resources/ios/*
 
 # Node (https://github.com/github/gitignore/blob/master/Node.gitignore) #
 #########################################################################

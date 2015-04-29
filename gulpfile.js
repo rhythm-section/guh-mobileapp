@@ -246,10 +246,22 @@ gulp.task('inject', ['markup'], function(done) {
   }
 });
 
-/* Ionic:Emulate
- * Wrapper for ionics emulate task */
+/* Ionic emulate wrapper
+ * Wrapper for Ionics emulate task */
 gulp.task('ionic:emulate', plugins.shell.task([
   'ionic emulate ' + emulate + ' --livereload --consolelogs'
+]));
+
+/* Ionic resources wrapper
+ * Wrapper for Ionics icon, splash and resources tasks */
+gulp.task('icon', plugins.shell.task([
+  'ionic resources --icon'
+]));
+gulp.task('splash', plugins.shell.task([
+  'ionic resources --splash'
+]));
+gulp.task('resources', plugins.shell.task([
+  'ionic resources'
 ]));
 
 /* No-op
