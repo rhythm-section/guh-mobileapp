@@ -26,11 +26,22 @@
   'use strict';
 
   angular
-    .module('guh', [])
-    .config(config);
+    .module('guh', [
+      // Ionic
+      'ionic',
+
+      // App
+      'guh.dashboard',
+      'guh.devices',
+      'guh.rules'
+    ])
+    .config(config)
+    .run(run);
 
   config.$inject = [];
 
   function config() {}
+
+  function run() {}
 
 }());

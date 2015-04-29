@@ -29,8 +29,62 @@
     .module('guh')
     .config(config);
 
-  config.$inject = [];
+  config.$inject = ['$urlRouterProvider', '$stateProvider'];
 
-  function config() {}
+  function config($urlRouterProvider, $stateProvider) {
+
+    $urlRouterProvider
+      .otherwise('/dashboard');
+
+    // App
+    $stateProvider.state('guh', {
+      abstract: true,
+      templateUrl: 'app/app.html'
+    });
+
+    // Dashboard
+    $stateProvider.state('guh.dashboard', {
+      url: '/dashboard',
+      views: {
+        dashboard: {
+          controller: 'DashboardCtrl as dashboard',
+          templateUrl: 'app/dashboard/dashboard.html'
+        }
+      }
+    });
+
+    // Devices
+    $stateProvider.state('guh.devices', {
+      abstract: true,
+      url: '/devices',
+      views: {
+        devices: {
+          template: '<ion-nav-view></ion-nav-view>'
+        }
+      }
+    });
+    $stateProvider.state('guh.devices.master', {
+      controller: 'DevicesMasterCtrl as devices',
+      url: '',
+      templateUrl: 'app/devices/master/devices-master.html'
+    });
+
+    // Rules
+    $stateProvider.state('guh.rules', {
+      abstract: true,
+      url: '/rules',
+      views: {
+        rules: {
+          template: '<ion-nav-view></ion-nav-view>'
+        }
+      }
+    });
+    $stateProvider.state('guh.rules.master', {
+      controller: 'RulesMasterCtrl as rules',
+      url: '',
+      templateUrl: 'app/rules/master/rules-master.html'
+    });
+    
+  }
 
 }());
