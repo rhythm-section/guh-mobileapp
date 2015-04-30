@@ -109,7 +109,10 @@ module.exports = {
     ],
     js: [
       // Ionic-Bundle: Concatenation of ionic.js, angular, angular-animate, angular-sanitize, angular-ui-router, ionic-angular
-      'assets/libs/ionic/js/ionic.bundle.min.js',
+      // 'assets/libs/ionic/js/ionic.bundle.min.js',
+
+      // Cordova plugins with angular services (ngCordova)
+      // 'assets/libs/ngCordova/dist/ng-cordova.min.js',
 
       // JS-Data
       'assets/libs/js-data/dist/js-data.min.js',

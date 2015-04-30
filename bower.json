@@ -27,7 +27,8 @@
   "dependencies": {
     "ionic": "driftyco/ionic-bower#1.0.0-rc.3",
     "js-data": "~1.8.0",
-    "js-data-angular": "~2.4.0"
+    "js-data-angular": "~2.4.0",
+    "ngCordova": "~0.1.15-alpha"
   },
   "devDependencies": {},
   "overrides": {
@@ -59,6 +60,7 @@
       "main": [
         "./css/ionic.min.css",
         "./fonts/*",
+        "./js/ionic.bundle.js",
         "./js/ionic.bundle.min.js",
         "./scss/*"
       ]
@@ -75,6 +77,11 @@
         "./dist/js-data-angular.js",
         "./dist/js-data-angular.min.js",
         "./dist/js-data-angular.min.map"
+      ]
+    },
+    "ngCordova": {
+      "main": [
+        "./dist/ng-cordova.js"
       ]
     }
   }

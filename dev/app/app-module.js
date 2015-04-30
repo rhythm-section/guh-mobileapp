@@ -29,6 +29,7 @@
     .module('guh', [
       // Ionic
       'ionic',
+      'ngCordova',
 
       // App
       'guh.dashboard',
@@ -42,6 +43,18 @@
 
   function config() {}
 
-  function run() {}
+  run.$inject = ['$log', '$ionicPlatform', '$cordovaSplashscreen'];
+
+  function run($log, $ionicPlatform, $cordovaSplashscreen) {
+    $ionicPlatform.ready(function() {
+      $log.log('Device is ready.');
+
+      setTimeout(function() {
+        $log.log('Hide splashscreen now.');
+        $cordovaSplashscreen.hide();
+      }, 10000);
+
+    });
+  }
 
 }());
