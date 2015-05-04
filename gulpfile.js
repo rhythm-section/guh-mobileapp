@@ -185,12 +185,12 @@ gulp.task('scripts', function() {
       .pipe(plugins.if(production, plugins.size(config.pluginSettings.size)))
 
       // Minify JS (only for production builds)
-      .pipe(plugins.if(production, plugins.uglify()))
+      .pipe(plugins.if(production, plugins.uglify(config.pluginSettings.uglify)))
       .pipe(plugins.if(production, plugins.size(config.pluginSettings.size)))
       .pipe(plugins.if(production, plugins.rename(config.pluginSettings.rename)))
 
     .pipe(plugins.if(production, plugins.sourcemaps.write('/')))
-    .pipe(plugins.if(production, revAll.revision()))
+    // .pipe(plugins.if(production, revAll.revision()))
     .pipe(plugins.plumber.stop())
     .pipe(gulp.dest(dest.app))
     .pipe(browserSync.reload({stream: true}));
@@ -212,7 +212,8 @@ gulp.task('inject', ['markup'], function(done) {
 
   if(production) {
     // App js config
-    var appScriptsConfig = config.pluginSettings.inject.getConfig('app/app.min-*.js', 'app', 'js');
+    // var appScriptsConfig = config.pluginSettings.inject.getConfig('app/app.min-*.js', 'app', 'js');
+    var appScriptsConfig = config.pluginSettings.inject.getConfig('app/app.min.js', 'app', 'js');
 
     gulp.src(config.appFiles.index, { cwd: dest.root })
 
