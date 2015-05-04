@@ -47,12 +47,11 @@
 
   function run($log, $ionicPlatform, $cordovaSplashscreen) {
     $ionicPlatform.ready(function() {
-      $log.log('Device is ready.');
-
-      setTimeout(function() {
-        $log.log('Hide splashscreen now.');
-        $cordovaSplashscreen.hide();
-      }, 10000);
+      if($cordovaSplashscreen) {
+        setTimeout(function() {
+          $cordovaSplashscreen.hide();
+        }, 1000);
+      }
 
     });
   }
