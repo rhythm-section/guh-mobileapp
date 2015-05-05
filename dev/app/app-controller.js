@@ -27,10 +27,10 @@
 
   angular
     .module('guh')
-    .controller('AppController', AppController);
+    .controller('AppCtrl', AppCtrl);
 
-  AppController.$inject = [];
+  AppCtrl.$inject = [];
 
-  function AppController() {}
+  function AppCtrl() {}
 
 }());

@@ -3,6 +3,8 @@
 .sass-cache
 .tmp
 www
+dev/index.html
+dev/app/config/app-config.js
 
 # Ionic #
 #########

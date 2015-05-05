@@ -39,9 +39,15 @@ var bourbon = require('node-bourbon');
 
 module.exports = {
 
+  // Configuration folder
+  config: {
+    root: config
+  },
+
   // Development folder (source)
   dev: {
-    root: dev
+    root: dev,
+    config: dev + '/app/config/'
   },
 
   // Build folder (destination 1)
@@ -54,7 +60,8 @@ module.exports = {
       css: build + '/assets/css',
       ionicJS: build + '/assets/libs/ionic/js',
       libs: build + '/assets/libs'
-    }
+    },
+    config: build + '/app/config'
   },
 
   sourcemapFiles: [
@@ -69,29 +76,41 @@ module.exports = {
   ],
 
   appFiles: {
-    html: '**/*.html',
+    appConfigPreprocess: 'app/config/app-config-preprocess.js',
+    html: [
+      '**/*.html',
+      '!index-preprocess.html'
+    ],
     index: 'index.html',
+    indexPreprocess: 'index-preprocess.html',
     js: [
-      // Components: Filters
-
-      // Components: Services
-
-      // Components: Directives
-
       // App: General
       'app/app-module.js',
       'app/app-routes.js',
       'app/app-controller.js',
 
-      // App: Dashboard
+      // Config
+      'app/**/config-module.js',
+      '!app/**/app-config-preprocess.js',
+      'app/**/app-config.js',
+
+      // Shared: Filters
+
+      // Shared: Services
+      'app/**/models-module.js',
+      'app/**/device-model-service.js',
+
+      // Shared: Directives
+
+      // Components: Dashboard
       'app/**/dashboard-module.js',
       'app/**/dashboard-controller.js',
 
-      // App: Devices
+      // Components: Devices
       'app/**/devices-module.js',
       'app/**/devices-master-controller.js',
 
-      // App: Rules
+      // Components: Rules
       'app/**/rules-module.js',
       'app/**/rules-master-controller.js'
     ],
@@ -131,7 +150,8 @@ module.exports = {
       css: tmp + '/assets/css',
       ionicJS: tmp + '/assets/libs/ionic/js',
       libs: tmp + '/assets/libs'
-    }
+    },
+    config: tmp + '/app/config'
   },
 
   // Bower components
@@ -152,6 +172,25 @@ module.exports = {
       reloadDelay: 500
     },
     concat: {},
+    environment: {
+      development: {
+        context: {
+          NODE_ENV: 'DEVELOPMENT',
+          DEBUG: true
+        }
+      },
+      production: {
+        context: {
+          NODE_ENV: 'PRODUCTION'
+        }
+      },
+      test: {
+        context: {
+          DEBUG: true,
+          NODE_ENV: 'TEST'
+        }
+      }
+    },
     inject: {
       getConfig: function(src, tag, ext) {
         var config = {
@@ -167,9 +206,7 @@ module.exports = {
         return injectParameters;
       }
     },
-    jshint: {
-
-    },
+    jshint: {},
     markup: {
       src: dev + '/index.html'
     },
@@ -193,6 +230,9 @@ module.exports = {
     },
     streamQueue: {
       objectMode: true
+    },
+    uglify: {
+      mangle: false
     }
   }
 

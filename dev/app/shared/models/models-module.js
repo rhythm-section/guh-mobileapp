@@ -26,79 +26,21 @@
   'use strict';
 
   angular
-    .module('guh')
+    .module('guh.models', [
+      // Datastore
+      'js-data'
+    ])
     .config(config);
 
-  config.$inject = ['$urlRouterProvider', '$stateProvider'];
+  config.$inject = ['DSProvider', 'app'];
 
-  function config($urlRouterProvider, $stateProvider) {
-
-    $urlRouterProvider
-      .otherwise('/dashboard');
-
-    // App
-    $stateProvider.state('guh', {
-      abstract: true,
-      controller: 'AppCtrl as app',
-      templateUrl: 'app/app.html'
-    });
-
-    // Dashboard
-    $stateProvider.state('guh.dashboard', {
-      url: '/dashboard',
-      views: {
-        dashboard: {
-          controller: 'DashboardCtrl as dashboard',
-          templateUrl: 'app/components/dashboard/dashboard.html'
-        }
-      }
-    });
-
-    // Devices
-    $stateProvider.state('guh.devices', {
-      abstract: true,
-      url: '/devices',
-      views: {
-        devices: {
-          template: '<ion-nav-view></ion-nav-view>'
-        }
-      }
-    });
-    $stateProvider.state('guh.devices.master', {
-      controller: 'DevicesMasterCtrl as devices',
-      url: '',
-      resolve: {
-        devices: function(DSDevice) {
-          return DSDevice
-            .findAll()
-            .then(function(devices) {
-              console.log('devices', devices);
-              return devices;
-            })
-            .catch(function(error) {
-              return error;
-            });
-        }
-      },
-      templateUrl: 'app/components/devices/master/devices-master.html'
-    });
-
-    // Rules
-    $stateProvider.state('guh.rules', {
-      abstract: true,
-      url: '/rules',
-      views: {
-        rules: {
-          template: '<ion-nav-view></ion-nav-view>'
-        }
-      }
-    });
-    $stateProvider.state('guh.rules.master', {
-      controller: 'RulesMasterCtrl as rules',
-      url: '',
-      templateUrl: 'app/components/rules/master/rules-master.html'
-    });
-    
+  function config(DSProvider, app) {
+    DSProvider
+      .defaults
+      .basePath = app.apiUrl;
+      // .basePath = 'http://192.168.0.201:3000/api/v1';   // ionic upload (Ionic View App)
+      // .basePath = 'http://guh.local:3000/api/v1';   // ionic upload (Ionic View App)
+      // .basePath = '/api/v1';                        // gulp, gulp -e (Browser, iOS Emulator)
   }
 
 }());

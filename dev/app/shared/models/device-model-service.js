@@ -23,82 +23,43 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 (function(){
-  'use strict';
+  "use strict";
 
   angular
-    .module('guh')
-    .config(config);
+    .module('guh.models')
+    .factory('DSDevice', DSDeviceFactory)
+    .run(function(DSDevice) {});
 
-  config.$inject = ['$urlRouterProvider', '$stateProvider'];
+  DSDeviceFactory.$inject = ['$log', '$state', 'DS', 'DSHttpAdapter'];
 
-  function config($urlRouterProvider, $stateProvider) {
-
-    $urlRouterProvider
-      .otherwise('/dashboard');
-
-    // App
-    $stateProvider.state('guh', {
-      abstract: true,
-      controller: 'AppCtrl as app',
-      templateUrl: 'app/app.html'
-    });
-
-    // Dashboard
-    $stateProvider.state('guh.dashboard', {
-      url: '/dashboard',
-      views: {
-        dashboard: {
-          controller: 'DashboardCtrl as dashboard',
-          templateUrl: 'app/components/dashboard/dashboard.html'
-        }
-      }
-    });
-
-    // Devices
-    $stateProvider.state('guh.devices', {
-      abstract: true,
-      url: '/devices',
-      views: {
-        devices: {
-          template: '<ion-nav-view></ion-nav-view>'
-        }
-      }
-    });
-    $stateProvider.state('guh.devices.master', {
-      controller: 'DevicesMasterCtrl as devices',
-      url: '',
-      resolve: {
-        devices: function(DSDevice) {
-          return DSDevice
-            .findAll()
-            .then(function(devices) {
-              console.log('devices', devices);
-              return devices;
-            })
-            .catch(function(error) {
-              return error;
-            });
-        }
-      },
-      templateUrl: 'app/components/devices/master/devices-master.html'
-    });
-
-    // Rules
-    $stateProvider.state('guh.rules', {
-      abstract: true,
-      url: '/rules',
-      views: {
-        rules: {
-          template: '<ion-nav-view></ion-nav-view>'
-        }
-      }
-    });
-    $stateProvider.state('guh.rules.master', {
-      controller: 'RulesMasterCtrl as rules',
-      url: '',
-      templateUrl: 'app/components/rules/master/rules-master.html'
-    });
+  function DSDeviceFactory($log, $state, DS, DSHttpAdapter) {
     
+    var staticMethods = {};
+
+    /*
+     * DataStore configuration
+     */
+    var DSDevice = DS.defineResource({
+
+      // API configuration
+      endpoint: 'devices',
+      suffix: '.json',
+
+      // Model configuration
+      idAttribute: 'id',
+      name: 'device',
+      relations: {},
+
+      // Computed properties
+      computed: {},
+
+      // Instance methods
+      methods: {}
+
+    });
+
+    return DSDevice;
+
   }
 
 }());

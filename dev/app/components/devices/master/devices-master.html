@@ -20,4 +20,15 @@
   SOFTWARE.
 -->
 
-<ion-view title="Devices"></ion-view>
+<ion-view title="Devices">
+
+  <ion-content>
+    <!-- <ul class="list"> -->
+    <ion-list>
+      <!-- <li class="item" ng-repeat="device in devices.configured | orderBy: 'name' track by $index">{{ device.name }}</li> -->
+      <ion-item class="item" ng-repeat="device in devices.configured | orderBy: 'name' track by $index">{{ device.name }}</ion-item>
+    </ion-list>
+    <!-- </ul> -->
+  </ion-content>
+
+</ion-view>

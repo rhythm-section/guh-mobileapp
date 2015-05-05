@@ -47,18 +47,15 @@ var config = require('./config/gulp');
 var args = plugins
   .yargs
   .alias('b', 'build')
+  .alias('d', 'dev')
   .alias('e', 'emulate')
   .alias('r', 'run')
-  .alias('s', 'serve')
-  .default('build', false)
-  .default('port', 3000)
   .argv;
 
 // Helper variables (depending on passed gulp arguments)
 var production = !!(args.build || args.emulate || args.run);
 var emulate = args.emulate;
 var run = args.run;
-var port = args.port;
 var defaultPlatform = 'ios';
 var dest = config.tmp;
 var browserSync = plugins.browserSync.create();
@@ -100,7 +97,10 @@ var onError = function (error) {
 /* Clean
  * Remove dest folder. */
 gulp.task('clean', function(done) {
-  plugins.del([config.tmp.root, config.build.root], done);
+  plugins.del([
+    config.tmp.root,
+    config.build.root
+  ], done);
 });
 
 /* Sourcemaps
@@ -253,6 +253,12 @@ gulp.task('ionic:emulate', plugins.shell.task([
   'ionic emulate ' + emulate + ' --livereload --consolelogs'
 ]));
 
+/* Ionic run wrapper
+ * Wrapper for Ionics run task */
+gulp.task('ionic:run', plugins.shell.task([
+  'ionic run ' + run
+]));
+
 /* Ionic resources wrapper
  * Wrapper for Ionics icon, splash and resources tasks */
 gulp.task('icon', plugins.shell.task([
@@ -284,15 +290,63 @@ gulp.task('server', function() {
   }
 });
 
+/* App Configuration
+ * Sets app wide configuration constants inside app-config(-preprocess).js */
+gulp.task('appConfig', function(done) {
+  console.log('appConfig');
+  console.log('!!args.build', !!args.build);
+  console.log('!!args.emulate', !!args.emulate);
+  console.log('!!args.run', !!args.run);
+
+  gulp
+    .src(config.appFiles.appConfigPreprocess, { cwd: config.dev.root })
+    .pipe(plugins.if(!!args.build, plugins.preprocess(config.pluginSettings.environment.production)))
+    .pipe(plugins.if(!!args.dev, plugins.preprocess(config.pluginSettings.environment.development)))
+    .pipe(plugins.if(!!args.emulate, plugins.preprocess(config.pluginSettings.environment.development)))
+    .pipe(plugins.if(!!args.run, plugins.preprocess(config.pluginSettings.environment.production)))
+    .pipe(plugins.rename('app-config.js'))
+    .pipe(gulp.dest(config.dev.config))
+    .on('end', done);
+});
+
+/* CPS Configuration
+ * Sets meta tag for content security policy inside index(-preprocess).html */
+gulp.task('cpsConfig', function(done) {
+  console.log('cpsConfig');
+  console.log('!!args.build', !!args.build);
+  console.log('!!args.emulate', !!args.emulate);
+  console.log('!!args.run', !!args.run);
+
+  gulp
+    .src(config.appFiles.indexPreprocess, { cwd: config.dev.root })
+    .pipe(plugins.if((!!args.emulate || !!args.run), plugins.preprocess(config.pluginSettings.environment.development), plugins.preprocess(config.pluginSettings.environment.production)))
+    .pipe(plugins.rename('index.html'))
+    .pipe(gulp.dest(config.dev.root))
+    .on('end', done);
+});
+
+/* Environment
+ * Sets tasks for specified environment */
+gulp.task('environment', function(done) {
+  plugins.runSequence(
+    [
+      'appConfig',
+      'cpsConfig'
+    ],
+    done
+  );
+});
+
 /* Default
  * Determine order of tasks */
 gulp.task('default', function(done) {
   plugins.runSequence(
       'clean',
+      'environment',
       [
         'bower',
         'styles',
-        'scripts'
+        'scripts',
       ],
       'sourcemaps',
       'inject',

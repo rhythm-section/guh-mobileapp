@@ -31,6 +31,12 @@
       'ionic',
       'ngCordova',
 
+      // Configuration
+      'guh.config',
+
+      // Services
+      'guh.models',
+
       // App
       'guh.dashboard',
       'guh.devices',
@@ -43,16 +49,17 @@
 
   function config() {}
 
-  run.$inject = ['$log', '$ionicPlatform', '$cordovaSplashscreen'];
+  run.$inject = ['$log', '$ionicPlatform', '$cordovaSplashscreen', 'app'];
 
-  function run($log, $ionicPlatform, $cordovaSplashscreen) {
-    $ionicPlatform.ready(function() {
-      if($cordovaSplashscreen) {
-        setTimeout(function() {
-          $cordovaSplashscreen.hide();
-        }, 1000);
+  function run($log, $ionicPlatform, $cordovaSplashscreen, app) {
+    ionic.Platform.ready(function() {
+      if(app.isCordovaApp) {
+        if($cordovaSplashscreen) {
+          setTimeout(function() {
+            $cordovaSplashscreen.hide();
+          }, 1000);
+        }
       }
-
     });
   }
 

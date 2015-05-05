@@ -26,79 +26,23 @@
   'use strict';
 
   angular
-    .module('guh')
-    .config(config);
+    .module('guh.config')
+    .constant('app', (function() {
+      return {
+        isCordovaApp: !!window.cordova,
 
-  config.$inject = ['$urlRouterProvider', '$stateProvider'];
+        // @if NODE_ENV = 'DEVELOPMENT'
+        apiUrl: '/api/v1',
+        // @endif
 
-  function config($urlRouterProvider, $stateProvider) {
+        // @if NODE_ENV = 'PRODUCTION'
+        apiUrl: 'http://10.0.0.2:3000/api/v1',
+        // @endif
 
-    $urlRouterProvider
-      .otherwise('/dashboard');
-
-    // App
-    $stateProvider.state('guh', {
-      abstract: true,
-      controller: 'AppCtrl as app',
-      templateUrl: 'app/app.html'
-    });
-
-    // Dashboard
-    $stateProvider.state('guh.dashboard', {
-      url: '/dashboard',
-      views: {
-        dashboard: {
-          controller: 'DashboardCtrl as dashboard',
-          templateUrl: 'app/components/dashboard/dashboard.html'
-        }
+        // @if NODE_ENV = 'TEST'
+        apiUrl: '/api/v1',
+        // @endif
       }
-    });
-
-    // Devices
-    $stateProvider.state('guh.devices', {
-      abstract: true,
-      url: '/devices',
-      views: {
-        devices: {
-          template: '<ion-nav-view></ion-nav-view>'
-        }
-      }
-    });
-    $stateProvider.state('guh.devices.master', {
-      controller: 'DevicesMasterCtrl as devices',
-      url: '',
-      resolve: {
-        devices: function(DSDevice) {
-          return DSDevice
-            .findAll()
-            .then(function(devices) {
-              console.log('devices', devices);
-              return devices;
-            })
-            .catch(function(error) {
-              return error;
-            });
-        }
-      },
-      templateUrl: 'app/components/devices/master/devices-master.html'
-    });
-
-    // Rules
-    $stateProvider.state('guh.rules', {
-      abstract: true,
-      url: '/rules',
-      views: {
-        rules: {
-          template: '<ion-nav-view></ion-nav-view>'
-        }
-      }
-    });
-    $stateProvider.state('guh.rules.master', {
-      controller: 'RulesMasterCtrl as rules',
-      url: '',
-      templateUrl: 'app/components/rules/master/rules-master.html'
-    });
-    
-  }
+    })());
 
 }());
