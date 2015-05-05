@@ -26,39 +26,42 @@
   "use strict";
 
   angular
-    .module('guh.models')
-    .factory('DSDevice', DSDeviceFactory)
-    .run(function(DSDevice) {});
+    .module('guh.utils')
+    .factory('AppInit', AppInitFactory);
 
-  DSDeviceFactory.$inject = ['$log', 'DS'];
+  AppInitFactory.$inject = ['$log', '$q', '$timeout', '$ionicPlatform', '$cordovaSplashscreen', 'app'];
 
-  function DSDeviceFactory($log, DS) {
+  function AppInitFactory($log, $q, $timeout, $ionicPlatform, $cordovaSplashscreen, app) {
     
-    var staticMethods = {};
+    var AppInit = {
+      hideSplashscreen: hideSplashscreen
+    };
 
-    /*
-     * DataStore configuration
-     */
-    var DSDevice = DS.defineResource({
+    return AppInit;
 
-      // API configuration
-      endpoint: 'devices',
-      suffix: '.json',
 
-      // Model configuration
-      idAttribute: 'id',
-      name: 'device',
-      relations: {},
+    function hideSplashscreen() {
+      var deferred = $q.defer();
+       
+      ionic.Platform.ready(function() {
+        $log.log('Ionic is ready.');
 
-      // Computed properties
-      computed: {},
+        if(app.isCordovaApp) {
+          $log.log('This app runs on cordova.');
 
-      // Instance methods
-      methods: {}
+          $timeout(function() {
+            $cordovaSplashscreen.hide();
+            deferred.resolve();
+          }, 500);
+        } else {
+          $log.log('This app runs in the browser.');
 
-    });
+          deferred.resolve();
+        }
+      });
 
-    return DSDevice;
+      return deferred.promise;
+    }
 
   }
 

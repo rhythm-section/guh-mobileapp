@@ -293,11 +293,6 @@ gulp.task('server', function() {
 /* App Configuration
  * Sets app wide configuration constants inside app-config(-preprocess).js */
 gulp.task('appConfig', function(done) {
-  console.log('appConfig');
-  console.log('!!args.build', !!args.build);
-  console.log('!!args.emulate', !!args.emulate);
-  console.log('!!args.run', !!args.run);
-
   gulp
     .src(config.appFiles.appConfigPreprocess, { cwd: config.dev.root })
     .pipe(plugins.if(!!args.build, plugins.preprocess(config.pluginSettings.environment.production)))
@@ -312,11 +307,6 @@ gulp.task('appConfig', function(done) {
 /* CPS Configuration
  * Sets meta tag for content security policy inside index(-preprocess).html */
 gulp.task('cpsConfig', function(done) {
-  console.log('cpsConfig');
-  console.log('!!args.build', !!args.build);
-  console.log('!!args.emulate', !!args.emulate);
-  console.log('!!args.run', !!args.run);
-
   gulp
     .src(config.appFiles.indexPreprocess, { cwd: config.dev.root })
     .pipe(plugins.if((!!args.emulate || !!args.run), plugins.preprocess(config.pluginSettings.environment.development), plugins.preprocess(config.pluginSettings.environment.production)))

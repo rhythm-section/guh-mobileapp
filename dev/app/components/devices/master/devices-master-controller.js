@@ -29,17 +29,13 @@
     .module('guh.devices')
     .controller('DevicesMasterCtrl', DevicesMasterCtrl);
 
-  DevicesMasterCtrl.$inject = ['$log', 'devices'];
+  DevicesMasterCtrl.$inject = ['$log', 'initialData'];
 
-  function DevicesMasterCtrl($log, devices) {
-
+  function DevicesMasterCtrl($log, initialData) {
+    
     var vm = this;
 
-    vm.configured = devices;
-    
-    $log.log('ionic', ionic);
-    $log.log('window', window);
-    $log.log('devices', JSON.stringify(devices));
+    vm.configured = initialData.devices;
   }
 
 }());

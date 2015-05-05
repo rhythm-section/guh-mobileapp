@@ -96,9 +96,13 @@ module.exports = {
 
       // Shared: Filters
 
-      // Shared: Services
+      // Shared: Utils
+      'app/**/utils-module.js',
+      'app/**/*-util-service.js',
+
+      // Shared: Models
       'app/**/models-module.js',
-      'app/**/device-model-service.js',
+      'app/**/*-model-service.js',
 
       // Shared: Directives
 

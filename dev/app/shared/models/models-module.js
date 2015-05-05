@@ -38,9 +38,6 @@
     DSProvider
       .defaults
       .basePath = app.apiUrl;
-      // .basePath = 'http://192.168.0.201:3000/api/v1';   // ionic upload (Ionic View App)
-      // .basePath = 'http://guh.local:3000/api/v1';   // ionic upload (Ionic View App)
-      // .basePath = '/api/v1';                        // gulp, gulp -e (Browser, iOS Emulator)
   }
 
 }());

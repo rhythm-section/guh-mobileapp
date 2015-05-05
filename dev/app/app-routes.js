@@ -40,6 +40,29 @@
     $stateProvider.state('guh', {
       abstract: true,
       controller: 'AppCtrl as app',
+      resolve: {
+        initialData: function($q, DSVendor, DSDeviceClass, DSDevice, AppInit) {
+          return $q
+            .all([
+              DSVendor.findAll(),
+              DSDeviceClass.findAll(),
+              DSDevice.findAll()
+            ])
+            .then(function(data) {
+              var initialData = {};
+              
+              initialData.vendors = data[0];
+              initialData.deviceClasses = data[1];
+              initialData.devices = data[2];
+
+              AppInit.hideSplashscreen();
+              return initialData;
+            })
+            .catch(function(error) {
+              return error
+            });
+        }
+      },
       templateUrl: 'app/app.html'
     });
 
@@ -67,19 +90,6 @@
     $stateProvider.state('guh.devices.master', {
       controller: 'DevicesMasterCtrl as devices',
       url: '',
-      resolve: {
-        devices: function(DSDevice) {
-          return DSDevice
-            .findAll()
-            .then(function(devices) {
-              console.log('devices', devices);
-              return devices;
-            })
-            .catch(function(error) {
-              return error;
-            });
-        }
-      },
       templateUrl: 'app/components/devices/master/devices-master.html'
     });
 

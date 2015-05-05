@@ -23,43 +23,9 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 (function(){
-  "use strict";
+  'use strict';
 
   angular
-    .module('guh.models')
-    .factory('DSDevice', DSDeviceFactory)
-    .run(function(DSDevice) {});
-
-  DSDeviceFactory.$inject = ['$log', 'DS'];
-
-  function DSDeviceFactory($log, DS) {
-    
-    var staticMethods = {};
-
-    /*
-     * DataStore configuration
-     */
-    var DSDevice = DS.defineResource({
-
-      // API configuration
-      endpoint: 'devices',
-      suffix: '.json',
-
-      // Model configuration
-      idAttribute: 'id',
-      name: 'device',
-      relations: {},
-
-      // Computed properties
-      computed: {},
-
-      // Instance methods
-      methods: {}
-
-    });
-
-    return DSDevice;
-
-  }
+    .module('guh.utils', []);
 
 }());

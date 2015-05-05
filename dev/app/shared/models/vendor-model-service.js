@@ -27,28 +27,35 @@
 
   angular
     .module('guh.models')
-    .factory('DSDevice', DSDeviceFactory)
-    .run(function(DSDevice) {});
+    .factory('DSVendor', DSVendorFactory)
+    .run(function(DSVendor) {});
 
-  DSDeviceFactory.$inject = ['$log', 'DS'];
+  DSVendorFactory.$inject = ['$log', 'DS'];
 
-  function DSDeviceFactory($log, DS) {
+  function DSVendorFactory($log, DS) {
     
     var staticMethods = {};
 
     /*
      * DataStore configuration
      */
-    var DSDevice = DS.defineResource({
+    var DSVendor = DS.defineResource({
 
       // API configuration
-      endpoint: 'devices',
+      endpoint: 'vendors',
       suffix: '.json',
 
       // Model configuration
       idAttribute: 'id',
-      name: 'device',
-      relations: {},
+      name: 'vendor',
+      relations: {
+        hasMany: {
+          deviceClass: {
+            localField: 'deviceClasses',
+            foreignKey: 'vendorId'
+          }
+        }
+      },
 
       // Computed properties
       computed: {},
@@ -58,7 +65,7 @@
 
     });
 
-    return DSDevice;
+    return DSVendor;
 
   }
 
