@@ -29,8 +29,14 @@
     .module('guh.rules')
     .controller('RulesMasterCtrl', RulesMasterCtrl);
 
-  RulesMasterCtrl.$inject = [];
+  RulesMasterCtrl.$inject = ['$log', 'initialData'];
 
-  function RulesMasterCtrl() {}
+  function RulesMasterCtrl($log, initialData) {
+
+    var vm = this;
+
+    vm.configured = initialData.rules;
+
+  }
 
 }());

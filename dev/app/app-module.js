@@ -52,19 +52,8 @@
 
   function config() {}
 
-  run.$inject = ['$log', '$ionicPlatform', '$cordovaSplashscreen', 'app', 'AppInit'];
+  run.$inject = [];
 
-  function run($log, $ionicPlatform, $cordovaSplashscreen, app, AppInit) {
-    // AppInit.hideSplashscreen();
-    // ionic.Platform.ready(function() {
-    //   if(app.isCordovaApp) {
-    //     if($cordovaSplashscreen) {
-    //       setTimeout(function() {
-    //         $cordovaSplashscreen.hide();
-    //       }, 1000);
-    //     }
-    //   }
-    // });
-  }
+  function run() {}
 
 }());

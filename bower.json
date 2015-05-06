@@ -28,7 +28,8 @@
     "ionic": "driftyco/ionic-bower#1.0.0-rc.3",
     "js-data": "~1.8.0",
     "js-data-angular": "~2.4.0",
-    "ngCordova": "~0.1.15-alpha"
+    "ngCordova": "~0.1.15-alpha",
+    "underscore": "~1.8.3"
   },
   "devDependencies": {},
   "overrides": {
@@ -82,6 +83,13 @@
     "ngCordova": {
       "main": [
         "./dist/ng-cordova.js"
+      ]
+    },
+    "underscore": {
+      "main": [
+        "./underscore.js",
+        "./underscore-min.js",
+        "./underscore-min.map"
       ]
     }
   }

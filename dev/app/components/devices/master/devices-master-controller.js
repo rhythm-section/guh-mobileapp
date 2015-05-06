@@ -36,6 +36,7 @@
     var vm = this;
 
     vm.configured = initialData.devices;
+    
   }
 
 }());

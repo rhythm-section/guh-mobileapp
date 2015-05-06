@@ -26,43 +26,47 @@
   "use strict";
 
   angular
-    .module('guh.utils')
-    .factory('AppInit', AppInitFactory);
+    .module('guh.models')
+    .factory('DSState', DSStateFactory)
+    .run(function(DSState) {});
 
-  AppInitFactory.$inject = ['$log', '$q', '$timeout', '$ionicPlatform', '$cordovaSplashscreen', 'app'];
+  DSStateFactory.$inject = ['$log', 'DS'];
 
-  function AppInitFactory($log, $q, $timeout, $ionicPlatform, $cordovaSplashscreen, app) {
+  function DSStateFactory($log, DS) {
     
-    var AppInit = {
-      hideSplashscreen: hideSplashscreen
-    };
+    var staticMethods = {};
 
-    return AppInit;
+    /*
+     * DataStore configuration
+     */
+    var DSState = DS.defineResource({
 
+      // API configuration
+      endpoint: 'states',
+      suffix: '.json',
 
-    function hideSplashscreen() {
-      var deferred = $q.defer();
-       
-      /* jshint -W117: https://jslinterrors.com/a-was-used-before-it-was-defined */
-      ionic.Platform.ready(function() {
-        $log.log('Ionic is ready.');
-
-        if(app.isCordovaApp) {
-          $log.log('This app runs on cordova.');
-
-          $timeout(function() {
-            $cordovaSplashscreen.hide();
-            deferred.resolve();
-          }, 500);
-        } else {
-          $log.log('This app runs in the browser.');
-
-          deferred.resolve();
+      // Model configuration
+      idAttribute: 'stateTypeId',
+      name: 'state',
+      relations: {
+        belongsTo: {
+          device: {
+            localField: 'device',
+            localKey: 'deviceId',
+            parent: true
+          }
         }
-      });
+      },
 
-      return deferred.promise;
-    }
+      // Computed properties
+      computed: {},
+
+      // Instance methods
+      methods: {}
+
+    });
+
+    return DSState;
 
   }
 

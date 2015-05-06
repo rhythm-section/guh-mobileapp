@@ -1,0 +1,73 @@
+<!-- 
+  Copyright (c) 2015 guh
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+-->
+
+<ion-view>
+  <ion-nav-title>{{ device.userSettings.name }}</ion-nav-title>
+
+  <ion-content>
+    
+    <!-- Setup Warning -->
+    <div class="card" ng-show="!device.SetupComplete">
+
+      <div class="item">
+        <h2>Warning</h2>
+        <p>Device is not properbly set up.</p>
+      </div>
+
+    </div>
+
+    <!-- Device information -->
+    <div class="list card" ng-show="device.SetupComplete">
+
+      <h1 class="item item-divider">Information</h1>
+      <p class="item item-text-wrap">Vendor: {{ device.deviceClass.vendor.name }}</p>
+      <p class="item item-text-wrap">Description: {{ device.name }}</p>
+
+    </div>
+
+    <!-- Device params -->
+    <div class="list card" ng-show="device.SetupComplete && device.params.length > 0">
+
+      <h1 class="item item-divider">Settings</h1>
+      <p class="item item-text-wrap" ng-repeat="param in device.params track by $index">{{ param.name }}: {{ param.value }}</p>
+
+    </div>
+
+    <!-- Device states -->
+    <div class="list card" ng-show="device.SetupComplete && device.states.length > 0">
+
+      <h1 class="item item-divider">Status</h1>
+      <p class="item item-text-wrap" ng-repeat="state in device.states | orderBy: 'stateType.name' track by $index">{{ state.stateType.name }}: {{ state.value }}</p>
+
+    </div>
+
+    <!-- Device actions -->
+    <div class="list card" ng-show="device.SetupComplete && device.deviceClass.actionTypes.length > 0 ">
+
+      <h1 class="item item-divider">Actions</h1>
+      <p class="item item-text-wrap" ng-repeat="actionType in device.deviceClass.actionTypes | orderBy: 'actionType.name' track by $index">{{ actionType.name }}</p>
+
+    </div>
+
+  </ion-content>
+
+</ion-view>

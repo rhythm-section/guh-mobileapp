@@ -23,46 +23,33 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 (function(){
-  "use strict";
+  'use strict';
 
   angular
-    .module('guh.utils')
-    .factory('AppInit', AppInitFactory);
+    .module('guh.devices')
+    .controller('RulesDetailCtrl', RulesDetailCtrl);
 
-  AppInitFactory.$inject = ['$log', '$q', '$timeout', '$ionicPlatform', '$cordovaSplashscreen', 'app'];
+  RulesDetailCtrl.$inject = ['$log', '$stateParams', 'DSRule'];
 
-  function AppInitFactory($log, $q, $timeout, $ionicPlatform, $cordovaSplashscreen, app) {
+  function RulesDetailCtrl($log, $stateParams, DSRule) {
     
-    var AppInit = {
-      hideSplashscreen: hideSplashscreen
-    };
+    var vm = this;
 
-    return AppInit;
+    function _init() {
+      var ruleId = $stateParams.ruleId;
 
-
-    function hideSplashscreen() {
-      var deferred = $q.defer();
-       
-      /* jshint -W117: https://jslinterrors.com/a-was-used-before-it-was-defined */
-      ionic.Platform.ready(function() {
-        $log.log('Ionic is ready.');
-
-        if(app.isCordovaApp) {
-          $log.log('This app runs on cordova.');
-
-          $timeout(function() {
-            $cordovaSplashscreen.hide();
-            deferred.resolve();
-          }, 500);
-        } else {
-          $log.log('This app runs in the browser.');
-
-          deferred.resolve();
-        }
-      });
-
-      return deferred.promise;
+      return DSRule
+        .find(ruleId)
+        .then(function(rule) {
+          $log.log('rule', rule);
+          vm.name = rule.name;
+        })
+        .catch(function(error) {
+          $log.error(error.data.errorMessage);
+        });
     }
+
+    _init();
 
   }
 

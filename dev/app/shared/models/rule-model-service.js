@@ -26,43 +26,39 @@
   "use strict";
 
   angular
-    .module('guh.utils')
-    .factory('AppInit', AppInitFactory);
+    .module('guh.models')
+    .factory('DSRule', DSRuleFactory)
+    .run(function(DSRule) {});
 
-  AppInitFactory.$inject = ['$log', '$q', '$timeout', '$ionicPlatform', '$cordovaSplashscreen', 'app'];
+  DSRuleFactory.$inject = ['$log', 'DS'];
 
-  function AppInitFactory($log, $q, $timeout, $ionicPlatform, $cordovaSplashscreen, app) {
+  function DSRuleFactory($log, DS) {
     
-    var AppInit = {
-      hideSplashscreen: hideSplashscreen
-    };
+    var staticMethods = {};
 
-    return AppInit;
+    /*
+     * DataStore configuration
+     */
+    var DSRule = DS.defineResource({
 
+      // API configuration
+      endpoint: 'rules',
+      suffix: '.json',
 
-    function hideSplashscreen() {
-      var deferred = $q.defer();
-       
-      /* jshint -W117: https://jslinterrors.com/a-was-used-before-it-was-defined */
-      ionic.Platform.ready(function() {
-        $log.log('Ionic is ready.');
+      // Model configuration
+      idAttribute: 'id',
+      name: 'rule',
+      relations: {},
 
-        if(app.isCordovaApp) {
-          $log.log('This app runs on cordova.');
+      // Computed properties
+      computed: {},
 
-          $timeout(function() {
-            $cordovaSplashscreen.hide();
-            deferred.resolve();
-          }, 500);
-        } else {
-          $log.log('This app runs in the browser.');
+      // Instance methods
+      methods: {}
 
-          deferred.resolve();
-        }
-      });
+    });
 
-      return deferred.promise;
-    }
+    return DSRule;
 
   }
 

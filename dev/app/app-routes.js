@@ -41,12 +41,43 @@
       abstract: true,
       controller: 'AppCtrl as app',
       resolve: {
-        initialData: function($q, DSVendor, DSDeviceClass, DSDevice, AppInit) {
+        initialData: function($q, DSVendor, DSDeviceClass, DSDevice, DSRule, AppInit) {
+          function _findAllVendors() {
+            return DSVendor.findAll();
+          }
+
+          function _findAllDeviceClasses() {
+            return DSDeviceClass.findAll();
+          }
+
+          function _findDeviceClassRelations(deviceClasses) {
+            return angular.forEach(deviceClasses, function(deviceClass) {
+              return DSDeviceClass.loadRelations(deviceClass, ['actionTypes', 'eventTypes', 'stateTypes']);
+            });
+          }
+
+          function _findAllDevices() {
+            return DSDevice.findAll();
+          }
+
+          function _findDeviceRelations(devices) {
+            return angular.forEach(devices, function(device) {
+              return DSDevice.loadRelations(device, ['actionTypes', 'states']);
+            });
+          }
+
+          function _findAllRules() {
+            return DSRule.findAll();
+          }
+
           return $q
             .all([
-              DSVendor.findAll(),
-              DSDeviceClass.findAll(),
-              DSDevice.findAll()
+              _findAllVendors(),
+              _findAllDeviceClasses()
+                .then(_findDeviceClassRelations),
+              _findAllDevices()
+                .then(_findDeviceRelations),
+              _findAllRules()
             ])
             .then(function(data) {
               var initialData = {};
@@ -54,12 +85,14 @@
               initialData.vendors = data[0];
               initialData.deviceClasses = data[1];
               initialData.devices = data[2];
+              initialData.rules = data[3];
 
               AppInit.hideSplashscreen();
+
               return initialData;
             })
             .catch(function(error) {
-              return error
+              return error;
             });
         }
       },
@@ -92,6 +125,11 @@
       url: '',
       templateUrl: 'app/components/devices/master/devices-master.html'
     });
+    $stateProvider.state('guh.devices.detail', {
+      controller: 'DevicesDetailCtrl as device',
+      url: '/:deviceId',
+      templateUrl: 'app/components/devices/detail/devices-detail.html'
+    });
 
     // Rules
     $stateProvider.state('guh.rules', {
@@ -107,6 +145,11 @@
       controller: 'RulesMasterCtrl as rules',
       url: '',
       templateUrl: 'app/components/rules/master/rules-master.html'
+    });
+    $stateProvider.state('guh.rules.detail', {
+      controller: 'RulesDetailCtrl as rule',
+      url: '/:ruleId',
+      templateUrl: 'app/components/rules/detail/rules-detail.html'
     });
     
   }

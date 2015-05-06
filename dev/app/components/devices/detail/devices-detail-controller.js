@@ -23,46 +23,70 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 (function(){
-  "use strict";
+  'use strict';
 
   angular
-    .module('guh.utils')
-    .factory('AppInit', AppInitFactory);
+    .module('guh.devices')
+    .controller('DevicesDetailCtrl', DevicesDetailCtrl);
 
-  AppInitFactory.$inject = ['$log', '$q', '$timeout', '$ionicPlatform', '$cordovaSplashscreen', 'app'];
+  DevicesDetailCtrl.$inject = ['$log', '$stateParams', 'libs', 'DSDevice'];
 
-  function AppInitFactory($log, $q, $timeout, $ionicPlatform, $cordovaSplashscreen, app) {
+  function DevicesDetailCtrl($log, $stateParams, libs, DSDevice) {
     
-    var AppInit = {
-      hideSplashscreen: hideSplashscreen
-    };
-
-    return AppInit;
+    var vm = this;
 
 
-    function hideSplashscreen() {
-      var deferred = $q.defer();
-       
-      /* jshint -W117: https://jslinterrors.com/a-was-used-before-it-was-defined */
-      ionic.Platform.ready(function() {
-        $log.log('Ionic is ready.');
+    /*
+     * Private method: _init()
+     */
+    function _init() {
+      var deviceId = $stateParams.deviceId;
 
-        if(app.isCordovaApp) {
-          $log.log('This app runs on cordova.');
+      _findDevice(deviceId)
+        .then(_findDeviceRelations)
+        .then(function(device) {
+          $log.log(device);
 
-          $timeout(function() {
-            $cordovaSplashscreen.hide();
-            deferred.resolve();
-          }, 500);
-        } else {
-          $log.log('This app runs in the browser.');
+          // Check if device has individual name
+          var params = device.params;
+          var nameParameter = libs._.find(params, function(param) { return (param.name === 'Name'); });
 
-          deferred.resolve();
-        }
-      });
-
-      return deferred.promise;
+          // Set view variables
+          vm.SetupComplete = device.SetupComplete;
+          vm.deviceClass = device.deviceClass;
+          vm.deviceClassId = device.deviceClassId;
+          vm.id = device.id;
+          vm.name = device.name
+          vm.params = (device.userSettings.name === device.name) ? device.params : libs._.without(params, nameParameter);
+          vm.states = device.states;
+          vm.userSettings = device.userSettings;
+        })
+        .catch(_showError);
     }
+
+    /*
+     * Private method: _findDevice(deviceId)
+     */
+    function _findDevice(deviceId) {
+      return DSDevice.find(deviceId);
+    }
+
+    /*
+     * Private method: _findDeviceRelations(device)
+     */
+    function _findDeviceRelations(device) {
+      return DSDevice.loadRelations(device, ['deviceClass', 'states']);
+    }
+
+    /*
+     * Private method: _showError(error)
+     */
+    function _showError(error) {
+      $log.error(error.data.errorMessage);
+    }
+
+
+    _init();
 
   }
 

@@ -53,7 +53,21 @@
           vendor: {
             localField: 'vendor',
             localKey: 'vendorId',
-            parent: true
+            // parent: true
+          }
+        },
+        hasMany: {
+          actionType: {
+            localField: 'actionTypes',
+            foreignKey: 'deviceClassId'
+          },
+          eventType: {
+            localField: 'eventTypes',
+            foreignKey: 'deviceClassId'
+          },
+          stateType: {
+            localField: 'stateTypes',
+            foreignKey: 'deviceClassId'
           }
         }
       },

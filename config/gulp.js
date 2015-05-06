@@ -112,11 +112,11 @@ module.exports = {
 
       // Components: Devices
       'app/**/devices-module.js',
-      'app/**/devices-master-controller.js',
+      'app/**/devices-*-controller.js',
 
       // Components: Rules
       'app/**/rules-module.js',
-      'app/**/rules-master-controller.js'
+      'app/**/rules-*-controller.js'
     ],
     scss: 'app/app.scss'
   },
@@ -136,6 +136,9 @@ module.exports = {
 
       // Cordova plugins with angular services (ngCordova)
       // 'assets/libs/ngCordova/dist/ng-cordova.min.js',
+
+      // Underscore
+      'assets/libs/underscore/underscore-min.js',
 
       // JS-Data
       'assets/libs/js-data/dist/js-data.min.js',

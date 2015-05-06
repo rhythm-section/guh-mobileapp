@@ -27,6 +27,9 @@
 
   angular
     .module('guh.config')
+    .constant('libs', {
+      '_': window._
+    })
     .constant('app', (function() {
       return {
         isCordovaApp: !!window.cordova,

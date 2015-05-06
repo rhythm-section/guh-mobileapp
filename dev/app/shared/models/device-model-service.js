@@ -30,9 +30,9 @@
     .factory('DSDevice', DSDeviceFactory)
     .run(function(DSDevice) {});
 
-  DSDeviceFactory.$inject = ['$log', 'DS'];
+  DSDeviceFactory.$inject = ['$log', 'DS', 'libs'];
 
-  function DSDeviceFactory($log, DS) {
+  function DSDeviceFactory($log, DS, libs) {
     
     var staticMethods = {};
 
@@ -48,10 +48,25 @@
       // Model configuration
       idAttribute: 'id',
       name: 'device',
-      relations: {},
+      relations: {
+        belongsTo: {
+          deviceClass: {
+            localField: 'deviceClass',
+            localKey: 'deviceClassId'
+          }
+        },
+        hasMany: {
+          state: {
+            localField: 'states',
+            foreignKey: 'deviceId'
+          }
+        }
+      },
 
       // Computed properties
-      computed: {},
+      computed: {
+        userSettings: ['name', 'params', _getUserSettings]
+      },
 
       // Instance methods
       methods: {}
@@ -59,6 +74,19 @@
     });
 
     return DSDevice;
+
+
+    /*
+     * Private method: _getUserSettings()
+     */
+    function _getUserSettings(name, params) {
+      var nameParameter = libs._.find(params, function(param) { return (param.name === 'Name'); });
+      var userSettings = {
+        name: (nameParameter === undefined) ? 'Name' : nameParameter.value
+      };
+
+      return userSettings;
+    }
 
   }
 
