@@ -29,11 +29,17 @@
     .module('guh.devices')
     .controller('DevicesDetailCtrl', DevicesDetailCtrl);
 
-  DevicesDetailCtrl.$inject = ['$log', '$stateParams', 'libs', 'DSDevice'];
+  DevicesDetailCtrl.$inject = ['$log', '$scope', '$stateParams', '$ionicModal', 'libs', 'DSDevice'];
 
-  function DevicesDetailCtrl($log, $stateParams, libs, DSDevice) {
+  function DevicesDetailCtrl($log, $scope, $stateParams, $ionicModal, libs, DSDevice) {
     
     var vm = this;
+    var editModal;
+
+    // Public methods
+    vm.editSettings = editSettings;
+    vm.closeSettings = closeSettings;
+    vm.saveSettings = saveSettings;
 
 
     /*
@@ -60,6 +66,17 @@
           vm.params = (device.userSettings.name === device.name) ? device.params : libs._.without(params, nameParameter);
           vm.states = device.states;
           vm.userSettings = device.userSettings;
+
+          // Needed because ionicModal only works with "$scope" but not with "vm" as scope
+          $scope.device = vm;
+
+          // Edit modal
+          $ionicModal.fromTemplateUrl('app/components/devices/detail/devices-edit-modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+          }).then(function(modal) {
+            editModal = modal;
+          });
         })
         .catch(_showError);
     }
@@ -85,6 +102,29 @@
       $log.error(error.data.errorMessage);
     }
 
+
+    /*
+     * Public method: editSettings()
+     */
+    function editSettings() {
+      editModal.show();
+    }
+
+    /*
+     * Public method: closeSettings()
+     */
+    function closeSettings() {
+      $log.log('Close modal');
+      editModal.hide();
+    }
+
+    /*
+     * Public method: saveSettings()
+     */
+    function saveSettings() {
+      $log.log('Save settings and close modal');
+      editModal.hide();
+    }
 
     _init();
 

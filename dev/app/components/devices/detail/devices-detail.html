@@ -21,7 +21,17 @@
 -->
 
 <ion-view>
+  <!-- Override nav-bar title -->
   <ion-nav-title>{{ device.userSettings.name }}</ion-nav-title>
+
+  <!-- Override nav-bar buttons -->
+  <ion-nav-buttons side="primary">
+    <button class="button button-icon icon ion-ios-arrow-back" ui-sref="guh.devices.master">&nbsp;Devices</button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="secondary">
+    <button class="button button-icon icon ion-ios-compose-outline" ng-click="device.editSettings()"></button>
+  </ion-nav-buttons>
 
   <ion-content>
     
@@ -41,14 +51,6 @@
       <h1 class="item item-divider">Information</h1>
       <p class="item item-text-wrap">Vendor: {{ device.deviceClass.vendor.name }}</p>
       <p class="item item-text-wrap">Description: {{ device.name }}</p>
-
-    </div>
-
-    <!-- Device params -->
-    <div class="list card" ng-show="device.SetupComplete && device.params.length > 0">
-
-      <h1 class="item item-divider">Settings</h1>
-      <p class="item item-text-wrap" ng-repeat="param in device.params track by $index">{{ param.name }}: {{ param.value }}</p>
 
     </div>
 
