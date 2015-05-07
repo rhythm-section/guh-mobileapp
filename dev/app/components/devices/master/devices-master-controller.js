@@ -29,36 +29,43 @@
     .module('guh.devices')
     .controller('DevicesMasterCtrl', DevicesMasterCtrl);
 
-  DevicesMasterCtrl.$inject = ['$log', 'DSDeviceClass', 'DSDevice'];
+  DevicesMasterCtrl.$inject = ['$log', '$scope', 'DSDeviceClass', 'DSDevice'];
 
-  function DevicesMasterCtrl($log, DSDeviceClass, DSDevice) {
+  function DevicesMasterCtrl($log, $scope, DSDeviceClass, DSDevice) {
     
     var vm = this;
     
+    // $scope methods
+    $scope.refresh = refresh;
+
 
     /*
      * Private method: _init()
      */
     function _init() {
-      _loadViewData();
+      _loadViewData(false);
     }
 
     /*
-     * Private method: _loadViewData()
+     * Private method: _loadViewData(cache)
      */
-    function _loadViewData() {
-      _findAllDevices()
+    function _loadViewData(bypassCache) {
+      return _findAllDevices(bypassCache)
         .then(_findDeviceRelations)
         .then(function(devices) {
           vm.configured = devices;
-        });
+        });;
     }
 
     /*
-     * Private method: _findAllDevices()
+     * Private method: _findAllDevices(bypassCache)
      */
-    function _findAllDevices() {
-      return DSDevice.findAll();
+    function _findAllDevices(bypassCache) {
+      if(bypassCache) {
+        return DSDevice.findAll({}, { bypassCache: true });
+      } else {
+        return DSDevice.findAll();
+      }
     }
 
     /*
@@ -79,7 +86,20 @@
       return DSDeviceClass.loadRelations(device.deviceClass, ['vendor']);
     }
 
+
+    /*
+     * Public method: refresh()
+     */
+    function refresh() {
+      _loadViewData(true)
+        .finally(function() {
+          $scope.$broadcast('scroll.refreshComplete');
+        });
+    }
+
+
     _init();
+
 
   }
 
