@@ -29,13 +29,39 @@
     .module('guh.rules')
     .controller('RulesMasterCtrl', RulesMasterCtrl);
 
-  RulesMasterCtrl.$inject = ['$log', 'initialData'];
+  RulesMasterCtrl.$inject = ['$log', 'DSRule'];
 
-  function RulesMasterCtrl($log, initialData) {
+  function RulesMasterCtrl($log, DSRule) {
 
     var vm = this;
 
-    vm.configured = initialData.rules;
+
+    /*
+     * Private method: _init()
+     */
+    function _init() {
+      _loadViewData();
+    }
+
+    /*
+     * Private method: _loadViewData()
+     */
+    function _loadViewData() {
+      _findAllRules()
+        .then(function(rules) {
+          vm.configured = rules;
+        });
+    }
+
+    /*
+     * Private method: _findAllRules()
+     */
+    function _findAllRules() {
+      return DSRule.findAll();
+    }
+
+
+    _init();
 
   }
 

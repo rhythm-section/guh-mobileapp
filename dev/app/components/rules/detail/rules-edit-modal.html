@@ -1,4 +1,4 @@
-<!-- 
+<!--
   Copyright (c) 2015 guh
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,20 +20,16 @@
   SOFTWARE.
 -->
 
-<ion-view>
-  <!-- Override nav-bar title -->
-  <ion-nav-title>{{ rule.name }}</ion-nav-title>
+<ion-modal-view>
 
-  <!-- Override nav-bar buttons -->
-  <ion-nav-buttons side="primary">
-    <button class="button button-icon icon ion-ios-arrow-back" ui-sref="guh.rules.master">&nbsp;Rules</button>
-  </ion-nav-buttons>
-
-  <ion-nav-buttons side="secondary">
-    <button class="button button-icon icon ion-ios-compose-outline" ng-click="rule.editSettings()"></button>
-  </ion-nav-buttons>
+  <!-- Header -->
+  <ion-header-bar>
+    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rule.closeSettings()"></button>
+    <div class="title">Edit {{ rule.name }}</div>
+    <button class="button button-icon icon ion-ios-checkmark-empty" ng-click="rule.saveSettings()"></button>
+  </ion-header-bar>
 
   <ion-content>
   </ion-content>
 
-</ion-view>
+</ion-modal-view>

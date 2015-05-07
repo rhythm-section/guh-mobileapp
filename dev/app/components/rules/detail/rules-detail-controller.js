@@ -29,13 +29,30 @@
     .module('guh.devices')
     .controller('RulesDetailCtrl', RulesDetailCtrl);
 
-  RulesDetailCtrl.$inject = ['$log', '$stateParams', 'DSRule'];
+  RulesDetailCtrl.$inject = ['$log', '$scope', '$stateParams', '$ionicModal', 'DSRule'];
 
-  function RulesDetailCtrl($log, $stateParams, DSRule) {
+  function RulesDetailCtrl($log, $scope, $stateParams, $ionicModal, DSRule) {
     
     var vm = this;
+    var editModal = {};
 
+    // Public methods
+    vm.editSettings = editSettings;
+    vm.closeSettings = closeSettings;
+    vm.saveSettings = saveSettings;
+
+
+    /*
+     * Private method: _init()
+     */
     function _init() {
+      _loadViewData();
+    }
+
+    /*
+     * Private method: _loadViewData()
+     */
+    function _loadViewData() {
       var ruleId = $stateParams.ruleId;
 
       return DSRule
@@ -43,11 +60,56 @@
         .then(function(rule) {
           $log.log('rule', rule);
           vm.name = rule.name;
+
+          // Needed because ionicModal only works with "$scope" but not with "vm" as scope
+          $scope.device = vm;
+
+          // Edit modal
+          $ionicModal.fromTemplateUrl('app/components/rules/detail/rules-edit-modal.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+          }).then(function(modal) {
+            editModal = modal;
+          });
         })
         .catch(function(error) {
-          $log.error(error.data.errorMessage);
+          _showError(error);
         });
     }
+
+    /*
+     * Private method: _showError(error)
+     */
+    function _showError(error) {
+      if(angular.isObject(error.data)) {
+        $log.error(error.data.errorMessage);
+      }
+    }
+
+
+    /*
+     * Public method: editSettings()
+     */
+    function editSettings() {
+      editModal.show();
+    }
+
+    /*
+     * Public method: closeSettings()
+     */
+    function closeSettings() {
+      $log.log('Close modal');
+      editModal.hide();
+    }
+
+    /*
+     * Public method: saveSettings()
+     */
+    function saveSettings() {
+      $log.log('Save settings and close modal');
+      editModal.hide();
+    }
+
 
     _init();
 
