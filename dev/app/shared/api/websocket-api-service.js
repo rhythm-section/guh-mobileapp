@@ -23,63 +23,93 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 (function(){
-  'use strict';
+  "use strict";
 
   angular
-    .module('guh.devices')
-    .controller('DevicesMasterCtrl', DevicesMasterCtrl);
+    .module('guh.api')
+    .factory('websocketService', websocketService);
 
-  DevicesMasterCtrl.$inject = ['$log', 'DSDeviceClass', 'DSDevice'];
+  websocketService.$inject = ['$log', '$rootScope', 'app'];
 
-  function DevicesMasterCtrl($log, DSDeviceClass, DSDevice) {
-    
-    var vm = this;
-    
+  function websocketService($log, $rootScope, app) {
+
+    var websocketService = {
+      // Data
+      ws: null,
+      callbacks: {},
+
+      // Methods
+      connect: connect,
+      subscribe: subscribe,
+      unsubscribe: unsubscribe
+    };
+
+    return websocketService;
+
 
     /*
-     * Private method: _init()
+     * Public method: connect()
      */
-    function _init() {
-      _loadViewData();
-    }
+    function connect() {
+      if(websocketService.ws) {
+        return;
+      }
 
-    /*
-     * Private method: _loadViewData()
-     */
-    function _loadViewData() {
-      _findAllDevices()
-        .then(_findDeviceRelations)
-        .then(function(devices) {
-          vm.configured = devices;
+      var ws = new WebSocket(app.websocketUrl);
+      // var ws = new WebSocket(protocol + '://' + host + ':' + port + '/ws');
+
+      ws.onopen = function(event) {
+        $log.log('Successfully connected with websocket.', event);
+
+        // Send broadcast event
+        $rootScope.$apply(function() {
+          $rootScope.$broadcast('WebsocketConnected', '');
         });
+      };
+
+      ws.onclose = function(event) {
+        $log.log('Closed websocket connection.', event);
+
+        // Send broadcast event
+        $rootScope.$apply(function() {
+          $rootScope.$broadcast('WebsocketConnectionLost', 'The app has lost the connection to guh. Please check if you are connected to your network and if guh is running correctly.');
+        });
+      };
+
+      ws.onerror = function() {
+        $log.error('There was an error with the websocket connection.');
+      };
+
+      ws.onmessage = function(message) {
+        // var cb = websocketService.callbacks[message.id];
+        // cb(angular.fromJson(message.data));
+
+        // Execute callback-function with right ID
+        angular.forEach(websocketService.callbacks, function(cb) {
+          cb(angular.fromJson(message.data));
+        });
+      };
+
+      websocketService.ws = ws;
     }
 
     /*
-     * Private method: _findAllDevices()
+     * Public method: subscribe(id, cb)
      */
-    function _findAllDevices() {
-      return DSDevice.findAll();
+    function subscribe(id, cb) {
+      if(!websocketService.ws) {
+        websocketService.connect();
+      }
+
+      websocketService.callbacks[id] = cb;
     }
 
     /*
-     * Private method: _findDeviceRelations()
+     * Public method: unsubscribe(id)
      */
-    function _findDeviceRelations(devices) {
-      return angular.forEach(devices, function(device) {
-        return DSDevice
-          .loadRelations(device, ['deviceClass'])
-          .then(_findDeviceClassRelations);
-      });
+    function unsubscribe(id) {
+      delete websocketService.callbacks[id];
     }
-
-    /*
-     * Private method: _findDeviceClassRelations(devices)
-     */
-    function _findDeviceClassRelations(device) {
-      return DSDeviceClass.loadRelations(device.deviceClass, ['vendor']);
-    }
-
-    _init();
 
   }
 

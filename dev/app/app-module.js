@@ -38,6 +38,7 @@
       'guh.utils',
 
       // Services
+      'guh.api',
       'guh.models',
 
       // App

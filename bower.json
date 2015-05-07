@@ -29,7 +29,8 @@
     "js-data": "~1.8.0",
     "js-data-angular": "~2.4.0",
     "ngCordova": "~0.1.15-alpha",
-    "underscore": "~1.8.3"
+    "underscore": "~1.8.3",
+    "reconnectingWebsocket": "~1.0.0"
   },
   "devDependencies": {},
   "overrides": {
@@ -83,6 +84,12 @@
     "ngCordova": {
       "main": [
         "./dist/ng-cordova.js"
+      ]
+    },
+    "reconnectingWebsocket": {
+      "main": [
+        "./reconnecting-websocket.js",
+        "./reconnecting-websocket.min.js"
       ]
     },
     "underscore": {

@@ -30,9 +30,9 @@
     .factory('DSDevice', DSDeviceFactory)
     .run(function(DSDevice) {});
 
-  DSDeviceFactory.$inject = ['$log', 'DS', 'libs'];
+  DSDeviceFactory.$inject = ['$log', 'DS', 'libs', 'websocketService'];
 
-  function DSDeviceFactory($log, DS, libs) {
+  function DSDeviceFactory($log, DS, libs, websocketService) {
     
     var staticMethods = {};
 
@@ -69,7 +69,10 @@
       },
 
       // Instance methods
-      methods: {}
+      methods: {
+        subscribe: subscribe,
+        unsubscribe: unsubscribe
+      }
 
     });
 
@@ -86,6 +89,23 @@
       };
 
       return userSettings;
+    }
+
+
+    /*
+     * Public method: subscribe(deviceId, cb)
+     */
+    function subscribe(deviceId, cb) {
+      // $log.log('subscribe device', deviceId);
+      return websocketService.subscribe(this.id, cb);
+    }
+
+    /*
+     * Public method: unsubscribe(deviceId)
+     */
+    function unsubscribe(deviceId) {
+      $log.log('unsubscribe device', deviceId);
+      return websocketService.unsubscribe(this.id);
     }
 
   }

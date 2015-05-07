@@ -100,6 +100,10 @@ module.exports = {
       'app/**/utils-module.js',
       'app/**/*-util-service.js',
 
+      // Shared: API
+      'app/**/api-module.js',
+      'app/**/*-api-service.js',
+
       // Shared: Models
       'app/**/models-module.js',
       'app/**/*-model-service.js',
@@ -139,6 +143,9 @@ module.exports = {
 
       // Underscore
       'assets/libs/underscore/underscore-min.js',
+
+      // Reconnecting websocket
+      'assets/libs/reconnectingWebsocket/reconnecting-websocket.min.js',
 
       // JS-Data
       'assets/libs/js-data/dist/js-data.min.js',

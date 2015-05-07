@@ -31,20 +31,28 @@
       '_': window._
     })
     .constant('app', (function() {
+      var isCordovaApp = !!window.cordova;
+      var httpProtocol = (isCordovaApp || window.location.protocol === 'http:') ? 'http' : 'https';
+      var wsProtocol = (isCordovaApp || window.location.protocol === 'http:') ? 'ws' : 'wss';
+      var host = 'localhost';
+      var port = '3000';
+
+      // @if NODE_ENV = 'DEVELOPMENT'
+      var apiUrl = '/api/v1';
+      // @endif
+
+      // @if NODE_ENV = 'PRODUCTION'
+      var apiUrl = httpProtocol + '://' + host + ':' + port + '/api/v1';
+      // @endif
+
+      // @if NODE_ENV = 'TEST'
+      var apiUrl = '/api/v1';
+      // @endif
+
       return {
-        isCordovaApp: !!window.cordova,
-
-        // @if NODE_ENV = 'DEVELOPMENT'
-        apiUrl: '/api/v1',
-        // @endif
-
-        // @if NODE_ENV = 'PRODUCTION'
-        apiUrl: 'http://10.0.0.2:3000/api/v1',
-        // @endif
-
-        // @if NODE_ENV = 'TEST'
-        apiUrl: '/api/v1',
-        // @endif
+        apiUrl: apiUrl,
+        websocketUrl: wsProtocol + '://' + host + ':' + port + '/ws',
+        isCordovaApp: isCordovaApp,
       }
     })());
 

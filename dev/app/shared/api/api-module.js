@@ -26,61 +26,11 @@
   'use strict';
 
   angular
-    .module('guh.devices')
-    .controller('DevicesMasterCtrl', DevicesMasterCtrl);
+    .module('guh.api', [])
+    .config(config);
 
-  DevicesMasterCtrl.$inject = ['$log', 'DSDeviceClass', 'DSDevice'];
+  config.$inject = [];
 
-  function DevicesMasterCtrl($log, DSDeviceClass, DSDevice) {
-    
-    var vm = this;
-    
-
-    /*
-     * Private method: _init()
-     */
-    function _init() {
-      _loadViewData();
-    }
-
-    /*
-     * Private method: _loadViewData()
-     */
-    function _loadViewData() {
-      _findAllDevices()
-        .then(_findDeviceRelations)
-        .then(function(devices) {
-          vm.configured = devices;
-        });
-    }
-
-    /*
-     * Private method: _findAllDevices()
-     */
-    function _findAllDevices() {
-      return DSDevice.findAll();
-    }
-
-    /*
-     * Private method: _findDeviceRelations()
-     */
-    function _findDeviceRelations(devices) {
-      return angular.forEach(devices, function(device) {
-        return DSDevice
-          .loadRelations(device, ['deviceClass'])
-          .then(_findDeviceClassRelations);
-      });
-    }
-
-    /*
-     * Private method: _findDeviceClassRelations(devices)
-     */
-    function _findDeviceClassRelations(device) {
-      return DSDeviceClass.loadRelations(device.deviceClass, ['vendor']);
-    }
-
-    _init();
-
-  }
+  function config() {}
 
 }());
