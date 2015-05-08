@@ -23,43 +23,34 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 (function(){
-  'use strict';
+  "use strict";
 
   angular
-    .module('guh.config')
-    .constant('libs', {
-      '_': window._
-    })
-    .constant('app', (function() {
-      var isCordovaApp = !!window.cordova;
-      // var httpProtocol = (isCordovaApp || window.location.protocol === 'http:') ? 'http' : 'https';
-      // var wsProtocol = (isCordovaApp || window.location.protocol === 'http:') ? 'ws' : 'wss';
-      var httpProtocol = 'http';
-      var wsProtocol = 'ws';
-      var host = '10.0.0.2';
-      var port = '3000';
+    .module('guh.models')
+    .factory('modelsHelper', modelsHelper);
 
-      // @if NODE_ENV = 'DEVELOPMENT'
-      var apiUrl = '/api/v1';
-      // @endif
+  modelsHelper.$inject = ['$log', 'DS', 'app'];
 
-      // @if NODE_ENV = 'PRODUCTION'
-      var apiUrl = httpProtocol + '://' + host + ':' + port + '/api/v1';
-      // @endif
+  function modelsHelper($log, DS, app) {
 
-      // @if NODE_ENV = 'TEST'
-      var apiUrl = '/api/v1';
-      // @endif
+    var modelsHelper = {
+      setBasePath: setBasePath
+    };
 
-      return {
-        isCordovaApp: isCordovaApp,
-        httpProtocol: httpProtocol,
-        wsProtocol: wsProtocol,
-        host: host,
-        port: port,
-        apiUrl: apiUrl,
-        websocketUrl: wsProtocol + '://' + host + ':' + port + '/ws',
-      }
-    })())
+    return modelsHelper;
+
+
+    /*
+     * Public method: setBasePath()
+     */
+    function setBasePath() {
+      $log.log('Set models base path', app.apiUrl);
+      
+      DS
+        .defaults
+        .basePath = app.apiUrl;
+    }
+
+  }
 
 }());

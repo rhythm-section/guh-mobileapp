@@ -39,13 +39,24 @@
       callbacks: {},
 
       // Methods
+      close: close,
       connect: connect,
+      reconnect: reconnect,
       subscribe: subscribe,
       unsubscribe: unsubscribe
     };
 
     return websocketService;
 
+
+    /*
+     * Public method: close()
+     */
+    function close() {
+      if(websocketService.ws) {
+        websocketService.ws = null;
+      }
+    }
 
     /*
      * Public method: connect()
@@ -56,14 +67,13 @@
       }
 
       var ws = new WebSocket(app.websocketUrl);
-      // var ws = new WebSocket(protocol + '://' + host + ':' + port + '/ws');
 
       ws.onopen = function(event) {
         $log.log('Successfully connected with websocket.', event);
 
         // Send broadcast event
         $rootScope.$apply(function() {
-          $rootScope.$broadcast('WebsocketConnected', '');
+          $rootScope.$broadcast('WebsocketConnected', 'Successful connected to guh.');
         });
       };
 
@@ -78,12 +88,14 @@
 
       ws.onerror = function() {
         $log.error('There was an error with the websocket connection.');
+
+        // Send broadcast event
+        $rootScope.$apply(function() {
+          $rootScope.$broadcast('WebsocketConnectionError', 'There was an error connecting to guh.');
+        });
       };
 
       ws.onmessage = function(message) {
-        // var cb = websocketService.callbacks[message.id];
-        // cb(angular.fromJson(message.data));
-
         // Execute callback-function with right ID
         angular.forEach(websocketService.callbacks, function(cb) {
           cb(angular.fromJson(message.data));
@@ -91,6 +103,14 @@
       };
 
       websocketService.ws = ws;
+    }
+
+    /*
+     * Public method: reconnect()
+     */
+    function reconnect() {
+      websocketService.close();
+      websocketService.connect();
     }
 
     /*

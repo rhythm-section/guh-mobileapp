@@ -29,8 +29,106 @@
     .module('guh')
     .controller('AppCtrl', AppCtrl);
 
-  AppCtrl.$inject = [];
+  AppCtrl.$inject = ['$log', '$scope', '$timeout', '$ionicModal', '$ionicLoading', 'app', 'websocketService', 'modelsHelper'];
 
-  function AppCtrl() {}
+  function AppCtrl($log, $scope, $timeout, $ionicModal, $ionicLoading, app, websocketService, modelsHelper) {
+
+    var vm = this;
+    var editModal = {};
+
+
+    // Public methods
+    vm.editSettings = editSettings;
+    vm.closeSettings = closeSettings;
+    vm.saveSettings = saveSettings;
+
+
+    /*
+     * Private method: _init()
+     */
+    function _init() {
+      vm.host = app.host;
+
+      // Needed because ionicModal only works with "$scope" but not with "vm" as scope
+      $scope.app = vm;
+
+      // Edit modal
+      $ionicModal.fromTemplateUrl('app/app-edit-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+        editModal = modal;
+      });
+    }
+
+
+    /*
+     * Public method: editSettings()
+     */
+    function editSettings() {
+      $log.log('editSettings');
+    }
+
+    /*
+     * Public method: editSettings()
+     */
+    function editSettings() {
+      editModal.show();
+    }
+
+    /*
+     * Public method: closeSettings()
+     */
+    function closeSettings() {
+      $log.log('Close modal');
+      editModal.hide();
+    }
+
+    /*
+     * Public method: saveSettings()
+     */
+    function saveSettings() {
+      var oldHost = app.host;
+
+      // Save IP setting
+      app.host = vm.host;
+
+      // Set new WebSocket url
+      app.websocketUrl = app.wsProtocol + '://' + app.host + ':' + app.port + '/ws';
+
+      // Reconnect websocket to new address
+      websocketService.reconnect();
+
+      // Show popup during reconnect
+      $ionicLoading.show({
+        template: 'Check connection to host "' + app.host + '"...'
+      });
+
+      // Hide popup and lose connection if reconnection fails (after 5s)
+      $timeout(function() {
+        app.host = oldHost;
+        app.websocketUrl = app.wsProtocol + '://' + app.host + ':' + app.port + '/ws';
+        vm.host = app.host;
+
+        $ionicLoading.hide();
+        websocketService.close();  
+      }, 5000);
+      
+      // If connection is sucessful
+      $scope.$on('WebsocketConnected', function(event, args) {
+        // Set new API url
+        app.apiUrl = (app.apiUrl === '/api/v1') ? '/api/v1' : app.httpProtocol + '://' + app.host + ':' + app.port + '/api/v1';
+        modelsHelper.setBasePath();
+
+        // Hide popup and modal
+        $ionicLoading.hide();
+        editModal.hide();
+      });
+    }
+
+
+    _init();
+
+  }
 
 }());

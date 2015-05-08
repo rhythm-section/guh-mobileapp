@@ -106,6 +106,7 @@ module.exports = {
 
       // Shared: Models
       'app/**/models-module.js',
+      'app/**/models-helper.js',
       'app/**/*-model-service.js',
 
       // Shared: Directives

@@ -22,6 +22,11 @@
 
 <ion-view title="Rules">
 
+  <!-- Override nav-bar buttons -->
+  <ion-nav-buttons side="primary">
+    <button class="button button-icon icon ion-ios-person-outline" ng-click="app.editSettings()"></button>
+  </ion-nav-buttons>
+
   <ion-content>
     <ion-refresher
       pulling-text="Pull to refresh rules..."
