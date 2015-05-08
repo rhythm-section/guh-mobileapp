@@ -30,9 +30,9 @@
     .factory('DSActionType', DSActionTypeFactory)
     .run(function(DSActionType) {});
 
-  DSActionTypeFactory.$inject = ['$log', 'DS'];
+  DSActionTypeFactory.$inject = ['$log', 'DS', 'modelsHelper'];
 
-  function DSActionTypeFactory($log, DS) {
+  function DSActionTypeFactory($log, DS, modelsHelper) {
     
     var staticMethods = {};
 
@@ -62,11 +62,45 @@
       computed: {},
 
       // Instance methods
-      methods: {}
+      methods: {
+        getParams: getParams
+      },
+
+      // Lifecycle hooks
+      afterInject: _addUiData
 
     });
 
     return DSActionType;
+
+
+    /*
+     * Private method: _addUiData(resource, attrs)
+     */
+    function _addUiData(resource, attrs) {      
+      angular.forEach(attrs.paramTypes, function(paramType) {
+        paramType = modelsHelper.addUiData(paramType);
+      });
+    }
+
+
+    /*
+     * Public method: getParams()
+     */
+    function getParams() {
+      var self = this;
+      var params = [];
+      var paramTypes = self.paramTypes;
+
+      angular.forEach(paramTypes, function(paramType) {
+        params.push({
+          name: paramType.name,
+          value: paramType.value
+        });
+      });
+
+      return params;
+    }
 
   }
 

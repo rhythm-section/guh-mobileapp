@@ -66,7 +66,10 @@
     <div class="list card" ng-show="device.SetupComplete && device.deviceClass.actionTypes.length > 0 ">
 
       <h1 class="item item-divider">Actions</h1>
-      <p class="item item-text-wrap" ng-repeat="actionType in device.deviceClass.actionTypes | orderBy: 'actionType.name' track by $index">{{ actionType.name }}</p>
+      <div class="list" ng-repeat="actionType in device.deviceClass.actionTypes | orderBy: 'actionType.name' track by $index">
+        <h2 class="item item-text-wrap">{{ actionType.name }}</h2>
+        <p guh-input="paramType" change="device.execute(actionType)" ng-repeat="paramType in actionType.paramTypes | orderBy: 'paramType.name' track by $index">{{ paramType.name }}</p>
+      </div>
 
     </div>
 

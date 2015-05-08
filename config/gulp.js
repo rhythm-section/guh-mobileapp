@@ -110,6 +110,8 @@ module.exports = {
       'app/**/*-model-service.js',
 
       // Shared: Directives
+      'app/**/ui-module.js',
+      'app/**/*-ui-directive.js',
 
       // Components: Dashboard
       'app/**/dashboard-module.js',

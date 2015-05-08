@@ -38,6 +38,7 @@
     var editModal = {};
 
     // Public methods
+    vm.execute = execute;
     vm.editSettings = editSettings;
     vm.closeSettings = closeSettings;
     vm.saveSettings = saveSettings;
@@ -149,6 +150,13 @@
       currentDevice.unsubscribe(currentDevice.id);
     }
 
+
+    /*
+     * Public method: execute(actionType)
+     */
+    function execute(actionType) {
+      currentDevice.executeAction(actionType);
+    }
 
     /*
      * Public method: editSettings()

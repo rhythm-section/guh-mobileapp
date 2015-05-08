@@ -26,68 +26,6 @@
   'use strict';
 
   angular
-    .module('guh.config')
-    .constant('libs', {
-      '_': window._
-    })
-    .constant('app', (function() {
-      // var httpProtocol = (isCordovaApp || window.location.protocol === 'http:') ? 'http' : 'https';
-      // var wsProtocol = (isCordovaApp || window.location.protocol === 'http:') ? 'ws' : 'wss';
-      var httpProtocol = 'http';
-      var wsProtocol = 'ws';
-      var host = '10.0.0.2';
-      var port = '3000';
-
-      // @if NODE_ENV = 'DEVELOPMENT'
-      var apiUrl = '/api/v1';
-      // @endif
-
-      // @if NODE_ENV = 'PRODUCTION'
-      var apiUrl = httpProtocol + '://' + host + ':' + port + '/api/v1';
-      // @endif
-
-      // @if NODE_ENV = 'TEST'
-      var apiUrl = '/api/v1';
-      // @endif
-
-      return {
-        // Cordova
-        isCordovaApp: !!window.cordova,
-
-        // Network
-        httpProtocol: httpProtocol,
-        wsProtocol: wsProtocol,
-        host: host,
-        port: port,
-
-        // API, Websockets
-        apiUrl: apiUrl,
-        websocketUrl: wsProtocol + '://' + host + ':' + port + '/ws',
-
-        // Basepaths
-        basePaths: {
-          ui: 'app/shared/ui/'
-        },
-
-        // File extensions
-        fileExtensions: {
-          html: '.html'
-        },
-
-        // Input Types
-        inputTypes: {
-          inputTypeIPv4Address: 'input-ipV4',
-          inputTypeIPv6Address: 'input-ipV6',
-          inputTypeMacAddress: 'input-mac',
-          inputTypeMail: 'input-mail',
-          inputTypePassword: 'input-password',
-          inputTypeSearch: 'input-search',
-          inputTypeTextLine: 'input-text',
-          inputTypeTextArea: 'input-textarea',
-          inputTypeUrl: 'input-url'
-
-        }
-      }
-    })())
+    .module('guh.ui', []);
 
 }());

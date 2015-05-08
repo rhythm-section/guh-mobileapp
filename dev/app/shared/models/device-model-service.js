@@ -71,7 +71,8 @@
       // Instance methods
       methods: {
         subscribe: subscribe,
-        unsubscribe: unsubscribe
+        unsubscribe: unsubscribe,
+        executeAction: executeAction
       }
 
     });
@@ -106,6 +107,24 @@
     function unsubscribe(deviceId) {
       $log.log('unsubscribe device', deviceId);
       return websocketService.unsubscribe(this.id);
+    }
+
+    /*
+     * Public method: executeAction()
+     */
+    function executeAction(actionType) {
+      var self = this;
+      var options = {};
+
+      options.params = actionType.getParams();
+
+      $log.log('actionType', actionType);
+      $log.log('options', options);
+
+      return DS
+        .adapters
+        .http
+        .POST('api/v1/devices/' + self.id + '/actions/' + actionType.id + '/execute.json', options);
     }
 
   }

@@ -30,9 +30,9 @@
     .factory('DSDeviceClass', DSDeviceClassFactory)
     .run(function(DSDeviceClass) {});
 
-  DSDeviceClassFactory.$inject = ['$log', 'DS'];
+  DSDeviceClassFactory.$inject = ['$log', 'DS', 'modelsHelper'];
 
-  function DSDeviceClassFactory($log, DS) {
+  function DSDeviceClassFactory($log, DS, modelsHelper) {
     
     var staticMethods = {};
 
@@ -76,11 +76,24 @@
       computed: {},
 
       // Instance methods
-      methods: {}
+      methods: {},
+
+      // Lifecycle hooks
+      afterInject: _addUiData
 
     });
 
     return DSDeviceClass;
+
+
+    /*
+     * Private method: _addUiData(resource, attrs)
+     */
+    function _addUiData(resource, attrs) {      
+      angular.forEach(attrs.paramTypes, function(paramType) {
+        paramType = modelsHelper.addUiData(paramType);
+      });
+    }
 
   }
 
