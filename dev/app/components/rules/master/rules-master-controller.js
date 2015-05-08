@@ -29,11 +29,14 @@
     .module('guh.rules')
     .controller('RulesMasterCtrl', RulesMasterCtrl);
 
-  RulesMasterCtrl.$inject = ['$log', 'DSRule'];
+  RulesMasterCtrl.$inject = ['$log', '$scope', 'DSRule'];
 
-  function RulesMasterCtrl($log, DSRule) {
+  function RulesMasterCtrl($log, $scope, DSRule) {
 
     var vm = this;
+
+    // $scope methods
+    $scope.refresh = refresh;
 
 
     /*
@@ -44,20 +47,35 @@
     }
 
     /*
-     * Private method: _loadViewData()
+     * Private method: _loadViewData(bypassCache)
      */
-    function _loadViewData() {
-      _findAllRules()
+    function _loadViewData(bypassCache) {
+      return _findAllRules(bypassCache)
         .then(function(rules) {
           vm.configured = rules;
         });
     }
 
     /*
-     * Private method: _findAllRules()
+     * Private method: _findAllRules(bypassCache)
      */
-    function _findAllRules() {
+    function _findAllRules(bypassCache) {
+      if(bypassCache) {
+        return DSRule.findAll({}, { bypassCache: true });
+      }
+      
       return DSRule.findAll();
+    }
+
+
+    /*
+     * Public method: refresh()
+     */
+    function refresh() {
+      _loadViewData(true)
+        .finally(function() {
+          $scope.$broadcast('scroll.refreshComplete');
+        });
     }
 
 

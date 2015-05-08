@@ -63,9 +63,9 @@
     function _findAllDevices(bypassCache) {
       if(bypassCache) {
         return DSDevice.findAll({}, { bypassCache: true });
-      } else {
-        return DSDevice.findAll();
       }
+      
+      return DSDevice.findAll();
     }
 
     /*
