@@ -91,15 +91,11 @@
 
           // Subscribe to websocket messages
           currentDevice.subscribe(currentDevice.id, function(message) {
-            $log.log('new message', message);
-
-            if(message.notification === 'Devices.StateChanged') {
-              angular.forEach(currentDevice.states, function(state, index) {
-                if(message.params.stateTypeId === state.stateTypeId && message.params.deviceId === vm.id) {
-                  DSState.inject([{stateTypeId: message.params.stateTypeId, value: message.params.value}]);
-                }
-              });
-            }
+            angular.forEach(currentDevice.states, function(state, index) {
+              if(message.params.stateTypeId === state.stateTypeId && message.params.deviceId === vm.id) {
+                DSState.inject([{stateTypeId: message.params.stateTypeId, value: message.params.value}]);
+              }
+            });
           });
         })
         .catch(_showError);

@@ -29,9 +29,9 @@
     .module('guh.api')
     .factory('websocketService', websocketService);
 
-  websocketService.$inject = ['$log', '$rootScope', 'app'];
+  websocketService.$inject = ['$log', '$rootScope', 'libs', 'app'];
 
-  function websocketService($log, $rootScope, app) {
+  function websocketService($log, $rootScope, libs, app) {
 
     var websocketService = {
       // Data
@@ -96,10 +96,19 @@
       };
 
       ws.onmessage = function(message) {
-        // Execute callback-function with right ID
-        angular.forEach(websocketService.callbacks, function(cb) {
-          cb(angular.fromJson(message.data));
-        });
+        var data = angular.fromJson(message.data);
+
+        if(data.notification === app.notificationTypes.devices.stateChanged) {
+          $log.log('Device state changed.', data);
+
+          // Execute callback-function with right ID
+          if(libs._.has(websocketService.callbacks, data.params.deviceId)) {
+            var cb = websocketService.callbacks[data.params.deviceId];
+            cb(data);
+          }
+        } else {
+          $log.warn('Type of notification not handled:' + data.notification);
+        }
       };
 
       websocketService.ws = ws;

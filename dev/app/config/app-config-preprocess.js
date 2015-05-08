@@ -74,7 +74,7 @@
           html: '.html'
         },
 
-        // Input Types
+        // Input types
         inputTypes: {
           inputTypeIPv4Address: 'input-ipV4',
           inputTypeIPv6Address: 'input-ipV6',
@@ -85,7 +85,32 @@
           inputTypeTextLine: 'input-text',
           inputTypeTextArea: 'input-textarea',
           inputTypeUrl: 'input-url'
+        },
 
+        // Notification types
+        notificationTypes: {
+          // Devices
+          devices: {
+            deviceAdded: 'Devices.DeviceAdded',
+            deviceRemoved: 'Devices.DeviceRemoved',
+            stateChanged: 'Devices.StateChanged'
+          },
+
+          // Rules
+          rules: {
+            ruleAdded: 'Rules.RuleAdded',
+            ruleRemoved: 'Rules.RuleRemoved'
+          },
+
+          // Events
+          events: {
+            eventTriggered: 'Events.EventTriggeres'
+          },
+
+          // Log entry
+          logging: {
+            logEntryAdded: 'Logging.LogEntryAdded'
+          }
         }
       }
     })())
