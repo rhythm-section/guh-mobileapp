@@ -70,6 +70,7 @@
 
           // Set view variables
           vm.SetupComplete = currentDevice.SetupComplete;
+          vm.actions = [];
           vm.deviceClass = currentDevice.deviceClass;
           vm.deviceClassId = currentDevice.deviceClassId;
           vm.id = currentDevice.id;
@@ -78,27 +79,57 @@
           vm.states = currentDevice.states;
           vm.userSettings = currentDevice.userSettings;
 
-          // Needed because ionicModal only works with "$scope" but not with "vm" as scope
-          $scope.device = vm;
+          // Actions & States
+          angular.forEach(currentDevice.deviceClass.actionTypes, function(actionType) {
+            var action = {};
+            action.actionType = actionType;
 
-          // Edit modal
-          $ionicModal.fromTemplateUrl('app/components/devices/detail/devices-edit-modal.html', {
-            scope: $scope,
-            animation: 'slide-in-up'
-          }).then(function(modal) {
-            editModal = modal;
+            if(actionType.hasState) {  
+              var state = libs._.find(currentDevice.states, function(state) { return state.stateTypeId === actionType.id });
+
+              action.state = state;
+              vm.states = libs._.without(vm.states, state);
+            }
+
+            vm.actions.push(action);
           });
+
+          // Initialize settings modal
+          _initModal();
 
           // Subscribe to websocket messages
-          currentDevice.subscribe(currentDevice.id, function(message) {
-            angular.forEach(currentDevice.states, function(state, index) {
-              if(message.params.stateTypeId === state.stateTypeId && message.params.deviceId === vm.id) {
-                DSState.inject([{stateTypeId: message.params.stateTypeId, value: message.params.value}]);
-              }
-            });
-          });
+          _subscribeToWebsocket();
         })
         .catch(_showError);
+    }
+
+    /*
+     * Private method: _initModal()
+     */
+    function _initModal() {
+      // Needed because ionicModal only works with "$scope" but not with "vm" as scope
+      $scope.device = vm;
+
+      // Edit modal
+      $ionicModal.fromTemplateUrl('app/components/devices/detail/devices-edit-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+        editModal = modal;
+      });
+    }
+
+    /*
+     * Private method: _subscribeToWebsocket()
+     */
+    function _subscribeToWebsocket() {
+      currentDevice.subscribe(currentDevice.id, function(message) {
+        angular.forEach(currentDevice.states, function(state, index) {
+          if(message.params.stateTypeId === state.stateTypeId && message.params.deviceId === vm.id) {
+            DSState.inject([{stateTypeId: message.params.stateTypeId, value: message.params.value}]);
+          }
+        });
+      });
     }
 
     /*
@@ -143,7 +174,9 @@
      */
     function _leaveState() {
       // Unsubscribe websocket connection when leaving this state
-      currentDevice.unsubscribe(currentDevice.id);
+      if(DSDevice.is(currentDevice)) {
+        currentDevice.unsubscribe(currentDevice.id);
+      }
     }
 
 

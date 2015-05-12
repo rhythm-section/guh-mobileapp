@@ -286,7 +286,7 @@ gulp.task('server', function() {
   if(!production || emulate) {
     gulp.watch(['./dev/index.html', './dev/app/**/*.html'], ['inject']);
     gulp.watch('./dev/app/**/*.js', ['scripts']);
-    gulp.watch('./dev/app/**/*.scss', ['styles']);
+    gulp.watch(['./dev/app/**/*.scss', './dev/assets/scss/**/*.scss'], ['styles']);
   }
 });
 

@@ -30,9 +30,9 @@
     .factory('DSDeviceClass', DSDeviceClassFactory)
     .run(function(DSDeviceClass) {});
 
-  DSDeviceClassFactory.$inject = ['$log', 'DS', 'modelsHelper'];
+  DSDeviceClassFactory.$inject = ['$log', 'DS', 'DSState', 'libs', 'modelsHelper'];
 
-  function DSDeviceClassFactory($log, DS, modelsHelper) {
+  function DSDeviceClassFactory($log, DS, DSState, libs, modelsHelper) {
     
     var staticMethods = {};
 
@@ -79,7 +79,10 @@
       methods: {},
 
       // Lifecycle hooks
-      afterInject: _addUiData
+      afterInject: function(resource, attrs) {
+        _addUiData(resource, attrs);
+        _mapStatesToActions(resource, attrs);
+      }
 
     });
 
@@ -89,9 +92,27 @@
     /*
      * Private method: _addUiData(resource, attrs)
      */
-    function _addUiData(resource, attrs) {      
+    function _addUiData(resource, attrs) {     
       angular.forEach(attrs.paramTypes, function(paramType) {
         paramType = modelsHelper.addUiData(paramType);
+      });
+    }
+
+    /*
+     * Private method: _mapStatesToActions(resource, attrs)
+     */
+    function _mapStatesToActions(resource, attrs) {
+      var actionTypes = attrs.actionTypes;
+      var stateTypes = attrs.stateTypes;
+      var stateIds = libs._.pluck(stateTypes, 'id');
+
+      angular.forEach(actionTypes, function(actionType) {
+        // Check if current actionType belongs to a stateType
+        if(libs._.contains(stateIds, actionType.id)) {
+          actionType.hasState = true;
+        } else {
+          actionType.hasState = false;
+        }
       });
     }
 

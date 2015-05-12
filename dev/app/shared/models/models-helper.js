@@ -29,9 +29,9 @@
     .module('guh.models')
     .factory('modelsHelper', modelsHelper);
 
-  modelsHelper.$inject = ['$log', 'DS', 'app'];
+  modelsHelper.$inject = ['$log', '$cordovaFile', 'DS', 'File', 'app'];
 
-  function modelsHelper($log, DS, app) {
+  function modelsHelper($log, $cordovaFile, DS, File, app) {
 
     var modelsHelper = {
       addUiData: addUiData,
@@ -52,23 +52,18 @@
      * Private method: _checkTemplateUrl(templateUrl)
      */
     function _checkTemplateUrl(templateUrl) {
-      var basePathElements = templateUrl.split('/');
-      basePathElements.pop();
-      var basePath = basePathElements.join('/') + '/';
+      var pathElements = templateUrl.split('/');
+      var file = pathElements.pop();
+      var path = pathElements.join('/') + '/';
 
-      if(templateUrl !== undefined && templateUrl !== '') {  
-        var request = new XMLHttpRequest();
-
-        request.open('HEAD', templateUrl, false);
-        request.send();
-
-        if(request.status === 200) {
+      if(templateUrl !== undefined && templateUrl !== '') {
+        if(File.checkFile(path, file)) {
           return templateUrl;
         } else {
-          return basePath + 'input-not-available.html';
+          return path + 'input-not-available.html'; 
         }
       } else {
-        return basePath + 'input-not-defined.html';
+        return path + 'input-not-defined.html';
       }
     }
 
@@ -85,7 +80,9 @@
 
       switch(type) {
         case 'bool':
-          templateUrl = _getInputPath('input-checkbox');
+          // templateUrl = _getInputPath('input-checkbox');
+          // templateUrl = _getInputPath('input-button');
+          templateUrl = _getInputPath('input-toggle-button');
           break;
         case 'int':
         case 'uint':

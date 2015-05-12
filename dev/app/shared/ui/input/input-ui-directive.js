@@ -33,18 +33,42 @@
 
   function input($log, $http, $compile) {
     var directive = {
+      controller: inputCtrl,
+      controllerAs: 'guhInput',
       link: inputLink,
-      restrict: 'A',
+      restrict: 'E',
       scope: {
         change: '&',
-        model: '=guhInput'
+        model: '=',
+        state: '=?'
       }
     };
 
     return directive;
 
 
+    function inputCtrl($scope, $element) {
+      var vm = this;
+
+      vm.change = change;
+
+      function change(value) {
+        // Toggle value
+        $scope.model.value = !$scope.model.value;
+
+        // Set loading animation
+        $scope.loading = true;
+
+        // Call change function defined in current directive instance
+        $scope.change();
+      }
+    }
+
     function inputLink(scope, element, attributes) {
+      // Initialize with current value
+      scope.model.value = scope.state.value;
+      scope.loading = false;
+
       scope.$on('$destroy', function() {
         // Remove only element, scope needed afterwards
         element.remove();
@@ -58,6 +82,12 @@
           element.html(template);
           $compile(element.contents())(scope);
         });
+      });
+
+      scope.$watch('state.value', function(newValue, oldValue) {
+        if(scope.loading) {
+          scope.loading = false;
+        }
       });
     }
   }

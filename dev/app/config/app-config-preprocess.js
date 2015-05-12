@@ -39,15 +39,15 @@
       var port = '3000';
 
       // @if NODE_ENV = 'DEVELOPMENT'
-      var apiUrl = '/api/v1';
+      var url = '';
       // @endif
 
       // @if NODE_ENV = 'PRODUCTION'
-      var apiUrl = httpProtocol + '://' + host + ':' + port + '/api/v1';
+      var url = httpProtocol + '://' + host + ':' + port;
       // @endif
 
       // @if NODE_ENV = 'TEST'
-      var apiUrl = '/api/v1';
+      var url = '';
       // @endif
 
       return {
@@ -61,7 +61,7 @@
         port: port,
 
         // API, Websockets
-        apiUrl: apiUrl,
+        apiUrl: url + '/api/v1',
         websocketUrl: wsProtocol + '://' + host + ':' + port + '/ws',
 
         // Basepaths

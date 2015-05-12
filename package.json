@@ -54,10 +54,11 @@
   },
   "cordovaPlugins": [
     "cordova-plugin-splashscreen",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-whitelist",
+    "org.apache.cordova.file"
   ],
   "cordovaPlatforms": [
-    "ios",
-    "android"
+    "android",
+    "ios"
   ]
 }

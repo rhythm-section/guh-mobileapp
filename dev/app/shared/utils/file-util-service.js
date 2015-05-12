@@ -26,102 +26,54 @@
   "use strict";
 
   angular
-    .module('guh.models')
-    .factory('DSDevice', DSDeviceFactory)
-    .run(function(DSDevice) {});
+    .module('guh.utils')
+    .factory('File', FileFactory);
 
-  DSDeviceFactory.$inject = ['$log', 'DS', 'libs', 'app', 'websocketService'];
+  FileFactory.$inject = ['$log', '$cordovaSplashscreen', '$cordovaFile', 'app'];
 
-  function DSDeviceFactory($log, DS, libs, app, websocketService) {
+  function FileFactory($log, $cordovaSplashscreen, $cordovaFile, app) {
     
-    var staticMethods = {};
+    var File = {
+      checkFile: checkFile
+    };
+
+    return File;
+
 
     /*
-     * DataStore configuration
+     * Public method: checkFile(path, file)
      */
-    var DSDevice = DS.defineResource({
-
-      // API configuration
-      endpoint: 'devices',
-      suffix: '.json',
-
-      // Model configuration
-      idAttribute: 'id',
-      name: 'device',
-      relations: {
-        belongsTo: {
-          deviceClass: {
-            localField: 'deviceClass',
-            localKey: 'deviceClassId'
+    function checkFile(path, file) {
+      if(ionic.Platform.isWebView()) {
+        if(app.isCordovaApp) {
+          // iOS, Android
+          if($cordovaFile.checkFile(path, file)) {
+            return true;
+          } else {
+            return false;
           }
-        },
-        hasMany: {
-          state: {
-            localField: 'states',
-            foreignKey: 'deviceId'
-          }
+        } else {
+          // Ionic View App
+          $log.warn('Can\'t check if file exists inside Ionic View app');
+          return true;
         }
-      },
+      } else {
+        // Browser
+        var request = new XMLHttpRequest();
 
-      // Computed properties
-      computed: {
-        userSettings: ['name', 'params', _getUserSettings]
-      },
+        $log.log('path', path);
+        $log.log('file', file);
 
-      // Instance methods
-      methods: {
-        subscribe: subscribe,
-        unsubscribe: unsubscribe,
-        executeAction: executeAction
+        request.open('HEAD', path + file, false);
+        request.send();
+
+        if(request.status === 200) {
+          return true;
+        } else {
+          return false;
+        }
       }
-
-    });
-
-    return DSDevice;
-
-
-    /*
-     * Private method: _getUserSettings()
-     */
-    function _getUserSettings(name, params) {
-      var nameParameter = libs._.find(params, function(param) { return (param.name === 'Name'); });
-      var userSettings = {
-        name: (nameParameter === undefined) ? 'Name' : nameParameter.value
-      };
-
-      return userSettings;
     }
-
-
-    /*
-     * Public method: subscribe(deviceId, cb)
-     */
-    function subscribe(deviceId, cb) {
-      return websocketService.subscribe(this.id, cb);
-    }
-
-    /*
-     * Public method: unsubscribe(deviceId)
-     */
-    function unsubscribe(deviceId) {
-      return websocketService.unsubscribe(this.id);
-    }
-
-    /*
-     * Public method: executeAction()
-     */
-    function executeAction(actionType) {
-      var self = this;
-      var options = {};
-
-      options.params = actionType.getParams();
-
-      return DS
-        .adapters
-        .http
-        .POST(app.apiUrl + '/devices/' + self.id + '/actions/' + actionType.id + '/execute.json', options);
-    }
-
   }
 
 }());
