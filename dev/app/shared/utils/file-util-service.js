@@ -61,9 +61,6 @@
         // Browser
         var request = new XMLHttpRequest();
 
-        $log.log('path', path);
-        $log.log('file', file);
-
         request.open('HEAD', path + file, false);
         request.send();
 

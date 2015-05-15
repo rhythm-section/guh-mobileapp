@@ -58,7 +58,6 @@
       return DSRule
         .find(ruleId)
         .then(function(rule) {
-          $log.log('rule', rule);
           vm.name = rule.name;
 
           // Needed because ionicModal only works with "$scope" but not with "vm" as scope
@@ -98,7 +97,6 @@
      * Public method: closeSettings()
      */
     function closeSettings() {
-      $log.log('Close modal');
       editModal.hide();
     }
 
@@ -106,7 +104,6 @@
      * Public method: saveSettings()
      */
     function saveSettings() {
-      $log.log('Save settings and close modal');
       editModal.hide();
     }
 

@@ -66,13 +66,6 @@
      * Public method: editSettings()
      */
     function editSettings() {
-      $log.log('editSettings');
-    }
-
-    /*
-     * Public method: editSettings()
-     */
-    function editSettings() {
       editModal.show();
     }
 
@@ -80,7 +73,6 @@
      * Public method: closeSettings()
      */
     function closeSettings() {
-      $log.log('Close modal');
       editModal.hide();
     }
 

@@ -29,9 +29,9 @@
     .module('guh.ui')
     .directive('guhInput', input);
 
-  input.$inject = ['$log', '$http', '$compile'];
+  input.$inject = ['$log', '$http', '$compile', '$timeout', 'DSState', 'libs'];
 
-  function input($log, $http, $compile) {
+  function input($log, $http, $compile, $timeout, DSState, libs) {
     var directive = {
       controller: inputCtrl,
       controllerAs: 'guhInput',
@@ -60,14 +60,42 @@
         $scope.loading = true;
 
         // Call change function defined in current directive instance
-        $scope.change();
+        $scope
+          .change()
+          .then(function() {
+            $scope.error = false;
+
+            // Wait 3 sec. and check if notification was received during this time
+            $scope.timeout = $timeout(function() {
+              // TODO: Use code below to refresh state (wait for new endpoint in guh-webserver)
+              $scope.loading = false;
+
+              // DSState
+              //   .find($scope.state.stateTypeId, { bypassCache: true })
+              //   .then(function(state) {
+              //     $scope.state = state;
+              //     $scope.loading = false;
+              //   });
+            }, 3000);
+          })
+          .catch(function(error) {
+            // Reset value
+            $scope.model.value = !$scope.model.value;
+
+            $scope.error = error;
+            $scope.loading = false;
+          });
       }
     }
 
     function inputLink(scope, element, attributes) {
       // Initialize with current value
-      scope.model.value = scope.state.value;
-      scope.loading = false;
+      if(angular.isObject(scope.state)) {
+        scope.model.value = scope.state.value;
+        scope.loading = false;
+        scope.error = false;
+        scope.timeout = false;
+      }
 
       scope.$on('$destroy', function() {
         // Remove only element, scope needed afterwards
@@ -85,6 +113,10 @@
       });
 
       scope.$watch('state.value', function(newValue, oldValue) {
+        if(scope.timeout) {
+          $timeout.cancel(scope.timeout);
+        }
+
         if(scope.loading) {
           scope.loading = false;
         }

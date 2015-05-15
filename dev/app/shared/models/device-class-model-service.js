@@ -92,8 +92,17 @@
     /*
      * Private method: _addUiData(resource, attrs)
      */
-    function _addUiData(resource, attrs) {     
-      angular.forEach(attrs.paramTypes, function(paramType) {
+    function _addUiData(resource, attrs) {
+      var discoveryParamTypes = attrs.discoveryParamTypes;
+      var paramTypes = attrs.paramTypes;
+
+      // discoveryParamTypes
+      angular.forEach(discoveryParamTypes, function(paramType) {
+        paramType = modelsHelper.addUiData(paramType);
+      });
+
+      // paramTypes
+      angular.forEach(paramTypes, function(paramType) {
         paramType = modelsHelper.addUiData(paramType);
       });
     }
@@ -115,6 +124,7 @@
         }
       });
     }
+
 
   }
 

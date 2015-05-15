@@ -29,12 +29,13 @@
     .module('guh.models')
     .factory('modelsHelper', modelsHelper);
 
-  modelsHelper.$inject = ['$log', '$cordovaFile', 'DS', 'File', 'app'];
+  modelsHelper.$inject = ['$log', '$cordovaFile', 'DS', 'DSParamType', 'File', 'app'];
 
-  function modelsHelper($log, $cordovaFile, DS, File, app) {
+  function modelsHelper($log, $cordovaFile, DS, DSParamType, File, app) {
 
     var modelsHelper = {
       addUiData: addUiData,
+      getTemplateUrl: getTemplateUrl,
       setBasePath: setBasePath
     };
 
@@ -74,7 +75,7 @@
     function addUiData(paramType) {
       var templateUrl = '';
 
-      var allowedValues = (paramType.allowedValues === undefined) ? [] : paramType.allowedValues;
+      var allowedValues = (paramType.allowedValues === undefined) ? null : paramType.allowedValues;
       var inputType = (paramType.inputType === undefined) ? null : paramType.inputType;
       var type = (paramType.type === undefined) ? null : paramType.type;
 
@@ -92,11 +93,9 @@
           templateUrl = _getInputPath('input-number-decimal');
           break;
         case 'QString':
-          if(angular.isArray(allowedValues)) {
+          if(allowedValues) {
             templateUrl = _getInputPath('input-select');
           } else if(inputType) {
-            $log.log('app.inputTypes', app.inputTypes);
-            $log.log('app.inputTypes[inputType]', app.inputTypes[inputType]);
             templateUrl = _getInputPath(app.inputTypes[inputType])
           } else {
             templateUrl = _getInputPath('input-text');
@@ -110,11 +109,17 @@
     }
 
     /*
+     * Public method: getTemplateurl(filename)
+     */
+    function getTemplateUrl(filename) {
+      var templateUrl = _getInputPath(filename);
+      return _checkTemplateUrl(templateUrl);
+    }
+
+    /*
      * Public method: setBasePath()
      */
-    function setBasePath() {
-      $log.log('Set models base path', app.apiUrl);
-      
+    function setBasePath() {      
       DS
         .defaults
         .basePath = app.apiUrl;

@@ -59,7 +59,9 @@
       },
 
       // Computed properties
-      computed: {},
+      computed: {
+        // templateUrl: ['paramTypes', _addUiData]
+      },
 
       // Instance methods
       methods: {
@@ -77,10 +79,18 @@
     /*
      * Private method: _addUiData(resource, attrs)
      */
-    function _addUiData(resource, attrs) {      
-      angular.forEach(attrs.paramTypes, function(paramType) {
-        paramType = modelsHelper.addUiData(paramType);
-      });
+    function _addUiData(resource, attrs) {
+      var paramTypes = attrs.paramTypes;
+
+      if(angular.isArray(paramTypes) && paramTypes.length === 0) {
+        // actionType
+        attrs.templateUrl = modelsHelper.getTemplateUrl('input-button');
+      } else {
+        // paramTypes
+        angular.forEach(paramTypes, function(paramType) {
+          paramType = modelsHelper.addUiData(paramType);
+        });
+      }
     }
 
 

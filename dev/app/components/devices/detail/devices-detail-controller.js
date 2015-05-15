@@ -62,8 +62,6 @@
         .then(function(device) {
           currentDevice = device;
 
-          $log.log('currentDevice', currentDevice);
-
           // Check if device has individual name
           var params = currentDevice.params;
           var nameParameter = libs._.find(params, function(param) { return (param.name === 'Name'); });
@@ -184,7 +182,7 @@
      * Public method: execute(actionType)
      */
     function execute(actionType) {
-      currentDevice.executeAction(actionType);
+      return currentDevice.executeAction(actionType);
     }
 
     /*
@@ -198,7 +196,6 @@
      * Public method: closeSettings()
      */
     function closeSettings() {
-      $log.log('Close modal');
       editModal.hide();
     }
 
@@ -206,7 +203,6 @@
      * Public method: saveSettings()
      */
     function saveSettings() {
-      $log.log('Save settings and close modal');
       editModal.hide();
     }
 
