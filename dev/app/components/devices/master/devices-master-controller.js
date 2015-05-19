@@ -43,13 +43,10 @@
     vm.addDevice = addDevice;
     vm.closeDevice = closeDevice;
     vm.saveDevice = saveDevice;
-
     vm.selectVendor = selectVendor;
     vm.selectDeviceClass = selectDeviceClass;
-
     vm.discoverDevices = discoverDevices;
 
-    // vm.isItemActive = isItemActive;
 
     /*
      * Private method: _init()
@@ -59,16 +56,13 @@
     }
 
     /*
-     * Private method: _loadViewData(cache)
+     * Private method: _loadViewData(bypassCache)
      */
     function _loadViewData(bypassCache) {
       return _findAllDevices(bypassCache)
         .then(_findDeviceRelations)
         .then(function(devices) {
           vm.configured = devices;
-
-          // Initialize settings modal
-          _initModal();
         });;
     }
 
@@ -105,17 +99,13 @@
      * Private method: _initModal()
      */
     function _initModal() {
-      $log.log('_initModal');
-
       // Needed because ionicModal only works with "$scope" but not with "vm" as scope
       $scope.devices = vm;
 
       // Edit modal
-      $ionicModal.fromTemplateUrl('app/components/devices/master/devices-add-modal.html', {
+      return $ionicModal.fromTemplateUrl('app/components/devices/master/devices-add-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
-      }).then(function(modal) {
-        addModal = modal;
       });
     }
 
@@ -156,7 +146,11 @@
       vm.selectedDeviceClass = null;
 
       // Schow modal
-      addModal.show();
+      _initModal().then(function(modal) {
+        $log.log('Modal initialized', modal);
+        addModal = modal;
+        addModal.show();
+      });
 
       _findAllVendors()
         .then(function(vendors) {
@@ -168,14 +162,18 @@
      * Public method: closeDevice()
      */
     function closeDevice() {
-      addModal.hide();
-    }
-
-    /*
-     * Public method: saveDevice()
-     */
-    function saveDevice() {
-      addModal.hide();
+      addModal
+        .hide()
+        .then(function() {
+          addModal
+            .remove()
+            .then(function() {
+              $log.log('Modal removed');
+            })
+            .catch(function(error) {
+              $log.error('Cannot destroy modal', error)
+            });
+        });
     }
 
     /*
@@ -214,9 +212,11 @@
     }
 
     /*
-     * Public method: saveDevice(deviceData)
+     * Public method: saveDevice(device)
      */
-    function saveDevice(deviceData) {
+    function saveDevice(device) {
+      var deviceData = angular.copy(device);
+
       if(deviceData) {
         // For discovered devices only
         var discoveryParamTypes = vm.selectedDeviceClass.discoveryParamTypes;
@@ -236,7 +236,11 @@
       DSDevice
         .add(vm.selectedDeviceClass.id, deviceData)
         .then(function(device) {
-          $log.log('device', device);
+          // TODO: Find a better way to update data-store after create (maybe use lifecycle hook "afterCreate")
+          _loadViewData(true)
+            .then(function() {
+              addModal.hide();
+            });
         })
         .catch(function(error) {
           $log.error(error);
@@ -264,26 +268,8 @@
         });
     }
 
-    /* 
-     * Public method: isItemActive(item, currentItem)
-     */
-    // function isItemActive(item, currentItem) {
-    //   $log.log('item', item);
-    //   $log.log('currentItem', currentItem);
-    //   return item === currentItem;
-    // }
-
-
-    /*
-     * Event: $destroy
-     */
-    $scope.$on('$destroy', function() {
-      $scope.modal.remove();
-    });
-
 
     _init();
-
 
   }
 

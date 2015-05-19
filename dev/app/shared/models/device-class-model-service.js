@@ -30,9 +30,9 @@
     .factory('DSDeviceClass', DSDeviceClassFactory)
     .run(function(DSDeviceClass) {});
 
-  DSDeviceClassFactory.$inject = ['$log', 'DS', 'DSHttpAdapter', 'DSState', 'libs', 'modelsHelper'];
+  DSDeviceClassFactory.$inject = ['$log', 'DS', 'DSHttpAdapter', 'DSState', 'app', 'libs', 'modelsHelper'];
 
-  function DSDeviceClassFactory($log, DS, DSHttpAdapter, DSState, libs, modelsHelper) {
+  function DSDeviceClassFactory($log, DS, DSHttpAdapter, DSState, app, libs, modelsHelper) {
     
     var staticMethods = {};
 
@@ -154,7 +154,7 @@
         discoveryParams.push(discoveryParam);
       });
 
-      return DSHttpAdapter.GET('/api/v1/device_classes/' + self.id + '/discover.json', {
+      return DSHttpAdapter.GET(app.apiUrl + '/device_classes/' + self.id + '/discover.json', {
         params: {
           'device_class_id': self.id,
           'discovery_params': angular.toJson(discoveryParams)
