@@ -36,6 +36,7 @@
       var httpProtocol = 'http';
       var wsProtocol = 'ws';
       var host = '10.0.0.2';
+      // var host = '192.168.0.124';
       var port = '3000';
 
       // @if NODE_ENV = 'DEVELOPMENT'
@@ -76,15 +77,15 @@
 
         // Input types
         inputTypes: {
-          inputTypeIPv4Address: 'input-ipV4',
-          inputTypeIPv6Address: 'input-ipV6',
-          inputTypeMacAddress: 'input-mac',
-          inputTypeMail: 'input-mail',
-          inputTypePassword: 'input-password',
-          inputTypeSearch: 'input-search',
-          inputTypeTextLine: 'input-text',
-          inputTypeTextArea: 'input-textarea',
-          inputTypeUrl: 'input-url'
+          InputTypeIPv4Address: 'input-ipV4',
+          InputTypeIPv6Address: 'input-ipV6',
+          InputTypeMacAddress: 'input-mac',
+          InputTypeMail: 'input-mail',
+          InputTypePassword: 'input-password',
+          InputTypeSearch: 'input-search',
+          InputTypeTextLine: 'input-text',
+          InputTypeTextArea: 'input-textarea',
+          InputTypeUrl: 'input-url'
         },
 
         // Notification types

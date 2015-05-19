@@ -65,7 +65,7 @@
           .then(function() {
             $scope.error = false;
 
-            // Wait 3 sec. and check if notification was received during this time
+            // Wait 2 sec. and check if notification was received during this time
             $scope.timeout = $timeout(function() {
               // TODO: Use code below to refresh state (wait for new endpoint in guh-webserver)
               $scope.loading = false;
@@ -73,10 +73,11 @@
               // DSState
               //   .find($scope.state.stateTypeId, { bypassCache: true })
               //   .then(function(state) {
+              //     $log.log('STATE', state);
               //     $scope.state = state;
               //     $scope.loading = false;
               //   });
-            }, 3000);
+            }, 2000);
           })
           .catch(function(error) {
             // Reset value
@@ -88,7 +89,7 @@
       }
     }
 
-    function inputLink(scope, element, attributes) {
+    function inputLink(scope, element, attrs) {
       // Initialize with current value
       if(angular.isObject(scope.state)) {
         scope.model.value = scope.state.value;

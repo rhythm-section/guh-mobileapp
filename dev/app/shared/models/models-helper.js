@@ -77,33 +77,42 @@
 
       var allowedValues = (paramType.allowedValues === undefined) ? null : paramType.allowedValues;
       var inputType = (paramType.inputType === undefined) ? null : paramType.inputType;
+      var name = (paramType.name === undefined) ? null : paramType.name;
       var type = (paramType.type === undefined) ? null : paramType.type;
+      var value = null;
 
       switch(type) {
         case 'bool':
-          // templateUrl = _getInputPath('input-checkbox');
-          // templateUrl = _getInputPath('input-button');
-          templateUrl = _getInputPath('input-toggle-button');
+          if(angular.isString(name) && name === 'power') {
+            templateUrl = _getInputPath('input-toggle-button');
+          } else {
+            templateUrl = _getInputPath('input-checkbox');
+          }
+          value = paramType.defaultValue || false;
           break;
         case 'int':
         case 'uint':
           templateUrl = _getInputPath('input-number-integer');
+          value = paramType.defaultValue || 0;
           break;
         case 'double':
           templateUrl = _getInputPath('input-number-decimal');
+          value = paramType.defaultValue || 0.0;
           break;
         case 'QString':
           if(allowedValues) {
             templateUrl = _getInputPath('input-select');
           } else if(inputType) {
+            $log.log('inputType', inputType, app.inputTypes[inputType]);
             templateUrl = _getInputPath(app.inputTypes[inputType])
           } else {
             templateUrl = _getInputPath('input-text');
           }
+          value = paramType.defaultValue || '';
       }
 
       paramType.templateUrl = _checkTemplateUrl(templateUrl);
-      paramType.value = paramType.defaultValue;
+      paramType.value = value;
 
       return paramType;
     }
