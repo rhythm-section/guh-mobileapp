@@ -144,6 +144,9 @@ module.exports = {
       // Cordova plugins with angular services (ngCordova)
       // 'assets/libs/ngCordova/dist/ng-cordova.min.js',
 
+      // Ionic Wizard: https://github.com/arielfaur/ionic-wizard
+      'assets/libs/ionic-wizard/dist/ion-wizard.js',
+
       // Underscore
       'assets/libs/underscore/underscore-min.js',
 

@@ -31,6 +31,9 @@
       'ionic',
       'ngCordova',
 
+      // Ionic enhancements
+      'ionic.wizard',
+
       // Configuration
       'guh.config',
 
@@ -40,6 +43,7 @@
       // Services
       'guh.api',
       'guh.models',
+      'guh.ui',
 
       // App
       'guh.dashboard',
@@ -55,6 +59,6 @@
 
   run.$inject = [];
 
-  function run() {}
+  function run(AppInit) {}
 
 }());
