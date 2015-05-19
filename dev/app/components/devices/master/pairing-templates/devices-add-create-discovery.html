@@ -20,29 +20,20 @@
   SOFTWARE.
 -->
 
-<ion-view title="Devices">
+<!-- Discovered devices -->
+<ion-spinner class="padding" icon="dots" ng-show="!devices.discover && devices.loading"></ion-spinner>
 
-  <!-- Override nav-bar buttons -->
-  <ion-nav-buttons side="primary">
-    <button class="button button-icon icon ion-ios-person-outline" ng-click="app.editSettings()"></button>
-  </ion-nav-buttons>
+<p class="padding" ng-if="devices.discover && devices.discoveredDevices.length === 0">Sorry, no devices found. Please check if the device you want to add is properbly set up.</p>
 
-  <ion-nav-buttons side="secondary">
-    <button class="button button-icon icon ion-ios-plus-empty" ng-click="devices.addDevice()"></button>
-  </ion-nav-buttons>
+<ion-list ng-if="devices.discoveredDevices.length > 0">
+  <ion-item class="item item-text-wrap" ng-repeat="device in devices.discoveredDevices track by $index | orderBy: 'name'" ng-click="devices.saveDevice(device)">
+    <h2>{{ device.title }}</h2>
+    <p>{{ device.description }}</p>
+  </ion-item>
+</ion-list>
 
-  <ion-content>
-    <ion-refresher
-      pulling-text="Pull to refresh devices..."
-      on-refresh="refresh()">
-    </ion-refresher>
+<form ng-if="devices.selectedDeviceClass.discoveryParamTypes.length > 0">
+  <guh-input model="paramType" ng-repeat="paramType in devices.selectedDeviceClass.discoveryParamTypes track by $index"></guh-input>
+</form>
 
-    <ion-list>
-      <ion-item class="item" ui-sref="guh.devices.detail({ deviceId: device.id })" ng-repeat="device in devices.configured | orderBy: 'name' track by $index">
-        <h2>{{ device.userSettings.name }}</h2>
-        <p>{{ device.deviceClass.vendor.name }}, {{ device.name }}</p>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-
-</ion-view>
+<button class="button-full button" ng-click="devices.discoverDevices()" ng-disabled="devices.loading">Start search</button>

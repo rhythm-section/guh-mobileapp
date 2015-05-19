@@ -70,11 +70,19 @@
 
       // Instance methods
       methods: {
+        // Websocket
         subscribe: subscribe,
         unsubscribe: unsubscribe,
-        executeAction: executeAction
-      }
+        
+        // API
+        executeAction: executeAction,
+        remove: remove
+      },
 
+    });
+
+    angular.extend(DSDevice, {
+      add: add
     });
 
     return DSDevice;
@@ -85,6 +93,9 @@
      */
     function _getUserSettings(name, params) {
       var nameParameter = libs._.find(params, function(param) { return (param.name === 'Name'); });
+      // $log.log('params', params);
+      // $log.log('name', name);
+      // $log.log('nameParameter', nameParameter);
       var userSettings = {
         name: (nameParameter === undefined) ? 'Name' : nameParameter.value
       };
@@ -107,6 +118,30 @@
       return websocketService.unsubscribe(this.id);
     }
 
+
+    /*
+     * Public method: add(deviceClassId, deviceData)
+     */
+    function add(deviceClassId, deviceData) {
+      var deviceData = deviceData || {};
+      var device = {};
+
+      device.deviceClassId = deviceClassId || '';
+      device.deviceDescriptorId = deviceData.id || '';
+
+      device.deviceParams = [];
+      angular.forEach(deviceData.deviceParamTypes, function(deviceParamType) {
+        var deviceParam = {};
+
+        deviceParam.name = deviceParamType.name;
+        deviceParam.value = deviceParamType.value;
+
+        device.deviceParams.push(deviceParam);
+      });
+
+      return DSDevice.create({device: device});
+    }
+
     /*
      * Public method: executeAction()
      */
@@ -120,6 +155,15 @@
         .adapters
         .http
         .POST(app.apiUrl + '/devices/' + self.id + '/actions/' + actionType.id + '/execute.json', options);
+    }
+
+    /*
+     * Public method: remove()
+     */
+    function remove() {
+      var self = this;
+
+      return DSDevice.destroy(self.id);
     }
 
   }

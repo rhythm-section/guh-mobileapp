@@ -1,0 +1,77 @@
+<!--
+  Copyright (c) 2015 guh
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+-->
+
+<ion-modal-view>
+
+  <!-- Header -->
+  <ion-header-bar>
+    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="devices.closeDevice()"></button>
+    <div class="title">Add Device</div>
+    <button class="button button-icon icon ion-ios-checkmark-empty" ng-click="devices.saveDevice()"></button>
+  </ion-header-bar>
+
+  <!-- Content -->
+  <ion-slide-box class="has-header" show-pager="false" guh-wizard>
+
+    <!-- Select vendor -->
+    <ion-slide guh-wizard-step condition="devices.selectedVendor">
+      <ion-content>
+        <!-- <div class="list" ng-show="devices.supportedVendors.length > 0 && !devices.vendor"> -->
+        <div class="list">
+          <!-- <p class="item item-text-wrap" ng-class="{active: devices.isItemActive(vendor, devices.selectedVendor)}" ng-repeat="vendor in devices.supportedVendors track by $index | orderBy: 'name'" ng-click="devices.selectVendor(vendor)">{{ vendor.name }}</p> -->
+          <p class="item item-text-wrap" ng-repeat="vendor in devices.supportedVendors track by $index | orderBy: 'name'" ng-click="devices.selectVendor(vendor)">{{ vendor.name }}</p>
+        </div>
+      </ion-content>
+    </ion-slide>
+
+    <!-- Select deviceClass -->
+    <ion-slide guh-wizard-step condition="devices.selectedDeviceClass">
+      <ion-content>
+        <!-- <div class="list" ng-show="devices.vendor && !devices.devicesClass && !devices.createMethod"> -->
+        <div class="list">
+          <p class="item item-text-wrap" ng-repeat="deviceClass in devices.supportedDeviceClasses track by $index | orderBy: 'name'" ng-click="devices.selectDeviceClass(deviceClass)">{{ deviceClass.name }}</p>
+        </div>
+      </ion-content>
+    </ion-slide>
+
+    <!-- Show createMethod -->
+    <ion-slide guh-wizard-step>
+      <ion-content>
+        <!-- <ng-include src="devices.createMethod.template" ng-show="devices.deviceClass && devices.createMethod"></ng-include> -->
+        <ng-include src="devices.createMethod.template"></ng-include>
+      </ion-content>
+    </ion-slide>
+
+    <!-- Show setupMethod -->
+    <!-- <ion-slide ion-wizard-step>
+      <ng-include src="devices.setupMethod.template"></ng-include>
+    </ion-slide> -->
+
+  </ion-slide-box>
+
+  <!-- Footer -->
+  <ion-footer-bar>
+    <button class="button button-icon ion-ios-arrow-back pull-left" guh-wizard-prev></button>
+    <button class="button button-icon ion-ios-arrow-forward pull-right" guh-wizard-next></button>
+  </ion-footer-bar>
+
+</ion-modal-view>

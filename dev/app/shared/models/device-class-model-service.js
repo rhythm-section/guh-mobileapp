@@ -30,9 +30,9 @@
     .factory('DSDeviceClass', DSDeviceClassFactory)
     .run(function(DSDeviceClass) {});
 
-  DSDeviceClassFactory.$inject = ['$log', 'DS', 'DSState', 'libs', 'modelsHelper'];
+  DSDeviceClassFactory.$inject = ['$log', 'DS', 'DSHttpAdapter', 'DSState', 'libs', 'modelsHelper'];
 
-  function DSDeviceClassFactory($log, DS, DSState, libs, modelsHelper) {
+  function DSDeviceClassFactory($log, DS, DSHttpAdapter, DSState, libs, modelsHelper) {
     
     var staticMethods = {};
 
@@ -53,7 +53,7 @@
           vendor: {
             localField: 'vendor',
             localKey: 'vendorId',
-            // parent: true
+            parent: true
           }
         },
         hasMany: {
@@ -76,11 +76,22 @@
       computed: {},
 
       // Instance methods
-      methods: {},
+      methods: {
+        discover: discover,
+        getCreateMethod: getCreateMethod,
+        getSetupMethod: getSetupMethod
+      },
 
       // Lifecycle hooks
       afterInject: function(resource, attrs) {
-        _addUiData(resource, attrs);
+        if(angular.isArray(attrs)) {
+          var arrayOfAttrs = attrs;
+          angular.forEach(arrayOfAttrs, function(attrs) {
+            _addUiData(resource, attrs);
+          });
+        } else {
+          _addUiData(resource, attrs);
+        }
         _mapStatesToActions(resource, attrs);
       }
 
@@ -104,6 +115,7 @@
       // paramTypes
       angular.forEach(paramTypes, function(paramType) {
         paramType = modelsHelper.addUiData(paramType);
+        // $log.log('paramType', paramType);
       });
     }
 
@@ -123,6 +135,98 @@
           actionType.hasState = false;
         }
       });
+    }
+
+
+    /*
+     * Public method: discover()
+     */
+    function discover() {
+      var self = this;
+      var discoveryParams = [];
+
+      angular.forEach(self.discoveryParamTypes, function(discoveryParamType, index) {
+        var discoveryParam = {};
+
+        discoveryParam.name = discoveryParamType.name;
+        discoveryParam.value = discoveryParamType.value;
+
+        discoveryParams.push(discoveryParam);
+      });
+
+      return DSHttpAdapter.GET('/api/v1/device_classes/' + self.id + '/discover.json', {
+        params: {
+          'device_class_id': self.id,
+          'discovery_params': angular.toJson(discoveryParams)
+        }
+      });
+    }
+
+    /*
+     * Public method: getCreateMethod()
+     */
+    function getCreateMethod() {
+      var self = this;
+      var basePath = 'app/components/devices/master/pairing-templates/';
+      var createMethodData = null;
+
+      if(self.createMethods.indexOf('CreateMethodDiscovery') > -1) {
+        createMethodData = {
+          title: 'Discovery',
+          template: basePath + 'devices-add-create-discovery.html'
+        };
+      } else if(self.createMethods.indexOf('CreateMethodUser') > -1) {
+        createMethodData = {
+          title: 'User',
+          template: basePath + 'devices-add-create-user.html'
+        };
+      } else if(self.createMethods.indexOf('CreateMethodAuto') > -1) {
+        createMethodData = {
+          title: 'Auto',
+          template: null
+        };
+      } else {
+        $log.error('CreateMethod "' + createMethod + '" not implemented.');
+      }
+
+      return createMethodData;
+    }
+
+    /*
+     * Public method: getSetupMethod()
+     */
+    function getSetupMethod() {
+      var self = this;
+      var basePath = 'app/components/devices/master/pairing-templates/';
+      var setupMethodData = {};
+
+      switch(self.setupMethod) {
+        case 'SetupMethodJustAdd':
+          break;
+        case 'SetupMethodDisplayPin':
+          setupMethodData = {
+            title: 'Display Pin',
+            template: basePath + 'devices-add-setup-display-pin.html'
+          };
+          break;
+        case 'SetupMethodEnterPin':
+          setupMethodData = {
+            title: 'Enter Pin',
+            template: basePath + 'devices-add-setup-enter-pin.html'
+          };
+          break;
+        case 'SetupMethodPushButton':
+          setupMethodData = {
+            title: 'Enter Pin',
+            template: basePath + 'devices-add-setup-push-button.html'
+          };
+          break;
+        default:
+          $log.error('SetupMethod "' + setupMethod + '" not implemented.');
+          break;
+      }
+
+      return setupMethodData;
     }
 
 
