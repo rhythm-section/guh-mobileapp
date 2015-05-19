@@ -1,4 +1,4 @@
-<!-- 
+<!--
   Copyright (c) 2015 guh
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,28 +20,41 @@
   SOFTWARE.
 -->
 
-<ion-view title="Rules">
+<ion-modal-view>
 
-  <!-- Override nav-bar buttons -->
-  <ion-nav-buttons side="primary">
-    <button class="button button-icon icon ion-ios-person-outline" ng-click="app.editSettings()"></button>
-  </ion-nav-buttons>
+  <!-- Header -->
+  <ion-header-bar>
+    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rules.closeRule()"></button>
+    <div class="title">Add Rule</div>
+  </ion-header-bar>
 
-  <ion-nav-buttons side="secondary">
-    <button class="button button-icon icon ion-ios-plus-empty" ng-click="rules.addRule()"></button>
-  </ion-nav-buttons>
+  <!-- Content -->
+  <ion-slide-box class="has-header" show-pager="false" guh-wizard>
 
-  <ion-content>
-    <ion-refresher
-      pulling-text="Pull to refresh rules..."
-      on-refresh="refresh()">
-    </ion-refresher>
+    <!-- -->
+    <ion-slide guh-wizard-step>
+      <ion-content>
+      </ion-content>
+    </ion-slide>
 
-    <ion-list>
-      <ion-item class="item" ui-sref="guh.rules.detail({ ruleId: rule.id })" ng-repeat="rule in rules.configured | orderBy: 'name' track by $index">
-        <h2>{{ rule.name }}</h2>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-  
-</ion-view>
+    <!--  -->
+    <ion-slide guh-wizard-step>
+      <ion-content>
+      </ion-content>
+    </ion-slide>
+
+    <!--  -->
+    <ion-slide guh-wizard-step>
+      <ion-content>
+      </ion-content>
+    </ion-slide>
+
+  </ion-slide-box>
+
+  <!-- Footer -->
+  <!-- <ion-footer-bar>
+    <button class="button button-icon ion-ios-arrow-back pull-left" guh-wizard-prev></button>
+    <button class="button button-icon ion-ios-arrow-forward pull-right" guh-wizard-next></button>
+  </ion-footer-bar> -->
+
+</ion-modal-view>
