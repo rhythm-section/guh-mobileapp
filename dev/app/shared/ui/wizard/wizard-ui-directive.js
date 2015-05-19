@@ -22,14 +22,74 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-// Colors
+/*
+ * Wizard directive highly influenced by ionic-wizard from arielfaur
+ * https://github.com/arielfaur/ionic-wizard
+ */
+(function(){
+  "use strict";
 
-// $light:                           #fff !default;
-// $stable:                          #fff !default;
-// $positive:                        #f00 !default;
-// $calm:                            #f00 !default;
-// $balanced:                        #f00 !default;
-// $energized:                       #f00 !default;
-// $assertive:                       #f00 !default;
-// $royal:                           #f00 !default;
-// $dark:                            #fff !default;
+  angular
+    .module('guh.ui')
+    .directive('guhWizard', wizard);
+
+  wizard.$inject = ['$log', '$rootScope', '$ionicSlideBoxDelegate'];
+
+  function wizard($log, $rootScope, $ionicSlideBoxDelegate) {
+    var directive = {
+      controller: wizardCtrl,
+      controllerAs: 'guhWizard',
+      link: wizardLink,
+      restrict: 'A'
+    };
+
+    return directive;
+
+
+    function wizardCtrl($scope, $element) {
+      var vm = this;
+      var conditions = [];
+
+      vm.addCondition = addCondition;
+      vm.isValidStep = isValidStep;
+
+      function addCondition(condition) {
+        conditions.push(condition);
+      }
+
+      function isValidStep(index) {
+        return angular.isDefined(conditions[index]) ? $scope.$eval(conditions[index]) : true;
+      }
+    }
+
+    function wizardLink(scope, element, attrs, wizardCtrl) {
+      var currentIndex = 0;
+
+      element.css('height', '100%');
+
+      $ionicSlideBoxDelegate.enableSlide(false);
+
+      scope.$on('wizard.prev', function(event) {
+        $ionicSlideBoxDelegate.previous();
+      });
+      
+      scope.$on('wizard.next', function(event) {
+        if(wizardCtrl.isValidStep(currentIndex)) {
+          $ionicSlideBoxDelegate.next();
+        } else {
+          $rootScope.$broadcast('wizard.stepFailed', { index: currentIndex });
+        }
+      });
+
+      scope.$on('wizard.reset', function(event, index) {
+        currentIndex = 0;
+        $ionicSlideBoxDelegate.slide(currentIndex);
+      });
+
+      scope.$on('slideBox.slideChanged', function(event, index) {
+        currentIndex = index;
+      });
+    }
+  }
+
+}());

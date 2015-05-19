@@ -22,14 +22,41 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-// Colors
+/*
+ * Wizard directive highly influenced by ionic-wizard from arielfaur
+ * https://github.com/arielfaur/ionic-wizard
+ */
+(function(){
+  "use strict";
 
-// $light:                           #fff !default;
-// $stable:                          #fff !default;
-// $positive:                        #f00 !default;
-// $calm:                            #f00 !default;
-// $balanced:                        #f00 !default;
-// $energized:                       #f00 !default;
-// $assertive:                       #f00 !default;
-// $royal:                           #f00 !default;
-// $dark:                            #fff !default;
+  angular
+    .module('guh.ui')
+    .directive('guhWizardPrev', wizardPrev);
+
+  wizardPrev.$inject = ['$log', '$rootScope', '$ionicSlideBoxDelegate'];
+
+  function wizardPrev($log, $rootScope, $ionicSlideBoxDelegate) {
+    var directive = {
+      link: wizardPrevLink,
+      restrict: 'A',
+      scope: {}
+    };
+
+    return directive;
+
+
+    function wizardPrevLink(scope, element, attrs) {
+      // Hide on initialize (only next button needed)
+      element.addClass('ng-hide');
+
+      element.on('click', function() {
+        $rootScope.$broadcast('wizard.prev');
+      });
+
+      scope.$on('slideBox.slideChanged', function(event, index) {
+        element.toggleClass('ng-hide', index === 0);
+      });
+    }
+  }
+
+}());

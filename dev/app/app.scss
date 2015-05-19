@@ -24,5 +24,17 @@
 
 @import "bourbon";
 
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../libs/ionic/fonts" !default;
+
+// Variables
+@import "../assets/scss/variables";
+
+// Ionic
+@import "./bower_components/ionic/scss/ionic.scss";
+
+// Core
+@import "../assets/scss/core/base";
+
 // Components
 @import "../assets/scss/components/button";

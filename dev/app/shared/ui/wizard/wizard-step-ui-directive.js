@@ -22,14 +22,35 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-// Colors
+/*
+ * Wizard directive highly influenced by ionic-wizard from arielfaur
+ * https://github.com/arielfaur/ionic-wizard
+ */
+(function(){
+  "use strict";
 
-// $light:                           #fff !default;
-// $stable:                          #fff !default;
-// $positive:                        #f00 !default;
-// $calm:                            #f00 !default;
-// $balanced:                        #f00 !default;
-// $energized:                       #f00 !default;
-// $assertive:                       #f00 !default;
-// $royal:                           #f00 !default;
-// $dark:                            #fff !default;
+  angular
+    .module('guh.ui')
+    .directive('guhWizardStep', wizardStep);
+
+  wizardStep.$inject = ['$log', '$rootScope', '$ionicSlideBoxDelegate'];
+
+  function wizardStep($log, $rootScope, $ionicSlideBoxDelegate) {
+    var directive = {
+      link: wizardStepLink,
+      restrict: 'A',
+      require: '^^guhWizard',
+      scope: {
+        condition: '&'
+      }
+    };
+
+    return directive;
+
+
+    function wizardStepLink(scope, element, attrs, wizardCtrl) {
+      wizardCtrl.addCondition(attrs.condition ? scope.condition : undefined);
+    }
+  }
+
+}());

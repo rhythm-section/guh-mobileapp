@@ -22,14 +22,25 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-// Colors
+.slider {
+  position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important ;
+    right: 0 !important;
+    top: 0 !important;
+}
 
-// $light:                           #fff !default;
-// $stable:                          #fff !default;
-// $positive:                        #f00 !default;
-// $calm:                            #f00 !default;
-// $balanced:                        #f00 !default;
-// $energized:                       #f00 !default;
-// $assertive:                       #f00 !default;
-// $royal:                           #f00 !default;
-// $dark:                            #fff !default;
+// .scroll-content {
+//   @include linear-gradient(to top, #57baae, #7cc09a);
+// }
+
+// .bar-header {
+//   // background-color: #7cc09a;
+//   background-color: #bde1ce;
+//   color: #fff;
+// }
+
+// .tabs {
+//   background-color: #8cc1b6;
+//   color: #fff;
+// }
