@@ -24,23 +24,33 @@
 
   <!-- Header -->
   <ion-header-bar>
-    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="device.closeSettings()"></button>
-    <div class="title">Edit {{ device.userSettings.name }}</div>
-    <button class="button button-icon icon ion-ios-checkmark-empty" ng-click="device.saveSettings()"></button>
+    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rulesAddAction.closeModal()"></button>
+    <div class="title">Add Action</div>
   </ion-header-bar>
 
-  <ion-content>
-  
-    <!-- Device params -->
-    <div class="list card" ng-show="device.SetupComplete && device.params.length > 0">
+  <!-- Add action wizard -->
+  <ion-slide-box class="has-header" delegate-handle="addActionWizard" show-pager="false" guh-wizard>
+    
+    <!-- Step 1.1: Select action -->
+    <ion-slide guh-wizard-step>
+      <ion-content>
+        <p class="padding">Select action</p>
+      </ion-content>
+    </ion-slide>
 
-      <h1 class="item item-divider">Settings</h1>
-      <p class="item item-text-wrap" ng-repeat="param in device.params track by $index">{{ param.name }}: {{ param.value }}</p>
+    <!-- Step 1.2: Save action -->
+    <ion-slide guh-wizard-step>
+      <ion-content>
+        <p class="padding">Save action</p>
+      </ion-content>
+    </ion-slide>
 
-    </div>
+  </ion-slide-box>
 
-    <button class="button button-full" ng-click="device.remove()">Remove device</button>
-
-  </ion-content>
+  <!-- Footer -->
+  <ion-footer-bar>
+    <button class="button button-icon ion-ios-arrow-back pull-left" guh-wizard-prev="addActionWizard"></button>
+    <button class="button button-icon ion-ios-arrow-forward pull-right" guh-wizard-next="addActionWizard"></button>
+  </ion-footer-bar>
 
 </ion-modal-view>

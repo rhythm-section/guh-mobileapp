@@ -22,45 +22,85 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/*
- * Wizard directive highly influenced by ionic-wizard from arielfaur
- * https://github.com/arielfaur/ionic-wizard
- */
 (function(){
-  "use strict";
+  'use strict';
 
   angular
-    .module('guh.ui')
-    .directive('guhWizardNext', wizardNext);
+    .module('guh.rules')
+    .controller('RulesAddCtrl', RulesAddCtrl);
 
-  wizardNext.$inject = ['$log', '$rootScope', '$ionicSlideBoxDelegate', 'libs'];
+  RulesAddCtrl.$inject = ['$log', '$scope', '$ionicModal', 'appModalService'];
 
-  function wizardNext($log, $rootScope, $ionicSlideBoxDelegate, libs) {
-    var directive = {
-      link: wizardNextLink,
-      restrict: 'A',
-      scope: {
-        delegateHandle: '@guhWizardNext'
-      }
-    };
+  function RulesAddCtrl($log, $scope, $ionicModal, appModalService) {
 
-    return directive;
+    var vm = this;
+    var addTriggerModal = {};
+    var addActionModal = {};
+
+    // Public methods
+    vm.addTrigger = addTrigger;
+    vm.addAction = addAction;
 
 
-    function wizardNextLink(scope, element, attrs) {
-      element.on('click', function() {
-        $rootScope.$broadcast('wizard.next', scope.delegateHandle);
-      });
+    /*
+     * Private method: _init()
+     */
+    function _init() {}
 
-      scope.$on('slideBox.slideChanged', function(event, index) {
-        var delegateInstance = $ionicSlideBoxDelegate.$getByHandle(scope.delegateHandle);
-        var delegateHandles = libs._.pluck(delegateInstance._instances, '$$delegateHandle');
-        var wizardId = libs._.indexOf(delegateHandles, scope.delegateHandle);
+    /*
+     * Private method: _initModaltemplateUrl
+     */
+    function _initModal(templateUrl) {
+      // Needed because ionicModal only works with "$scope" but not with "vm" as scope
+      $scope.rules = vm;
 
-        element.toggleClass('ng-hide', index === delegateInstance._instances[wizardId].slidesCount() - 1);
-        // element.toggleClass('ng-hide', index === $ionicSlideBoxDelegate.$getByHandle(scope.delegateHandle).slidesCount() - 1);
+      // Edit modal
+      return $ionicModal.fromTemplateUrl(templateUrl, {
+        scope: $scope,
+        animation: 'slide-in-up'
       });
     }
+
+    
+    /*
+     * Public method: addTrigger()
+     */
+    function addTrigger() {
+      // Reset wizard
+
+      // Reset view
+
+      // Show modal
+      appModalService
+        .show('app/components/rules/master/add/rules-add-trigger-modal.html', 'RulesAddTriggerCtrl as rulesAddTrigger', {})
+        .then(function(result) {
+          $log.log('result', result);
+        }, function(error) {
+          $log.error(error);
+        });
+    }
+
+    /*
+     * Public method: addAction()
+     */
+    function addAction() {
+      // Reset wizard
+
+      // Reset view
+
+      // Show modal
+      appModalService
+        .show('app/components/rules/master/add/rules-add-action-modal.html', 'RulesAddActionCtrl as rulesAddAction', {})
+        .then(function(result) {
+          $log.log('result', result);
+        }, function(error) {
+          $log.error(error);
+        });
+    }
+
+
+    _init();
+
   }
 
 }());

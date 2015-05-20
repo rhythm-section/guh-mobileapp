@@ -29,9 +29,9 @@
     .module('guh.rules')
     .controller('RulesMasterCtrl', RulesMasterCtrl);
 
-  RulesMasterCtrl.$inject = ['$log', '$rootScope', '$scope', '$ionicModal', 'DSRule'];
+  RulesMasterCtrl.$inject = ['$log', '$rootScope', '$scope', '$ionicModal', 'DSRule', 'appModalService'];
 
-  function RulesMasterCtrl($log, $rootScope, $scope, $ionicModal, DSRule) {
+  function RulesMasterCtrl($log, $rootScope, $scope, $ionicModal, DSRule, appModalService) {
 
     var vm = this;
     var addModal = {};
@@ -41,8 +41,6 @@
 
     // Public methods
     vm.addRule = addRule;
-    vm.closeRule = closeRule;
-
 
     /*
      * Private method: _init()
@@ -72,20 +70,6 @@
       return DSRule.findAll();
     }
 
-    /*
-     * Private method: _initModal()
-     */
-    function _initModal() {
-      // Needed because ionicModal only works with "$scope" but not with "vm" as scope
-      $scope.rules = vm;
-
-      // Edit modal
-      return $ionicModal.fromTemplateUrl('app/components/rules/master/rules-add-modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      });
-    }
-
 
     /*
      * Public method: refresh()
@@ -102,39 +86,16 @@
      */
     function addRule() {
       // Reset wizard
-      $rootScope.$broadcast('wizard.reset');
+      // $rootScope.$broadcast('wizard.reset');
 
       // Reset view
 
-
-      // Schow modal
-      _initModal().then(function(modal) {
-        $log.log('Modal initialized', modal);
-        addModal = modal;
-        addModal.show();
-      });
-
-      // _findAllVendors()
-      //   .then(function(vendors) {
-      //     vm.supportedVendors = vendors;
-      //   });
-    }
-
-    /*
-     * Public method: closeRule()
-     */
-    function closeRule() {
-      addModal
-        .hide()
-        .then(function() {
-          addModal
-            .remove()
-            .then(function() {
-              $log.log('Modal removed');
-            })
-            .catch(function(error) {
-              $log.error('Cannot destroy modal', error)
-            });
+      appModalService
+        .show('app/components/rules/master/add/rules-add-modal.html', 'RulesAddCtrl as rulesAdd', {})
+        .then(function(result) {
+          $log.log('result', result);
+        }, function(error) {
+          $log.error(error);
         });
     }
 

@@ -109,9 +109,10 @@ module.exports = {
       'app/**/models-helper.js',
       'app/**/*-model-service.js',
 
-      // Shared: Directives
+      // Shared: UI
       'app/**/ui-module.js',
       'app/**/*-ui-directive.js',
+      'app/**/*-ui-service.js',
 
       // Components: Dashboard
       'app/**/dashboard-module.js',

@@ -39,7 +39,9 @@
     var directive = {
       link: wizardPrevLink,
       restrict: 'A',
-      scope: {}
+      scope: {
+        delegateHandle: '@guhWizardPrev'
+      }
     };
 
     return directive;
@@ -50,7 +52,7 @@
       element.addClass('ng-hide');
 
       element.on('click', function() {
-        $rootScope.$broadcast('wizard.prev');
+        $rootScope.$broadcast('wizard.prev', scope.delegateHandle);
       });
 
       scope.$on('slideBox.slideChanged', function(event, index) {

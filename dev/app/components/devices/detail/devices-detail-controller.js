@@ -42,6 +42,7 @@
     vm.editSettings = editSettings;
     vm.closeSettings = closeSettings;
     vm.saveSettings = saveSettings;
+    vm.remove = remove;
 
 
     /*
@@ -204,6 +205,21 @@
      */
     function saveSettings() {
       editModal.hide();
+    }
+
+    /*
+     * Public method: remove()
+     */
+    function remove() {
+      currentDevice
+        .remove()
+        .then(function(response) {
+          $log.log(currentDevice.name + ' is now removed.', response);
+        })
+        .catch(function(error) {
+          // TODO: Build general error handler
+          $log.error(error);
+        });
     }
 
     

@@ -22,45 +22,29 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/*
- * Wizard directive highly influenced by ionic-wizard from arielfaur
- * https://github.com/arielfaur/ionic-wizard
- */
 (function(){
-  "use strict";
+  'use strict';
 
   angular
-    .module('guh.ui')
-    .directive('guhWizardNext', wizardNext);
+    .module('guh.rules')
+    .controller('RulesAddTriggerCtrl', RulesAddTriggerCtrl);
 
-  wizardNext.$inject = ['$log', '$rootScope', '$ionicSlideBoxDelegate', 'libs'];
+  RulesAddTriggerCtrl.$inject = ['$log'];
 
-  function wizardNext($log, $rootScope, $ionicSlideBoxDelegate, libs) {
-    var directive = {
-      link: wizardNextLink,
-      restrict: 'A',
-      scope: {
-        delegateHandle: '@guhWizardNext'
-      }
-    };
+  function RulesAddTriggerCtrl($log) {
 
-    return directive;
+    var vm = this;
+    var triggerModal = {};
 
 
-    function wizardNextLink(scope, element, attrs) {
-      element.on('click', function() {
-        $rootScope.$broadcast('wizard.next', scope.delegateHandle);
-      });
+    /*
+     * Private method: _init()
+     */
+    function _init() {}
 
-      scope.$on('slideBox.slideChanged', function(event, index) {
-        var delegateInstance = $ionicSlideBoxDelegate.$getByHandle(scope.delegateHandle);
-        var delegateHandles = libs._.pluck(delegateInstance._instances, '$$delegateHandle');
-        var wizardId = libs._.indexOf(delegateHandles, scope.delegateHandle);
 
-        element.toggleClass('ng-hide', index === delegateInstance._instances[wizardId].slidesCount() - 1);
-        // element.toggleClass('ng-hide', index === $ionicSlideBoxDelegate.$getByHandle(scope.delegateHandle).slidesCount() - 1);
-      });
-    }
+    _init();
+
   }
 
 }());

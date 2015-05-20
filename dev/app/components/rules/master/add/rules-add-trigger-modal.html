@@ -24,37 +24,33 @@
 
   <!-- Header -->
   <ion-header-bar>
-    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rules.closeRule()"></button>
-    <div class="title">Add Rule</div>
+    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rulesAddTrigger.closeModal()"></button>
+    <div class="title">Add Trigger</div>
   </ion-header-bar>
 
-  <!-- Content -->
-  <ion-slide-box class="has-header" show-pager="false" guh-wizard>
-
-    <!-- -->
+  <!-- Add trigger wizard -->
+  <ion-slide-box class="has-header" delegate-handle="addTriggerWizard" show-pager="false" guh-wizard>
+    
+    <!-- Step 1.1: Select trigger -->
     <ion-slide guh-wizard-step>
       <ion-content>
+        <p class="padding">Select trigger</p>
       </ion-content>
     </ion-slide>
 
-    <!--  -->
+    <!-- Step 1.2: Save trigger -->
     <ion-slide guh-wizard-step>
       <ion-content>
-      </ion-content>
-    </ion-slide>
-
-    <!--  -->
-    <ion-slide guh-wizard-step>
-      <ion-content>
+        <p class="padding">Save trigger</p>
       </ion-content>
     </ion-slide>
 
   </ion-slide-box>
 
   <!-- Footer -->
-  <!-- <ion-footer-bar>
-    <button class="button button-icon ion-ios-arrow-back pull-left" guh-wizard-prev></button>
-    <button class="button button-icon ion-ios-arrow-forward pull-right" guh-wizard-next></button>
-  </ion-footer-bar> -->
+  <ion-footer-bar>
+    <button class="button button-icon ion-ios-arrow-back pull-left" guh-wizard-prev="addTriggerWizard"></button>
+    <button class="button button-icon ion-ios-arrow-forward pull-right" guh-wizard-next="addTriggerWizard"></button>
+  </ion-footer-bar>
 
 </ion-modal-view>

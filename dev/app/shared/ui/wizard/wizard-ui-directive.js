@@ -33,9 +33,9 @@
     .module('guh.ui')
     .directive('guhWizard', wizard);
 
-  wizard.$inject = ['$log', '$rootScope', '$ionicSlideBoxDelegate'];
+  wizard.$inject = ['$log', '$rootScope', '$ionicSlideBoxDelegate', 'libs'];
 
-  function wizard($log, $rootScope, $ionicSlideBoxDelegate) {
+  function wizard($log, $rootScope, $ionicSlideBoxDelegate, libs) {
     var directive = {
       controller: wizardCtrl,
       controllerAs: 'guhWizard',
@@ -69,21 +69,39 @@
 
       $ionicSlideBoxDelegate.enableSlide(false);
 
-      scope.$on('wizard.prev', function(event) {
-        $ionicSlideBoxDelegate.previous();
+      scope.$on('wizard.prev', function(event, delegateHandle) {
+        var delegateInstance = $ionicSlideBoxDelegate.$getByHandle(delegateHandle);
+        var delegateHandles = libs._.pluck(delegateInstance._instances, '$$delegateHandle');
+        var wizardId = libs._.indexOf(delegateHandles, delegateHandle);
+
+        delegateInstance._instances[wizardId].previous();
       });
       
-      scope.$on('wizard.next', function(event) {
+      scope.$on('wizard.next', function(event, delegateHandle) {
         if(wizardCtrl.isValidStep(currentIndex)) {
-          $ionicSlideBoxDelegate.next();
+          var delegateInstance = $ionicSlideBoxDelegate.$getByHandle(delegateHandle);
+          var delegateHandles = libs._.pluck(delegateInstance._instances, '$$delegateHandle');
+          var wizardId = libs._.indexOf(delegateHandles, delegateHandle);
+          
+          delegateInstance._instances[wizardId].next();
         } else {
           $rootScope.$broadcast('wizard.stepFailed', { index: currentIndex });
         }
       });
 
-      scope.$on('wizard.reset', function(event, index) {
+      // scope.$on('wizard.slide', function(event, index) {
+      //   currentIndex = index;
+      //   $ionicSlideBoxDelegate.slide(currentIndex);
+      // });
+
+      scope.$on('wizard.reset', function(event, delegateHandle) {
+        var delegateInstance = $ionicSlideBoxDelegate.$getByHandle(delegateHandle);
+        var delegateHandles = libs._.pluck(delegateInstance._instances, '$$delegateHandle');
+        var wizardId = libs._.indexOf(delegateHandles, delegateHandle);
+
         currentIndex = 0;
-        $ionicSlideBoxDelegate.slide(currentIndex);
+
+        delegateInstance._instances[wizardId].slide(currentIndex);
       });
 
       scope.$on('slideBox.slideChanged', function(event, index) {
