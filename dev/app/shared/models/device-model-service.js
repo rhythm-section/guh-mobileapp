@@ -64,9 +64,7 @@
       },
 
       // Computed properties
-      computed: {
-        userSettings: ['name', 'params', _getUserSettings]
-      },
+      computed: {},
 
       // Instance methods
       methods: {
@@ -81,6 +79,18 @@
         getStateDescriptor: getStateDescriptor
       },
 
+      // Lifecycle hooks
+      afterInject: function(resource, attrs) {
+        if(angular.isArray(attrs)) {
+          var arrayOfAttrs = attrs;
+          angular.forEach(arrayOfAttrs, function(attrs) {
+            _addCustomName(resource, attrs);
+          });
+        } else {
+          _addCustomName(resource, attrs);
+        }
+      }
+
     });
 
     angular.extend(DSDevice, {
@@ -91,18 +101,11 @@
 
 
     /*
-     * Private method: _getUserSettings()
+     * Private method: _addCustomName()
      */
-    function _getUserSettings(name, params) {
-      var nameParameter = libs._.find(params, function(param) { return (param.name === 'Name'); });
-      // $log.log('params', params);
-      // $log.log('name', name);
-      // $log.log('nameParameter', nameParameter);
-      var userSettings = {
-        name: (nameParameter === undefined) ? 'Name' : nameParameter.value
-      };
-
-      return userSettings;
+    function _addCustomName(resource, attrs) {
+      var nameParameter = libs._.find(attrs.params, function(param) { return (param.name === 'name'); });
+      attrs.name = (nameParameter === undefined) ? 'Name' : nameParameter.value;
     }
 
 

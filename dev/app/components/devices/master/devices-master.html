@@ -39,8 +39,8 @@
 
     <ion-list>
       <ion-item class="item" ui-sref="guh.devices.detail({ deviceId: device.id })" ng-repeat="device in devices.configured | orderBy: 'name' track by $index">
-        <h2>{{ device.userSettings.name }}</h2>
-        <p>{{ device.deviceClass.vendor.name }}, {{ device.name }}</p>
+        <h2>{{ device.name }}</h2>
+        <p>{{ device.deviceClass.vendor.name }}, {{ device.deviceClass.name }}</p>
       </ion-item>
     </ion-list>
   </ion-content>

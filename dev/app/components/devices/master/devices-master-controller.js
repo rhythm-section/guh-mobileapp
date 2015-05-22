@@ -63,6 +63,7 @@
         .then(_findDeviceRelations)
         .then(function(devices) {
           vm.configured = devices;
+          $log.log('devices', devices);
         });;
     }
 
