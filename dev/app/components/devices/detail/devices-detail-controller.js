@@ -74,9 +74,8 @@
           vm.deviceClassId = currentDevice.deviceClassId;
           vm.id = currentDevice.id;
           vm.name = currentDevice.name
-          vm.params = (currentDevice.userSettings.name === currentDevice.name) ? currentDevice.params : libs._.without(params, nameParameter);
+          vm.params = currentDevice.params;
           vm.states = currentDevice.states;
-          vm.userSettings = currentDevice.userSettings;
 
           // Actions & States
           angular.forEach(currentDevice.deviceClass.actionTypes, function(actionType) {
