@@ -29,9 +29,9 @@
     .module('guh.rules')
     .controller('RulesAddCtrl', RulesAddCtrl);
 
-  RulesAddCtrl.$inject = ['$log', '$scope', '$ionicModal', 'appModalService'];
+  RulesAddCtrl.$inject = ['$log', '$scope', '$ionicModal', 'app', 'appModalService'];
 
-  function RulesAddCtrl($log, $scope, $ionicModal, appModalService) {
+  function RulesAddCtrl($log, $scope, $ionicModal, app, appModalService) {
 
     var vm = this;
     var addTriggerModal = {};
@@ -45,20 +45,42 @@
     /*
      * Private method: _init()
      */
-    function _init() {}
+    function _init() {
+      // Reset view
+      vm.addedTrigger = [];
+      vm.addedActions = [];
+      vm.rule = {
+        actions: [],
+        enabled: false,
+        eventDescriptors: [],
+        exitActions: [],
+        name: 'Name',
+        stateEvaluator: {}
+      };
+    }
 
     /*
-     * Private method: _initModaltemplateUrl
+     * Private method: _updateEventDescriptors(trigger)
      */
-    function _initModal(templateUrl) {
-      // Needed because ionicModal only works with "$scope" but not with "vm" as scope
-      $scope.rules = vm;
+    function _updateEventDescriptors(eventDescriptor) {
+      vm.rule.eventDescriptors.push(eventDescriptor);
+    }
 
-      // Edit modal
-      return $ionicModal.fromTemplateUrl(templateUrl, {
-        scope: $scope,
-        animation: 'slide-in-up'
-      });
+    /*
+     * Private method: _updateStateEvaluator(trigger)
+     */
+    function _updateStateEvaluator(stateDescriptor) {
+      var childEvaluator = {
+        operator: app.stateOperator.StateOperatorAnd,
+        stateDescriptor: stateDescriptor
+      };
+
+      if(vm.rule.stateEvaluator.childEvaluators) {
+        vm.rule.stateEvaluator.childEvaluators.push(childEvaluator);
+      } else {
+        vm.rule.stateEvaluator = childEvaluator;
+        vm.rule.stateEvaluator.childEvaluators = [];
+      }
     }
 
     
@@ -66,15 +88,28 @@
      * Public method: addTrigger()
      */
     function addTrigger() {
-      // Reset wizard
-
-      // Reset view
-
       // Show modal
       appModalService
         .show('app/components/rules/master/add/rules-add-trigger-modal.html', 'RulesAddTriggerCtrl as rulesAddTrigger', {})
-        .then(function(result) {
-          $log.log('result', result);
+        .then(function(trigger) {
+          if(trigger !== undefined) {
+            vm.addedTrigger.push(trigger);
+
+            // EventDescriptor
+            if(trigger.eventDescriptor) {
+              _updateEventDescriptors(trigger.eventDescriptor);
+            }
+
+            // StateDescriptor(s)
+            if(trigger.stateDescriptorIs) {
+              _updateStateEvaluator(trigger.stateDescriptorIs);
+            } else if(trigger.stateDescriptorFrom && trigger.stateDescriptorTo) {
+              _updateStateEvaluator(trigger.stateDescriptorFrom);
+              _updateStateEvaluator(trigger.stateDescriptorTo);
+            }
+          }
+
+          $log.log('vm.rule', vm.rule);
         }, function(error) {
           $log.error(error);
         });
@@ -84,10 +119,6 @@
      * Public method: addAction()
      */
     function addAction() {
-      // Reset wizard
-
-      // Reset view
-
       // Show modal
       appModalService
         .show('app/components/rules/master/add/rules-add-action-modal.html', 'RulesAddActionCtrl as rulesAddAction', {})

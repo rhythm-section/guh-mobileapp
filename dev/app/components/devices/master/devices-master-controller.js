@@ -139,7 +139,7 @@
      */
     function addDevice() {
       // Reset wizard
-      $rootScope.$broadcast('wizard.reset');
+      $rootScope.$broadcast('wizard.reset', 'addDeviceWizard');
 
       // Reset view
       vm.selectedVendor = null;
@@ -188,7 +188,7 @@
           vm.supportedDeviceClasses = vendor.deviceClasses;
           
           // Go to next wizard step
-          $rootScope.$broadcast('wizard.next');
+          $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
         });
     }
 
@@ -208,7 +208,7 @@
       vm.setupMethod = deviceClass.getSetupMethod();
 
       // Go to next wizard step
-      $rootScope.$broadcast('wizard.next');
+      $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
     }
 
     /*

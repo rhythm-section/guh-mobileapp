@@ -38,7 +38,7 @@
       link: inputLink,
       restrict: 'E',
       scope: {
-        change: '&',
+        change: '&?',
         model: '=',
         state: '=?'
       }
@@ -90,6 +90,8 @@
     }
 
     function inputLink(scope, element, attrs) {
+      $log.log('inputLink', attrs);
+
       // Initialize with current value
       if(angular.isObject(scope.state)) {
         scope.model.value = scope.state.value;
@@ -100,10 +102,12 @@
 
       scope.$on('$destroy', function() {
         // Remove only element, scope needed afterwards
+        // scope.$destroy();
         element.remove();
       });
 
       scope.$watch('model', function(newValue, oldValue) {
+        $log.log('model', scope.model, newValue, oldValue);
         var templateUrl = scope.model.templateUrl;
 
         $http.get(templateUrl).success(function(template) {

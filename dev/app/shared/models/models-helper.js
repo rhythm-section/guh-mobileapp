@@ -36,6 +36,7 @@
     var modelsHelper = {
       addUiData: addUiData,
       getTemplateUrl: getTemplateUrl,
+      getUnit: getUnit,
       setBasePath: setBasePath
     };
 
@@ -70,15 +71,15 @@
 
 
     /*
-     * Public method: addUiData(paramType)
+     * Public method: addUiData(guhType)
      */
-    function addUiData(paramType) {
+    function addUiData(guhType) {
       var templateUrl = '';
 
-      var allowedValues = (paramType.allowedValues === undefined) ? null : paramType.allowedValues;
-      var inputType = (paramType.inputType === undefined) ? null : paramType.inputType;
-      var name = (paramType.name === undefined) ? null : paramType.name;
-      var type = (paramType.type === undefined) ? null : paramType.type;
+      var allowedValues = (guhType.allowedValues === undefined) ? null : guhType.allowedValues;
+      var inputType = (guhType.inputType === undefined) ? null : guhType.inputType;
+      var name = (guhType.name === undefined) ? null : guhType.name;
+      var type = (guhType.type === undefined) ? null : guhType.type;
       var value = null;
 
       switch(type) {
@@ -88,33 +89,33 @@
           } else {
             templateUrl = _getInputPath('input-checkbox');
           }
-          value = paramType.defaultValue || false;
+          value = guhType.defaultValue || false;
           break;
         case 'int':
         case 'uint':
           templateUrl = _getInputPath('input-number-integer');
-          value = paramType.defaultValue || 0;
+          value = guhType.defaultValue || 0;
           break;
         case 'double':
           templateUrl = _getInputPath('input-number-decimal');
-          value = paramType.defaultValue || 0.0;
+          value = guhType.defaultValue || 0.0;
           break;
         case 'QString':
           if(allowedValues) {
             templateUrl = _getInputPath('input-select');
           } else if(inputType) {
-            $log.log('inputType', inputType, app.inputTypes[inputType]);
             templateUrl = _getInputPath(app.inputTypes[inputType])
           } else {
             templateUrl = _getInputPath('input-text');
           }
-          value = paramType.defaultValue || '';
+          value = guhType.defaultValue || '';
       }
 
-      paramType.templateUrl = _checkTemplateUrl(templateUrl);
-      paramType.value = value;
+      guhType.operator = app.valueOperator.is.operators[0];
+      guhType.templateUrl = _checkTemplateUrl(templateUrl);
+      guhType.value = value;
 
-      return paramType;
+      return guhType;
     }
 
     /*
@@ -123,6 +124,21 @@
     function getTemplateUrl(filename) {
       var templateUrl = _getInputPath(filename);
       return _checkTemplateUrl(templateUrl);
+    }
+
+    /*
+     * Public method: getUnit(name)
+     */
+    function getUnit(name) {
+      // Get value inside Brackets []
+      var regExp = /\[([^)]+)\]/;
+      var searchUnit = regExp.exec(name);
+
+      if(angular.isArray(searchUnit) && searchUnit.length === 2) {
+        return searchUnit[1];
+      } else {
+        return '';
+      }
     }
 
     /*

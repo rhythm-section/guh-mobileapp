@@ -24,8 +24,9 @@
 
   <!-- Header -->
   <ion-header-bar>
-    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rulesAdd.closeModal()"></button>
+    <button class="button button-icon icon ion-ios-arrow-back pull-left" guh-wizard-prev="addRuleWizard"> Back</button>
     <div class="title">Add Rule</div>
+    <button class="button button-icon icon ion-ios-close-empty" ng-click="rulesAdd.closeModal()"></button>
   </ion-header-bar>
 
   <!-- Add rule wizard -->
@@ -39,12 +40,16 @@
         <!-- List of added trigger(s) -->
         <ion-list>
           <ion-item class="item" ng-repeat="trigger in rulesAdd.addedTrigger track by $index">
-            <h2>{{ trigger }}</h2>
+            <h2>{{ trigger.type.phrase }}</h2>
           </ion-item>
         </ion-list>
 
         <!-- Add trigger button -->
-        <button class="button button-full" ng-click="rulesAdd.addTrigger()" type="button">Add {{ rulesAdd.addedTrigger.length > 0 && 'another' || 'a' }} trigger</button>
+        <button class="button button-full" type="button" ng-click="rulesAdd.addTrigger()">Add {{ rulesAdd.addedTrigger.length > 0 && 'another' || 'a' }} trigger</button>
+        <button class="button button-full icon-right ion-ios-arrow-forward" type="button" guh-wizard-next="addRuleWizard">
+        <!-- <button class="button button-full icon-right ion-ios-arrow-forward" type="button" ng-disabled="rulesAdd.addedTrigger.length === 0" guh-wizard-next="addRuleWizard"> -->
+          Add actions
+        </button>
       </ion-content>
     </ion-slide>
 
@@ -78,9 +83,9 @@
   </ion-slide-box>
 
   <!-- Footer -->
-  <ion-footer-bar>
+  <!-- <ion-footer-bar>
     <button class="button button-icon ion-ios-arrow-back pull-left" guh-wizard-prev="addRuleWizard"></button>
     <button class="button button-icon ion-ios-arrow-forward pull-right" guh-wizard-next="addRuleWizard"></button>
-  </ion-footer-bar>
+  </ion-footer-bar> -->
 
 </ion-modal-view>

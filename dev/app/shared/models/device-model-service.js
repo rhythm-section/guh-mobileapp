@@ -76,7 +76,9 @@
         
         // API
         executeAction: executeAction,
-        remove: remove
+        remove: remove,
+        getEventDescriptor: getEventDescriptor,
+        getStateDescriptor: getStateDescriptor
       },
 
     });
@@ -164,6 +166,40 @@
       var self = this;
 
       return DSDevice.destroy(self.id);
+    }
+
+    /*
+     * Public method: getEventDescriptor(eventType)
+     */
+    function getEventDescriptor(eventType) {
+      var self = this;
+      var eventDescriptor = {};
+      var paramDescriptors = [];
+
+      eventDescriptor.deviceId = self.id;
+      eventDescriptor.eventTypeId = eventType.id;
+
+      paramDescriptors = eventType.getParamDescriptors(eventType.paramTypes);
+      if(paramDescriptors.length > 0) {
+        eventDescriptor.paramDescriptors = paramDescriptors;
+      }
+
+      return eventDescriptor;     
+    }
+
+    /*
+     * Public method: getStateDescriptor(stateType)
+     */
+    function getStateDescriptor(stateType) {
+      var self = this;
+      var stateDescriptor = {};
+
+      stateDescriptor.deviceId = self.id;
+      stateDescriptor.operator = stateType.operator;
+      stateDescriptor.stateTypeId = stateType.id;
+      stateDescriptor.value = stateType.value;
+
+      return stateDescriptor;
     }
 
   }

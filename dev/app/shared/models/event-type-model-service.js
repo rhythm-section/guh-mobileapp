@@ -30,9 +30,9 @@
     .factory('DSEventType', DSEventTypeFactory)
     .run(function(DSEventType) {});
 
-  DSEventTypeFactory.$inject = ['$log', 'DS'];
+  DSEventTypeFactory.$inject = ['$log', 'DS', 'modelsHelper'];
 
-  function DSEventTypeFactory($log, DS) {
+  function DSEventTypeFactory($log, DS, modelsHelper) {
     
     var staticMethods = {};
 
@@ -62,11 +62,67 @@
       computed: {},
 
       // Instance methods
-      methods: {}
+      methods: {
+        getParamDescriptors: getParamDescriptors
+      },
+
+      // Lifecycle hooks
+      afterInject: function(resource, attrs) {
+        if(angular.isArray(attrs)) {
+          var arrayOfAttrs = attrs;
+          angular.forEach(arrayOfAttrs, function(attrs) {
+            _addUiData(resource, attrs);
+          });
+        } else {
+          _addUiData(resource, attrs);
+        }
+      }
 
     });
 
     return DSEventType;
+
+
+    /*
+     * Private method: _addUiData(resource, attrs)
+     */
+    function _addUiData(resource, attrs) {
+      var paramTypes = attrs.paramTypes;
+      var phrase = 'When ' + attrs.name;
+
+      // phrase
+      if(angular.isArray(paramTypes) && paramTypes.length === 0) {
+        attrs.phrase = phrase + ' is detected.';
+      } else {
+        attrs.phrase = phrase + ' is detcted and Parameters are...';
+      }
+
+      // unit
+      attrs.unit = modelsHelper.getUnit(attrs.name);
+
+      // paramTypes
+      angular.forEach(paramTypes, function(paramType) {
+        paramType = modelsHelper.addUiData(paramType);
+      });
+    }
+
+
+    /*
+     * Public method: getParamDescriptors(paramTypes)
+     */
+    function getParamDescriptors(paramTypes) {
+      var paramDescriptors = [];
+
+      angular.forEach(paramTypes, function(paramType) {
+        paramDescriptors.push({
+          name: paramType.name,
+          operator: paramType.operator,
+          value: paramType.value
+        });
+      });
+
+      return paramDescriptors;
+    }
 
   }
 

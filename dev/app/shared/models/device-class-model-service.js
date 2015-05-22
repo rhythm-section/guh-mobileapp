@@ -92,7 +92,7 @@
         } else {
           _addUiData(resource, attrs);
         }
-        _mapStatesToActions(resource, attrs);
+        _mapStates(resource, attrs);
       }
 
     });
@@ -106,6 +106,7 @@
     function _addUiData(resource, attrs) {
       var discoveryParamTypes = attrs.discoveryParamTypes;
       var paramTypes = attrs.paramTypes;
+      var stateTypes = attrs.stateTypes;
 
       // discoveryParamTypes
       angular.forEach(discoveryParamTypes, function(paramType) {
@@ -115,24 +116,40 @@
       // paramTypes
       angular.forEach(paramTypes, function(paramType) {
         paramType = modelsHelper.addUiData(paramType);
-        // $log.log('paramType', paramType);
+      });
+
+      // stateTypes
+      angular.forEach(stateTypes, function(stateType) {
+        stateType = modelsHelper.addUiData(stateType);
       });
     }
 
     /*
-     * Private method: _mapStatesToActions(resource, attrs)
+     * Private method: _mapStates(resource, attrs)
      */
-    function _mapStatesToActions(resource, attrs) {
+    function _mapStates(resource, attrs) {
       var actionTypes = attrs.actionTypes;
+      var eventTypes = attrs.eventTypes;
       var stateTypes = attrs.stateTypes;
       var stateIds = libs._.pluck(stateTypes, 'id');
 
+      // Map actionTypes
       angular.forEach(actionTypes, function(actionType) {
         // Check if current actionType belongs to a stateType
         if(libs._.contains(stateIds, actionType.id)) {
           actionType.hasState = true;
         } else {
           actionType.hasState = false;
+        }
+      });
+
+      // Map eventTypes
+      angular.forEach(eventTypes, function(eventType) {
+        // Check if current actionType belongs to a stateType
+        if(libs._.contains(stateIds, eventType.id)) {
+          eventType.hasState = true;
+        } else {
+          eventType.hasState = false;
         }
       });
     }

@@ -30,9 +30,9 @@
     .factory('DSStateType', DSStateTypeFactory)
     .run(function(DSStateType) {});
 
-  DSStateTypeFactory.$inject = ['$log', 'DS'];
+  DSStateTypeFactory.$inject = ['$log', 'DS', 'modelsHelper'];
 
-  function DSStateTypeFactory($log, DS) {
+  function DSStateTypeFactory($log, DS, modelsHelper) {
     
     var staticMethods = {};
 
@@ -62,11 +62,62 @@
       computed: {},
 
       // Instance methods
-      methods: {}
+      methods: {},
+
+      // Lifecycle hooks
+      afterInject: function(resource, attrs) {
+        if(angular.isArray(attrs)) {
+          var arrayOfAttrs = attrs;
+          angular.forEach(arrayOfAttrs, function(attrs) {
+            _addUiData(resource, attrs);
+          });
+        } else {
+          _addUiData(resource, attrs);
+        }
+      }
 
     });
 
     return DSStateType;
+
+    // Get value inside Brackets []
+    var regExp = /\s\[([^)]+)\]/;
+    var searchUnit = name.replace(regExp, '');
+    var phrase = name;
+
+    // If name contains the unit in brackets []
+    if(regExp.test(name)) {
+      phrase = searchUnit;
+    }
+
+    return 'When value of ' + phrase + ' is...';
+
+
+    /*
+     * Private method: _addUiData(resource, attrs)
+     */
+    function _addUiData(resource, attrs) {
+      var paramTypes = attrs.paramTypes;
+      var regExp = /\s\[([^)]+)\]/;                 // Value inside brackets []
+      var searchUnit = name.replace(regExp, '');    // Get value inside brackets
+      var phrase = attrs.name;
+
+      // If name contains the unit in brackets []
+      if(regExp.test(name)) {
+        phrase = searchUnit;
+      }
+
+      // phrase
+      attrs.phrase = 'When value of ' + phrase + ' is...';
+
+      // unit
+      attrs.unit = modelsHelper.getUnit(attrs.name);
+
+      // paramTypes
+      angular.forEach(paramTypes, function(paramType) {
+        paramType = modelsHelper.addUiData(paramType);
+      });
+    }
 
   }
 

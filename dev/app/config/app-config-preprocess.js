@@ -35,8 +35,8 @@
       // var wsProtocol = (isCordovaApp || window.location.protocol === 'http:') ? 'ws' : 'wss';
       var httpProtocol = 'http';
       var wsProtocol = 'ws';
-      var host = '10.0.0.2';
-      // var host = '192.168.0.124';
+      // var host = '10.0.0.2';
+      var host = '192.168.0.124';
       var port = '3000';
 
       // @if NODE_ENV = 'DEVELOPMENT'
@@ -63,7 +63,8 @@
 
         // API, Websockets
         apiUrl: url + '/api/v1',
-        websocketUrl: wsProtocol + '://' + host + ':' + port + '/ws',
+        // websocketUrl: wsProtocol + '://' + host + ':' + port + '/ws',
+        websocketUrl: wsProtocol + '://localhost' + ':' + port + '/ws',
 
         // Basepaths
         basePaths: {
@@ -111,6 +112,41 @@
           // Log entry
           logging: {
             logEntryAdded: 'Logging.LogEntryAdded'
+          }
+        },
+
+        // State operators
+        stateOperator: {
+          StateOperatorAnd: 'StateOperatorAnd',
+          StateOperatorOr: 'StateOperatorOr'
+        },
+
+        // Value operators
+        valueOperator: {
+          is: {
+            id: 1,
+            label: 'is',
+            operators: ['ValueOperatorEquals']
+          },
+          isNot: {
+            id: 2,
+            label: 'is not',
+            operators: ['ValueOperatorNotEquals']
+          },
+          isGreaterThan: {
+            id: 3,
+            label: 'is greater than',
+            operators: ['ValueOperatorGreater']
+          },
+          isLessThan: {
+            id: 4,
+            label: 'is less than',
+            operators: ['ValueOperatorLess']
+          },
+          between: {
+            id: 5,
+            label: 'is between',
+            operators: ['ValueOperatorGreaterOrEqual', 'ValueOperatorLessOrEqual']
           }
         }
       }

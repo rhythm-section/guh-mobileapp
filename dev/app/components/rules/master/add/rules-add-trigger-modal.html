@@ -24,8 +24,9 @@
 
   <!-- Header -->
   <ion-header-bar>
-    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rulesAddTrigger.closeModal()"></button>
+    <button class="button button-icon icon icon ion-ios-arrow-back" guh-wizard-prev="addTriggerWizard"> All</button>
     <div class="title">Add Trigger</div>
+    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rulesAddTrigger.cancel()"></button>
   </ion-header-bar>
 
   <!-- Add trigger wizard -->
@@ -34,23 +35,60 @@
     <!-- Step 1.1: Select trigger -->
     <ion-slide guh-wizard-step>
       <ion-content>
-        <p class="padding">Select trigger</p>
+        <!-- Devices -->
+        <div class="list" ng-if="triggerDevice.deviceClass.eventTypes.length > 0 || triggerDevice.deviceClass.stateTypes.length > 0" ng-repeat="triggerDevice in rulesAddTrigger.availableTriggerDevices | orderBy: 'name' track by $index">
+          <p class="item item-divider">{{ triggerDevice.deviceClass.name }}</p>
+
+          <!-- Events -->
+          <p class="item item-icon-right" ng-if="!eventType.hasState" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes">
+            {{ eventType.phrase }}
+            <i class="icon ion-ios-arrow-right" ng-if="eventType.paramTypes.length > 0"></i>
+          </p>
+
+          <!-- States -->
+          <p class="item item-icon-right" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, stateType)" ng-repeat="stateType in triggerDevice.deviceClass.stateTypes">
+            {{ stateType.phrase }}
+            <i class="icon ion-ios-arrow-right"></i>
+          </p>
+        </div>
       </ion-content>
     </ion-slide>
 
     <!-- Step 1.2: Save trigger -->
     <ion-slide guh-wizard-step>
       <ion-content>
-        <p class="padding">Save trigger</p>
+        <!-- EventType -->
+        <guh-input model="paramType" ng-if="rulesAddTrigger.isEventType && rulesAddTrigger.selectedType.paramTypes.length > 0" ng-repeat="paramType in rulesAddTrigger.selectedType.paramTypes"></guh-input>
+        
+        <!-- StateType -->
+        <div ng-if="rulesAddTrigger.isStateType">
+          <!-- Value operator -->
+          <label class="item item-input item-select" ng-show="rulesAddTrigger.availableOperators.length > 1">
+            <div class="input-label">{{ rulesAddTrigger.selectedType.name }}</div>
+            <select ng-model="rulesAddTrigger.selectedOperator" ng-change="rulesAddTrigger.setOperator()" ng-options="operator as operator.label for (key, operator) in rulesAddTrigger.availableOperators track by operator.id" name="operator"></select>
+          </label>
+
+          <!-- Is (is not) -->
+          <guh-input ng-if="rulesAddTrigger.selectedTypeIs" model="rulesAddTrigger.selectedTypeIs"></guh-input>
+
+          <!-- From -->
+          <guh-input ng-if="rulesAddTrigger.selectedTypeFrom" model="rulesAddTrigger.selectedTypeFrom"></guh-input>
+
+          <!-- To -->
+          <guh-input ng-if="rulesAddTrigger.selectedTypeTo" model="rulesAddTrigger.selectedTypeTo"></guh-input>
+        </div>
+
+        <!-- Save -->
+        <button class="button button-full" ng-click="rulesAddTrigger.save()">Save trigger</button>
       </ion-content>
     </ion-slide>
 
   </ion-slide-box>
 
   <!-- Footer -->
-  <ion-footer-bar>
-    <button class="button button-icon ion-ios-arrow-back pull-left" guh-wizard-prev="addTriggerWizard"></button>
-    <button class="button button-icon ion-ios-arrow-forward pull-right" guh-wizard-next="addTriggerWizard"></button>
-  </ion-footer-bar>
+  <!-- <ion-footer-bar ng-show="rulesAddTrigger.showWizardNav">
+    <button class="button button-icon ion-ios-arrow-left pull-left" guh-wizard-prev="addTriggerWizard"></button>
+    <button class="button button-icon ion-ios-arrow-right pull-right" guh-wizard-next="addTriggerWizard"></button>
+  </ion-footer-bar> -->
 
 </ion-modal-view>
