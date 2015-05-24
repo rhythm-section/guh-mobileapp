@@ -40,9 +40,13 @@
           <p class="item item-divider">{{ triggerDevice.deviceClass.name }}</p>
 
           <!-- Events -->
-          <p class="item item-icon-right" ng-if="!eventType.hasState" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes">
+          <p class="item item-icon-right" ng-if="!eventType.hasState && eventType.paramTypes.length == 0" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes">
             {{ eventType.phrase }}
-            <i class="icon ion-ios-arrow-right" ng-if="eventType.paramTypes.length > 0"></i>
+          </p>
+
+          <p class="item item-icon-right" ng-if="!eventType.hasState && eventType.paramTypes.length > 0" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes">
+            {{ eventType.phrase }}
+            <i class="icon ion-ios-arrow-right"></i>
           </p>
 
           <!-- States -->

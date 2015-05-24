@@ -40,6 +40,7 @@
     // Public methods
     vm.addTrigger = addTrigger;
     vm.addAction = addAction;
+    vm.save = save;
 
 
     /*
@@ -48,7 +49,8 @@
     function _init() {
       // Reset view
       vm.addedTrigger = [];
-      vm.addedActions = [];
+      vm.addedEnterActions = [];
+      vm.addedExitActions = [];
       vm.rule = {
         actions: [],
         enabled: false,
@@ -60,7 +62,7 @@
     }
 
     /*
-     * Private method: _updateEventDescriptors(trigger)
+     * Private method: _updateEventDescriptors(eventDescriptor)
      */
     function _updateEventDescriptors(eventDescriptor) {
       vm.rule.eventDescriptors.push(eventDescriptor);
@@ -80,6 +82,24 @@
       } else {
         vm.rule.stateEvaluator = childEvaluator;
         vm.rule.stateEvaluator.childEvaluators = [];
+      }
+    }
+
+    /*
+     * Private method: _updateActions(action, actionType)
+     */
+    function _updateActions(action, actionType) {
+      switch(actionType) {
+        case 'EnterAction':
+          vm.addedEnterActions.push(action);
+          vm.rule.actions.push(action.action);
+          break;
+        case 'ExitAction':
+          vm.addedExitActions.push(action);
+          vm.rule.exitActions.push(action.action);
+          break;
+        default:
+          break;
       }
     }
 
@@ -116,17 +136,40 @@
     }
 
     /*
-     * Public method: addAction()
+     * Public method: addAction(actionType)
      */
-    function addAction() {
+    function addAction(actionType) {
       // Show modal
       appModalService
         .show('app/components/rules/master/add/rules-add-action-modal.html', 'RulesAddActionCtrl as rulesAddAction', {})
-        .then(function(result) {
-          $log.log('result', result);
+        .then(function(action) {
+          if(action !== undefined) {
+            _updateActions(action, actionType);       
+          }
         }, function(error) {
           $log.error(error);
         });
+    }
+
+    /*
+     * Public method: save()
+     */
+    function save() {
+      // exitActions
+      if(vm.rule.eventDescriptors.length >= 1) {
+        delete vm.rule.exitActions;
+      }
+
+      // eventDescriptor or eventDescriptorList
+      if(vm.rule.eventDescriptors.length > 1) {
+        vm.rule.eventDescriptorList = vm.rule.eventDescriptors;
+      } else if(vm.rule.eventDescriptors.length === 1) {
+        vm.rule.eventDescriptor = vm.rule.eventDescriptors[0];
+      }
+
+      delete vm.rule.eventDescriptors;
+
+      vm.closeModal(vm.rule);
     }
 
 

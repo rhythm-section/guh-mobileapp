@@ -85,15 +85,21 @@
      * Public method: addRule()
      */
     function addRule() {
-      // Reset wizard
-      // $rootScope.$broadcast('wizard.reset');
-
-      // Reset view
-
       appModalService
         .show('app/components/rules/master/add/rules-add-modal.html', 'RulesAddCtrl as rulesAdd', {})
-        .then(function(result) {
-          $log.log('result', result);
+        .then(function(rule) {
+          if(rule !== undefined) {
+            DSRule.create({
+                'rule': rule
+              })
+              .then(function(rule) {
+                // TODO: Find a better way to update data-store after create (maybe use lifecycle hook "afterCreate")
+                _loadViewData(true);
+              })
+              .catch(function(error) {
+                $log.error(error);
+              });
+          }
         }, function(error) {
           $log.error(error);
         });

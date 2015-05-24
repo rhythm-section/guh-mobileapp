@@ -63,7 +63,6 @@
         .then(_findDeviceRelations)
         .then(function(devices) {
           vm.availableTriggerDevices = devices;
-          $log.log('devices', devices);
         });;
     }
 
@@ -157,7 +156,12 @@
         vm.isStateType = true;
       }
 
-      $rootScope.$broadcast('wizard.next', 'addTriggerWizard');
+      $log.log('type', type);
+      if(DSEventType.is(type) && type.paramTypes.length === 0) {
+        vm.save();
+      } else {
+        $rootScope.$broadcast('wizard.next', 'addTriggerWizard');
+      }
     }
 
     /*
@@ -208,7 +212,7 @@
 
       // EventDescriptor
       if(DSEventType.is(vm.selectedType)) {
-        trigger.eventDescriptor.escriptor = vm.selectedDevice.getEventDescriptor(vm.selectedType);
+        trigger.eventDescriptor = vm.selectedDevice.getEventDescriptor(vm.selectedType);
       }
 
       // StateEvaluator

@@ -24,8 +24,9 @@
 
   <!-- Header -->
   <ion-header-bar>
-    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rulesAddAction.closeModal()"></button>
+    <button class="button button-icon icon icon ion-ios-arrow-back" guh-wizard-prev="addActionWizard"> All</button>
     <div class="title">Add Rule Action</div>
+    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="rulesAddAction.cancel()"></button>
   </ion-header-bar>
 
   <!-- Add action wizard -->
@@ -34,23 +35,40 @@
     <!-- Step 1.1: Select action -->
     <ion-slide guh-wizard-step>
       <ion-content>
-        <p class="padding">Select action</p>
+        <!-- Devices -->
+        <div class="list" ng-if="actionDevice.deviceClass.actionTypes.length > 0" ng-repeat="actionDevice in rulesAddAction.availableActionDevices | orderBy: 'name' track by $index">
+          <p class="item item-divider">{{ actionDevice.deviceClass.name }}</p>
+
+          <!-- Actions -->
+          <p class="item item-icon-right" ng-if="actionType.paramTypes.length == 0" ng-click="rulesAddAction.selectAction(actionDevice, actionType)" ng-repeat="actionType in actionDevice.deviceClass.actionTypes">
+            {{ actionType.phrase }}
+          </p>
+
+          <p class="item item-icon-right" ng-if="actionType.paramTypes.length > 0" ng-click="rulesAddAction.selectAction(actionDevice, actionType)" ng-repeat="actionType in actionDevice.deviceClass.actionTypes">
+            {{ actionType.phrase }}
+            <i class="icon ion-ios-arrow-right"></i>
+          </p>
+
+        </div>
       </ion-content>
     </ion-slide>
 
     <!-- Step 1.2: Save action -->
     <ion-slide guh-wizard-step>
       <ion-content>
-        <p class="padding">Save action</p>
+        <!-- ActionType -->
+        <guh-input model="paramType" ng-if="rulesAddAction.selectedType.paramTypes.length > 0" ng-repeat="paramType in rulesAddAction.selectedType.paramTypes"></guh-input>
+
+        <button class="button button-full" ng-click="rulesAddAction.save()">Save action</button>
       </ion-content>
     </ion-slide>
 
   </ion-slide-box>
 
   <!-- Footer -->
-  <ion-footer-bar>
+  <!-- <ion-footer-bar>
     <button class="button button-icon ion-ios-arrow-back pull-left" guh-wizard-prev="addActionWizard"></button>
     <button class="button button-icon ion-ios-arrow-forward pull-right" guh-wizard-next="addActionWizard"></button>
-  </ion-footer-bar>
+  </ion-footer-bar> -->
 
 </ion-modal-view>

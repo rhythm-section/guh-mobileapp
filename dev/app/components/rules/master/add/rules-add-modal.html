@@ -46,10 +46,9 @@
 
         <!-- Add trigger button -->
         <button class="button button-full" type="button" ng-click="rulesAdd.addTrigger()">Add {{ rulesAdd.addedTrigger.length > 0 && 'another' || 'a' }} trigger</button>
-        <button class="button button-full icon-right ion-ios-arrow-forward" type="button" guh-wizard-next="addRuleWizard">
-        <!-- <button class="button button-full icon-right ion-ios-arrow-forward" type="button" ng-disabled="rulesAdd.addedTrigger.length === 0" guh-wizard-next="addRuleWizard"> -->
-          Add actions
-        </button>
+
+        <!-- Add actions button -->
+        <button class="button button-full icon-right ion-ios-arrow-forward" type="button" ng-disabled="rulesAdd.addedTrigger.length === 0" guh-wizard-next="addRuleWizard">Add actions</button>
       </ion-content>
     </ion-slide>
 
@@ -59,15 +58,41 @@
       <ion-content>
         <p class="padding">What action(s) should guh execute?</p>
 
-        <!-- List of added action(s) -->
-        <ion-list>
-          <ion-item class="item" ng-repeat="action in rulesAdd.addedActions track by $index">
-            <h2>{{ action }}</h2>
-          </ion-item>
-        </ion-list>
+        <!-- Enter actions -->
+        <div>
+          <p class="padding" ng-show="rulesAdd.rule.eventDescriptors.length <= 0">When rule enters:</p>
 
-        <!-- Add action button -->
-        <button class="button button-full" ng-click="rulesAdd.addAction()" type="button">Add {{ rules.addedActions.length > 0 && 'another' || 'an' }} action</button>
+          <!-- List of added actions -->
+          <ion-list>
+            <ion-item class="item" ng-repeat="action in rulesAdd.addedEnterActions track by $index">
+              <h2>{{ action.type.phrase }}</h2>
+            </ion-item>
+          </ion-list>
+
+          <!-- Add enter action button -->
+          <button class="button button-full" ng-show="rulesAdd.rule.eventDescriptors.length <= 0" ng-click="rulesAdd.addAction('EnterAction')" type="button">Add {{ rules.addedActions.length > 0 && 'another' || 'an' }} enter action</button>
+
+          <!-- Add action button -->
+          <button class="button button-full" ng-show="rulesAdd.rule.eventDescriptors.length > 0" ng-click="rulesAdd.addAction('EnterAction')" type="button">Add {{ rules.addedActions.length > 0 && 'another' || 'an' }} action</button>
+        </div>
+
+        <!-- Exit actions -->
+        <div ng-show="rulesAdd.rule.eventDescriptors.length <= 0">
+          <p class="padding">When rule exits:</p>
+
+          <!-- List of added actions -->
+          <ion-list>
+            <ion-item class="item" ng-repeat="action in rulesAdd.addedExitActions track by $index">
+              <h2>{{ action.type.phrase }}</h2>
+            </ion-item>
+          </ion-list>
+
+          <!-- Add exit action button -->
+          <button class="button button-full" ng-click="rulesAdd.addAction('ExitAction')" type="button">Add {{ rules.addedActions.length > 0 && 'another' || 'an' }} exit action</button>
+        </div>
+
+        <button class="button button-full icon-right ion-ios-arrow-forward" type="button" ng-disabled="rulesAdd.rule.actions.length === 0" guh-wizard-next="addRuleWizard">Enter rule details</button>
+        
       </ion-content>
     </ion-slide>
 
@@ -75,8 +100,17 @@
     <!-- Step 3: Add rule name and enabled/disable it -->
     <ion-slide guh-wizard-step>
       <ion-content>
+        <!-- Rule name -->
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Name</span>
+          <input type="text" placeholder="Name" ng-model="rulesAdd.rule.name">
+        </label>
+
+        <!-- Enabled/disable rule -->
+        <ion-checkbox ng-model="rulesAdd.rule.enabled">Rule is {{ rulesAdd.rule.enabled && 'enabled' ||'disabled' }}</ion-checkbox>
+
         <!-- Add rule button -->
-        <button class="button button-full" ng-click="rules.saveRule()" type="button">Add rule</button>
+        <button class="button button-full" ng-click="rulesAdd.save()" ng-disabled="!rulesAdd.rule.name" type="button">Add rule</button>
       </ion-content>
     </ion-slide>
 

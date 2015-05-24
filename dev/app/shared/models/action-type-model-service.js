@@ -65,7 +65,8 @@
 
       // Instance methods
       methods: {
-        getParams: getParams
+        getParams: getParams,
+        getRuleActionParams: getRuleActionParams
       },
 
       // Lifecycle hooks
@@ -81,6 +82,14 @@
      */
     function _addUiData(resource, attrs) {
       var paramTypes = attrs.paramTypes;
+      var phrase = 'Execute "' + attrs.name + '"';
+
+      // phrase
+      if(angular.isArray(paramTypes) && paramTypes.length === 0) {
+        attrs.phrase = phrase + '.';
+      } else {
+        attrs.phrase = phrase + ' with following Parameters.';
+      }
 
       if(angular.isArray(paramTypes) && paramTypes.length === 0) {
         // actionType
@@ -110,6 +119,24 @@
       });
 
       return params;
+    }
+
+    /*
+     * Public method: getRuleActionParams()
+     */
+    function getRuleActionParams() {
+      var self = this;
+      var ruleActionParams = [];
+      var paramTypes = self.paramTypes;
+
+      angular.forEach(paramTypes, function(paramType) {
+        ruleActionParams.push({
+          name: paramType.name,
+          value: paramType.value
+        });
+      });
+
+      return ruleActionParams;
     }
 
   }

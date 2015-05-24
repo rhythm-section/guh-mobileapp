@@ -29,18 +29,110 @@
     .module('guh.rules')
     .controller('RulesAddActionCtrl', RulesAddActionCtrl);
 
-  RulesAddActionCtrl.$inject = ['$log'];
+  RulesAddActionCtrl.$inject = ['$log', '$rootScope', 'DSDevice', 'DSActionType'];
 
-  function RulesAddActionCtrl($log) {
+  function RulesAddActionCtrl($log, $rootScope, DSDevice, DSActionType) {
 
     var vm = this;
-    var triggerModal = {};
+    var actionModal = {};
+
+    vm.availableActionDevices = [];
+
+    // Public methods
+    vm.selectAction = selectAction;
+    vm.cancel = cancel;
+    vm.save = save;
 
 
     /*
      * Private method: _init()
      */
-    function _init() {}
+    function _init() {
+      _loadViewData(false);
+    }
+
+    /*
+     * Private method: _loadViewData(bypassCache)
+     */
+    function _loadViewData(bypassCache) {
+      return _findAllDevices(bypassCache)
+        .then(_findDeviceRelations)
+        .then(function(devices) {
+          vm.availableActionDevices = devices;
+          $log.log('devices', devices);
+        });;
+    }
+
+    /*
+     * Private method: _findAllDevices(bypassCache)
+     */
+    function _findAllDevices(bypassCache) {
+      if(bypassCache) {
+        return DSDevice.findAll({}, { bypassCache: true });
+      }
+      
+      return DSDevice.findAll();
+    }
+
+    /*
+     * Private method: _findDeviceRelations()
+     */
+    function _findDeviceRelations(devices) {
+      return angular.forEach(devices, function(device) {
+        return DSDevice
+          .loadRelations(device, ['deviceClass'])
+          .then(_setAvailableItem);
+      });
+    }
+
+    /*
+     * Private method: _setAvailableItem(device)
+     */
+    function _setAvailableItem(device) {
+      var deviceClass = device.deviceClass;
+
+      if(deviceClass.actionTypes.length > 0) {
+        $log.log('device with actions', device);
+        return device;
+      } else {
+        $log.log('device without actions', device);
+      }
+    }
+
+
+    /*
+     * Public method: selectAction(device, type)
+     */
+    function selectAction(device, type) {
+      vm.selectedDevice = angular.copy(device);
+      vm.selectedType = angular.copy(type);
+
+      if(DSActionType.is(type) && type.paramTypes.length === 0) {
+        vm.save();
+      } else {
+        $rootScope.$broadcast('wizard.next', 'addActionWizard');
+      }
+    }
+
+    /*
+     * Public method: cancel()
+     */
+    function cancel() {
+      vm.closeModal();
+    }
+
+    /*
+     * Public method: save(trigger)
+     */
+    function save() {
+      var action = {
+        device: vm.selectedDevice,
+        action: vm.selectedDevice.getAction(vm.selectedType),
+        type: vm.selectedType
+      };
+
+      vm.closeModal(action);
+    }
 
 
     _init();

@@ -76,7 +76,8 @@
         executeAction: executeAction,
         remove: remove,
         getEventDescriptor: getEventDescriptor,
-        getStateDescriptor: getStateDescriptor
+        getStateDescriptor: getStateDescriptor,
+        getAction: getAction
       },
 
       // Lifecycle hooks
@@ -226,6 +227,25 @@
       stateDescriptor.value = stateType.value;
 
       return stateDescriptor;
+    }
+
+    /*
+     * Public method: getAction(actionType)
+     */
+    function getAction(actionType) {
+      var self = this;
+      var action = {};
+      var ruleActionParams = [];
+
+      ruleActionParams = actionType.getRuleActionParams();
+      if(ruleActionParams.length > 0) {
+        action.ruleActionParams = ruleActionParams;
+      }
+
+      action.actionTypeId = actionType.id;
+      action.deviceId = self.id;
+
+      return action;
     }
 
   }
