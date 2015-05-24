@@ -94,7 +94,8 @@
     });
 
     angular.extend(DSDevice, {
-      add: add
+      add: add,
+      edit: edit
     });
 
     return DSDevice;
@@ -145,6 +146,28 @@
       });
 
       return DSDevice.create({device: device});
+    }
+
+    /*
+     * Public method: edit(deviceId, deviceData)
+     */
+    function edit(deviceId, deviceData) {
+      var deviceData = deviceData || {};
+      var device = {};
+
+      device.deviceDescriptorId = deviceData.id || '';
+
+      device.deviceParams = [];
+      angular.forEach(deviceData.deviceParamTypes, function(deviceParamType) {
+        var deviceParam = {};
+
+        deviceParam.name = deviceParamType.name;
+        deviceParam.value = deviceParamType.value;
+
+        device.deviceParams.push(deviceParam);
+      });
+
+      return DSDevice.update(deviceId, {device: device});
     }
 
     /*

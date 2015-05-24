@@ -20,7 +20,20 @@
   SOFTWARE.
 -->
 
-<label class="item item-input item-select">
-  <div class="input-label">{{ model.name }}</div>
-  <select ng-disabled="model.readOnly" ng-model="model.value" ng-options="value for value in model.allowedValues"></select>
-</label>
+<ion-modal-view>
+
+  <!-- Header -->
+  <ion-header-bar>
+    <div class="title">Edit {{ devicesEdit.name }}</div>
+    <button class="button button-icon icon icon ion-ios-close-empty" ng-click="devicesEdit.cancel()"></button>
+  </ion-header-bar>
+
+  <ion-content>
+
+    <ng-include src="devicesEdit.createMethod.editTemplate"></ng-include>
+
+    <button class="button button-full" ng-click="devicesEdit.remove()">Remove device</button>
+
+  </ion-content>
+
+</ion-modal-view>

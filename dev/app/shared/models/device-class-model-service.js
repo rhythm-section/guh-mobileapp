@@ -184,23 +184,27 @@
      */
     function getCreateMethod() {
       var self = this;
-      var basePath = 'app/components/devices/master/pairing-templates/';
+      var addBasePath = 'app/components/devices/master/pairing-templates/';
+      var editBasePath = 'app/components/devices/detail/edit/pairing-templates/';
       var createMethodData = null;
 
       if(self.createMethods.indexOf('CreateMethodDiscovery') > -1) {
         createMethodData = {
           title: 'Discovery',
-          template: basePath + 'devices-add-create-discovery.html'
+          addTemplate: addBasePath + 'devices-add-create-discovery.html',
+          editTemplate: editBasePath + 'devices-edit-create-discovery.html'
         };
       } else if(self.createMethods.indexOf('CreateMethodUser') > -1) {
         createMethodData = {
           title: 'User',
-          template: basePath + 'devices-add-create-user.html'
+          addTemplate: addBasePath + 'devices-add-create-user.html',
+          editTemplate: editBasePath + 'devices-edit-create-user.html'
         };
       } else if(self.createMethods.indexOf('CreateMethodAuto') > -1) {
         createMethodData = {
           title: 'Auto',
-          template: null
+          addTemplate: null,
+          ediTemplate: null
         };
       } else {
         $log.error('CreateMethod "' + createMethod + '" not implemented.');
@@ -214,7 +218,8 @@
      */
     function getSetupMethod() {
       var self = this;
-      var basePath = 'app/components/devices/master/pairing-templates/';
+      var addBasePath = 'app/components/devices/master/pairing-templates/';
+      var editBasePath = 'app/components/devices/detail/edit/pairing-templates/';
       var setupMethodData = {};
 
       switch(self.setupMethod) {
@@ -223,19 +228,22 @@
         case 'SetupMethodDisplayPin':
           setupMethodData = {
             title: 'Display Pin',
-            template: basePath + 'devices-add-setup-display-pin.html'
+            addTemplate: basePath + 'devices-add-setup-display-pin.html',
+            editTemplate: basePath + 'devices-edit-setup-display-pin.html'
           };
           break;
         case 'SetupMethodEnterPin':
           setupMethodData = {
             title: 'Enter Pin',
-            template: basePath + 'devices-add-setup-enter-pin.html'
+            addTemplate: basePath + 'devices-add-setup-enter-pin.html',
+            editTemplate: basePath + 'devices-edit-setup-enter-pin.html'
           };
           break;
         case 'SetupMethodPushButton':
           setupMethodData = {
             title: 'Enter Pin',
-            template: basePath + 'devices-add-setup-push-button.html'
+            addTemplate: basePath + 'devices-add-setup-push-button.html',
+            editTemplate: basePath + 'devices-edit-setup-push-button.html'
           };
           break;
         default:

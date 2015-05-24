@@ -29,9 +29,9 @@
     .module('guh.devices')
     .controller('DevicesDetailCtrl', DevicesDetailCtrl);
 
-  DevicesDetailCtrl.$inject = ['$log', '$rootScope', '$scope', '$stateParams', '$ionicModal', 'libs', 'DSDeviceClass', 'DSDevice', 'DSState'];
+  DevicesDetailCtrl.$inject = ['$log', '$rootScope', '$scope', '$stateParams', '$ionicModal', 'libs', 'appModalService', 'DSDeviceClass', 'DSDevice', 'DSState'];
 
-  function DevicesDetailCtrl($log, $rootScope, $scope, $stateParams, $ionicModal, libs, DSDeviceClass, DSDevice, DSState) {
+  function DevicesDetailCtrl($log, $rootScope, $scope, $stateParams, $ionicModal, libs, appModalService, DSDeviceClass, DSDevice, DSState) {
     
     var vm = this;
     var currentDevice = {};
@@ -40,9 +40,6 @@
     // Public methods
     vm.execute = execute;
     vm.editSettings = editSettings;
-    vm.closeSettings = closeSettings;
-    vm.saveSettings = saveSettings;
-    vm.remove = remove;
 
 
     /*
@@ -77,6 +74,8 @@
           vm.params = currentDevice.params;
           vm.states = currentDevice.states;
 
+          $log.log('vm', vm);
+
           // Actions & States
           angular.forEach(currentDevice.deviceClass.actionTypes, function(actionType) {
             var action = {};
@@ -92,29 +91,10 @@
             vm.actions.push(action);
           });
 
-          // Initialize settings modal
-          _initModal();
-
           // Subscribe to websocket messages
           _subscribeToWebsocket();
         })
         .catch(_showError);
-    }
-
-    /*
-     * Private method: _initModal()
-     */
-    function _initModal() {
-      // Needed because ionicModal only works with "$scope" but not with "vm" as scope
-      $scope.device = vm;
-
-      // Edit modal
-      $ionicModal.fromTemplateUrl('app/components/devices/detail/devices-edit-modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      }).then(function(modal) {
-        editModal = modal;
-      });
     }
 
     /*
@@ -189,34 +169,14 @@
      * Public method: editSettings()
      */
     function editSettings() {
-      editModal.show();
-    }
-
-    /*
-     * Public method: closeSettings()
-     */
-    function closeSettings() {
-      editModal.hide();
-    }
-
-    /*
-     * Public method: saveSettings()
-     */
-    function saveSettings() {
-      editModal.hide();
-    }
-
-    /*
-     * Public method: remove()
-     */
-    function remove() {
-      currentDevice
-        .remove()
-        .then(function(response) {
-          $log.log(currentDevice.name + ' is now removed.', response);
-        })
-        .catch(function(error) {
-          // TODO: Build general error handler
+      appModalService
+        .show('app/components/devices/detail/edit/devices-edit-modal.html', 'DevicesEditCtrl as devicesEdit', currentDevice)
+        .then(function(deviceUpdated) {
+          $log.log('deviceUpdated', deviceUpdated);
+          if(deviceUpdated) {
+            _loadViewData();
+          }
+        }, function(error) {
           $log.error(error);
         });
     }
