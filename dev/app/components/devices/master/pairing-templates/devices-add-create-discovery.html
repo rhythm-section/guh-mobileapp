@@ -23,7 +23,7 @@
 <!-- Discovered devices -->
 <ion-spinner class="padding" icon="dots" ng-show="!devices.discover && devices.loading"></ion-spinner>
 
-<p class="padding" ng-if="devices.discover && devices.discoveredDevices.length === 0">Sorry, no devices found. Please check if the device you want to add is properbly set up.</p>
+<p class="padding" ng-if="devices.discover && devices.discoveredDevices.length === 0">Sorry, no devices found. Please check if the device you want to add is set up properbly.</p>
 
 <ion-list ng-if="devices.discoveredDevices.length > 0">
   <ion-item class="item item-text-wrap" ng-repeat="device in devices.discoveredDevices track by $index | orderBy: 'name'" ng-click="devices.saveDevice(device)">
