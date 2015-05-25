@@ -21,6 +21,6 @@
 -->
 
 <form ng-show="devicesEdit.deviceClass.paramTypes.length > 0" ng-submit="devicesEdit.save()">
-  <guh-input model="paramType" ng-repeat="paramType in devicesEdit.deviceClass.paramTypes track by $index"></guh-input>
+  <guh-input model="paramType" disabled="paramType.readOnly" ng-repeat="paramType in devicesEdit.deviceClass.paramTypes track by $index"></guh-input>
   <button class="button-full button" type="submit">Update Device</button>
 </form>

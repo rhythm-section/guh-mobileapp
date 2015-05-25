@@ -39,6 +39,7 @@
       restrict: 'E',
       scope: {
         change: '&?',
+        disabled: '=?',
         model: '=',
         state: '=?'
       }
@@ -70,13 +71,12 @@
               // TODO: Use code below to refresh state (wait for new endpoint in guh-webserver)
               $scope.loading = false;
 
-              // DSState
-              //   .find($scope.state.stateTypeId, { bypassCache: true })
-              //   .then(function(state) {
-              //     $log.log('STATE', state);
-              //     $scope.state = state;
-              //     $scope.loading = false;
-              //   });
+              DSState
+                .find($scope.state.stateTypeId, { bypassCache: true })
+                .then(function(state) {
+                  $scope.state = state;
+                  $scope.loading = false;
+                });
             }, 2000);
           })
           .catch(function(error) {
@@ -90,8 +90,6 @@
     }
 
     function inputLink(scope, element, attrs) {
-      $log.log('inputLink', attrs);
-
       // Initialize with current value
       if(angular.isObject(scope.state)) {
         scope.model.value = scope.state.value;
@@ -100,6 +98,9 @@
         scope.timeout = false;
       }
 
+      scope.disabled = (scope.disabled) ? scope.disabled : false;
+      $log.log('scope.disabled', scope.disabled);
+
       scope.$on('$destroy', function() {
         // Remove only element, scope needed afterwards
         // scope.$destroy();
@@ -107,7 +108,6 @@
       });
 
       scope.$watch('model', function(newValue, oldValue) {
-        $log.log('model', scope.model, newValue, oldValue);
         var templateUrl = scope.model.templateUrl;
 
         $http.get(templateUrl).success(function(template) {
