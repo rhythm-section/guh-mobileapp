@@ -186,7 +186,16 @@
       _findVendorRelations(vendor)
         .then(function(vendor) {
           vm.selectedVendor = vendor;
-          vm.supportedDeviceClasses = vendor.deviceClasses;
+          vm.supportedDeviceClasses = [];
+
+          // Remove deviceClasses that are auto discovered
+          angular.forEach(vendor.deviceClasses, function(deviceClass, index) {
+            var createMethod = deviceClass.getCreateMethod();
+
+            if(createMethod.title !== 'Auto') {
+              vm.supportedDeviceClasses.push(deviceClass);
+            }
+          });
           
           // Go to next wizard step
           $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
