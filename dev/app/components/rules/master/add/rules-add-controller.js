@@ -141,7 +141,7 @@
     function addAction(actionType) {
       // Show modal
       appModalService
-        .show('app/components/rules/master/add/rules-add-action-modal.html', 'RulesAddActionCtrl as rulesAddAction', {})
+        .show('app/components/rules/master/add/rules-add-action-modal.html', 'RulesAddActionCtrl as rulesAddAction', vm.addedTrigger)
         .then(function(action) {
           if(action !== undefined) {
             _updateActions(action, actionType);       

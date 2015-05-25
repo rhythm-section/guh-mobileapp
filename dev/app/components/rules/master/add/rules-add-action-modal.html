@@ -57,7 +57,16 @@
     <ion-slide guh-wizard-step>
       <ion-content>
         <!-- ActionType -->
-        <guh-input model="paramType" ng-if="rulesAddAction.selectedType.paramTypes.length > 0" ng-repeat="paramType in rulesAddAction.selectedType.paramTypes"></guh-input>
+        <div ng-if="rulesAddAction.selectedType.paramTypes.length > 0" ng-repeat="paramType in rulesAddAction.selectedType.paramTypes">
+          <!-- Input -->
+          <guh-input model="paramType" disabled="paramType.dependsOnTrigger"></guh-input>
+
+          <!-- Event paramTypes -->
+          <ng-form>
+            <ion-radio name="group-{{ paramType }}" ng-change="rulesAddAction.setTriggerDependency()" ng-model="paramType.dependsOnTrigger" ng-value="false" ng-show="rulesAddAction.eventParamTypes[paramType.name].length > 0">Use entered value.</ion-radio>
+            <ion-radio name="group-{{ paramType.name }}" ng-change="rulesAddAction.setTriggerDependency(paramType, eventParamType)" ng-model="paramType.dependsOnTrigger" ng-value="true" ng-repeat="eventParamType in rulesAddAction.eventParamTypes[paramType.name] track by $index">Use value of {{ eventParamType.name }}.</ion-radio>
+          </ng-form>
+        </div>
 
         <button class="button button-full" ng-click="rulesAddAction.save()">Save action</button>
       </ion-content>

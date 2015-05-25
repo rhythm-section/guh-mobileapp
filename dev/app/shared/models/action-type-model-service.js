@@ -98,6 +98,7 @@
         // paramTypes
         angular.forEach(paramTypes, function(paramType) {
           paramType = modelsHelper.addUiData(paramType);
+          paramType.dependsOnTrigger = false;
         });
       }
     }
@@ -122,18 +123,32 @@
     }
 
     /*
-     * Public method: getRuleActionParams()
+     * Public method: getRuleActionParams(actionType, actionParamType, eventParamType)
      */
-    function getRuleActionParams() {
+    function getRuleActionParams(actionType, actionParamType, eventParamType) {
       var self = this;
       var ruleActionParams = [];
       var paramTypes = self.paramTypes;
 
       angular.forEach(paramTypes, function(paramType) {
-        ruleActionParams.push({
-          name: paramType.name,
-          value: paramType.value
-        });
+        if(actionParamType !== undefined && eventParamType !== undefined) {
+          if(paramType.name === actionParamType.name) {
+            ruleActionParams.push({
+              eventParamName: eventParamType.name,
+              eventTypeId: eventParamType.eventDescriptor.eventTypeId
+            });
+          } else {
+            ruleActionParams.push({
+              name: paramType.name,
+              value: paramType.value
+            });
+          }
+        } else {
+          ruleActionParams.push({
+            name: paramType.name,
+            value: paramType.value
+          });
+        }
       });
 
       return ruleActionParams;

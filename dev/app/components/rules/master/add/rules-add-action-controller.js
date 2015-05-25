@@ -29,17 +29,22 @@
     .module('guh.rules')
     .controller('RulesAddActionCtrl', RulesAddActionCtrl);
 
-  RulesAddActionCtrl.$inject = ['$log', '$rootScope', 'DSDevice', 'DSActionType'];
+  RulesAddActionCtrl.$inject = ['$log', '$rootScope', 'libs', 'DSDevice', 'DSActionType', 'parameters'];
 
-  function RulesAddActionCtrl($log, $rootScope, DSDevice, DSActionType) {
+  function RulesAddActionCtrl($log, $rootScope, libs, DSDevice, DSActionType, parameters) {
 
     var vm = this;
     var actionModal = {};
+    var eventParamTypesAll = [];
+    var eventTriggersAll = [];
 
     vm.availableActionDevices = [];
+    vm.addedTrigger = parameters;
+    vm.ruleAction = {};
 
     // Public methods
     vm.selectAction = selectAction;
+    vm.setTriggerDependency = setTriggerDependency;
     vm.cancel = cancel;
     vm.save = save;
 
@@ -49,6 +54,24 @@
      */
     function _init() {
       _loadViewData(false);
+
+      // Get all available paramTypes from all selected triggers
+      var paramTypesNested = [];
+      angular.forEach(vm.addedTrigger, function(trigger) {
+        var triggerType = trigger.type;  
+        var paramTypes = triggerType.paramTypes;
+
+        angular.forEach(paramTypes, function(paramType, index) {
+          paramTypes[index].eventDescriptor = trigger.eventDescriptor;
+          paramTypes[index].deviceName = trigger.device.name;
+          paramTypes[index].eventTypeName = trigger.type.name;
+        });
+
+        if(paramTypes.length > 0) {
+          paramTypesNested.push(triggerType.paramTypes);
+        }
+      });
+      eventParamTypesAll = libs._.flatten(paramTypesNested, true);
     }
 
     /*
@@ -104,14 +127,41 @@
      * Public method: selectAction(device, type)
      */
     function selectAction(device, type) {
-      vm.selectedDevice = angular.copy(device);
-      vm.selectedType = angular.copy(type);
-
       if(DSActionType.is(type) && type.paramTypes.length === 0) {
         vm.save();
       } else {
+        var actionParamTypes = type.paramTypes;
+        var eventParamTypesFiltered = {};
+
+        // Save event paramTypes that an action can depend on
+        angular.forEach(actionParamTypes, function(actionParamType) {
+          eventParamTypesFiltered[actionParamType.name] = libs._.filter(eventParamTypesAll, function(eventParamType) {
+            return actionParamType.type === eventParamType.type;
+          });
+        });
+
+        vm.selectedDevice = angular.copy(device);
+        vm.selectedType = angular.copy(type);
+        vm.dependsOnTrigger = false;
+        vm.eventParamTypes = eventParamTypesFiltered;
+
+        // Go to next wizard step
         $rootScope.$broadcast('wizard.next', 'addActionWizard');
       }
+    }
+
+    /*
+     * Public method: setTriggerDependency(actionParamType, eventParamType)
+     */
+    function setTriggerDependency(actionParamType, eventParamType) {
+      if(actionParamType !== undefined && eventParamType !== undefined) {
+        // If event paramType was selected that the action shoudl depend on
+        vm.ruleAction = vm.selectedDevice.getAction(vm.selectedType, actionParamType, eventParamType);
+      } else {
+        vm.ruleAction = vm.selectedDevice.getAction(vm.selectedType);
+      }
+
+      $log.log('vm.ruleAction', vm.ruleAction);
     }
 
     /*
@@ -122,12 +172,16 @@
     }
 
     /*
-     * Public method: save(trigger)
+     * Public method: save()
      */
     function save() {
+      // $log.log('ruleAction', vm.selectedDevice.getAction(vm.selectedType));
+      $log.log('ruleAction', vm.ruleAction);
+
       var action = {
         device: vm.selectedDevice,
-        action: vm.selectedDevice.getAction(vm.selectedType),
+        // action: vm.selectedDevice.getAction(vm.selectedType),
+        action: vm.ruleAction,
         type: vm.selectedType
       };
 

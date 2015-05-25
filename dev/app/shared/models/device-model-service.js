@@ -230,14 +230,14 @@
     }
 
     /*
-     * Public method: getAction(actionType)
+     * Public method: getAction(actionType, actionParamType, eventParamType)
      */
-    function getAction(actionType) {
+    function getAction(actionType, actionParamType, eventParamType) {
       var self = this;
       var action = {};
       var ruleActionParams = [];
 
-      ruleActionParams = actionType.getRuleActionParams();
+      ruleActionParams = actionType.getRuleActionParams(actionType, actionParamType, eventParamType);
       if(ruleActionParams.length > 0) {
         action.ruleActionParams = ruleActionParams;
       }
