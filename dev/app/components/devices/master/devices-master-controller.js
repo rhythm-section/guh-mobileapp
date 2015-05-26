@@ -29,9 +29,9 @@
     .module('guh.devices')
     .controller('DevicesMasterCtrl', DevicesMasterCtrl);
 
-  DevicesMasterCtrl.$inject = ['$log', '$rootScope', '$scope', '$ionicModal', 'DSVendor', 'DSDeviceClass', 'DSDevice'];
+  DevicesMasterCtrl.$inject = ['$log', '$rootScope', '$scope', '$ionicModal', 'DSVendor', 'DSDeviceClass', 'DSDevice', 'appModalService'];
 
-  function DevicesMasterCtrl($log, $rootScope, $scope, $ionicModal, DSVendor, DSDeviceClass, DSDevice) {
+  function DevicesMasterCtrl($log, $rootScope, $scope, $ionicModal, DSVendor, DSDeviceClass, DSDevice, appModalService) {
     
     var vm = this;
     var addModal = {};
@@ -41,11 +41,6 @@
 
     // Public methods
     vm.addDevice = addDevice;
-    vm.closeDevice = closeDevice;
-    vm.saveDevice = saveDevice;
-    vm.selectVendor = selectVendor;
-    vm.selectDeviceClass = selectDeviceClass;
-    vm.discoverDevices = discoverDevices;
 
 
     /*
@@ -63,7 +58,6 @@
         .then(_findDeviceRelations)
         .then(function(devices) {
           vm.configured = devices;
-          $log.log('devices', devices);
         });;
     }
 
@@ -96,34 +90,6 @@
       return DSDeviceClass.loadRelations(device.deviceClass, ['vendor']);
     }
 
-    /*
-     * Private method: _initModal()
-     */
-    function _initModal() {
-      // Needed because ionicModal only works with "$scope" but not with "vm" as scope
-      $scope.devices = vm;
-
-      // Edit modal
-      return $ionicModal.fromTemplateUrl('app/components/devices/master/devices-add-modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-      });
-    }
-
-    /*
-     * Private method: _findAllVendors()
-     */
-    function _findAllVendors() {
-      return DSVendor.findAll();
-    }
-
-    /*
-     * Private method: _findVendorRelations(vendor)
-     */
-    function _findVendorRelations(vendor) {
-      return DSVendor.loadRelations(vendor, ['deviceClasses']);
-    }
-
 
     /*
      * Public method: refresh()
@@ -139,141 +105,20 @@
      * Public method: addDevice()
      */
     function addDevice() {
-      // Reset wizard
-      $rootScope.$broadcast('wizard.reset', 'addDeviceWizard');
-
-      // Reset view
-      vm.selectedVendor = null;
-      vm.selectedDeviceClass = null;
-
-      // Schow modal
-      _initModal().then(function(modal) {
-        $log.log('Modal initialized', modal);
-        addModal = modal;
-        addModal.show();
-      });
-
-      _findAllVendors()
-        .then(function(vendors) {
-          vm.supportedVendors = vendors;
-        });
-    }
-
-    /*
-     * Public method: closeDevice()
-     */
-    function closeDevice() {
-      addModal
-        .hide()
-        .then(function() {
-          addModal
-            .remove()
-            .then(function() {
-              $log.log('Modal removed');
-            })
-            .catch(function(error) {
-              $log.error('Cannot destroy modal', error)
-            });
-        });
-    }
-
-    /*
-     * Public method: selectVendor(vendor)
-     */
-    function selectVendor(vendor) {
-      vm.vendor = vendor;
-
-      _findVendorRelations(vendor)
-        .then(function(vendor) {
-          vm.selectedVendor = vendor;
-          vm.supportedDeviceClasses = [];
-
-          // Remove deviceClasses that are auto discovered
-          angular.forEach(vendor.deviceClasses, function(deviceClass, index) {
-            var createMethod = deviceClass.getCreateMethod();
-
-            if(createMethod.title !== 'Auto') {
-              vm.supportedDeviceClasses.push(deviceClass);
-            }
-          });
-          
-          // Go to next wizard step
-          $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
-        });
-    }
-
-    /*
-     * Public method: selectDeviceClass(deviceClass)
-     */
-    function selectDeviceClass(deviceClass) {
-      // Reset
-      vm.discoveredDevices = [];
-      vm.createMethod = null;
-      vm.setupMethod = null;
-      vm.discover = false;
-
-      vm.selectedDeviceClass = deviceClass;
-
-      vm.createMethod = deviceClass.getCreateMethod();
-      vm.setupMethod = deviceClass.getSetupMethod();
-
-      // Go to next wizard step
-      $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
-    }
-
-    /*
-     * Public method: saveDevice(device)
-     */
-    function saveDevice(device) {
-      var deviceData = angular.copy(device);
-
-      if(deviceData) {
-        // For discovered devices only
-        var discoveryParamTypes = vm.selectedDeviceClass.discoveryParamTypes;
-
-        deviceData.deviceParamTypes = (angular.isArray(discoveryParamTypes) && discoveryParamTypes.length > 0) ? discoveryParamTypes : [];
-        
-        delete deviceData.description;
-        delete deviceData.title;
-      } else {
-        // For user created devices only
-        var deviceData = {};
-        
-        var paramTypes = vm.selectedDeviceClass.paramTypes;
-        deviceData.deviceParamTypes = (angular.isArray(paramTypes) && paramTypes.length > 0) ? paramTypes : []; 
-      }
-
-      DSDevice
-        .add(vm.selectedDeviceClass.id, deviceData)
+      appModalService
+        .show('app/components/devices/add/devices-add-modal.html', 'DevicesAddCtrl as devicesAdd', {})
         .then(function(device) {
-          // TODO: Find a better way to update data-store after create (maybe use lifecycle hook "afterCreate")
-          _loadViewData(true)
-            .then(function() {
-              addModal.hide();
-            });
-        })
-        .catch(function(error) {
-          $log.error(error);
-        });
-    }
-
-    /*
-     * Public method: discoverDevices(deviceClass)
-     */
-    function discoverDevices() {
-      vm.discover = false;
-      vm.loading = true;
-
-      vm.selectedDeviceClass
-        .discover()
-        .then(function(discoveredDevices) {
-          vm.discover = true;
-          vm.loading = false;
-          vm.discoveredDevices = discoveredDevices.data;
-        })
-        .catch(function(error) {
-          vm.discover = true;
-          vm.loading = false;
+          if(device !== undefined) {
+            DSDevice
+              .add(device.deviceClassId, device.deviceData)
+              .then(function(device) {
+                _loadViewData(true);
+              })
+              .catch(function(error) {
+                $log.error(error);
+              });
+          }
+        }, function(error) {
           $log.error(error);
         });
     }

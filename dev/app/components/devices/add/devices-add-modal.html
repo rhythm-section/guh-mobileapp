@@ -26,59 +26,59 @@
   <ion-header-bar>
     <button class="button button-icon icon ion-ios-arrow-left" guh-wizard-prev="addDeviceWizard"></button>
     <div class="title">Add Device</div>
-    <button class="button button-icon icon ion-ios-close-empty" ng-click="devices.closeDevice()"></button>
-    <!-- <button class="button button-icon icon ion-ios-checkmark-empty" ng-disable="" ng-click="devices.saveDevice()"></button> -->
+    <button class="button button-icon icon ion-ios-close-empty" ng-click="devicesAdd.cancel()"></button>
   </ion-header-bar>
+
 
   <!-- Content -->
   <ion-slide-box class="has-header" delegate-handle="addDeviceWizard" show-pager="false" guh-wizard>
 
     <!-- Select vendor -->
-    <ion-slide guh-wizard-step condition="devices.selectedVendor">
+    <ion-slide guh-wizard-step condition="devicesAdd.selectedVendor">
       <ion-content>
-        <!-- <div class="list" ng-show="devices.supportedVendors.length > 0 && !devices.vendor"> -->
+
         <div class="list">
-          <!-- <p class="item item-text-wrap" ng-class="{active: devices.isItemActive(vendor, devices.selectedVendor)}" ng-repeat="vendor in devices.supportedVendors track by $index | orderBy: 'name'" ng-click="devices.selectVendor(vendor)">{{ vendor.name }}</p> -->
-          <p class="item item-text-wrap item-icon-right" ng-repeat="vendor in devices.supportedVendors track by $index | orderBy: 'name'" ng-click="devices.selectVendor(vendor)">
+          <p class="item item-text-wrap item-icon-right" ng-repeat="vendor in devicesAdd.supportedVendors | orderBy: 'name' track by $index" ng-click="devicesAdd.selectVendor(vendor)">
             {{ vendor.name }}
             <i class="icon ion-ios-arrow-right"></i>
           </p>
         </div>
+
       </ion-content>
     </ion-slide>
 
+
     <!-- Select deviceClass -->
-    <ion-slide guh-wizard-step condition="devices.selectedDeviceClass">
+    <ion-slide guh-wizard-step condition="devicesAdd.selectedDeviceClass">
       <ion-content>
-        <!-- <div class="list" ng-show="devices.vendor && !devices.devicesClass && !devices.createMethod"> -->
+
         <div class="list">
-          <p class="item item-text-wrap item-icon-right" ng-repeat="deviceClass in devices.supportedDeviceClasses track by $index | orderBy: 'name'" ng-click="devices.selectDeviceClass(deviceClass)">
+          <p class="item item-text-wrap item-icon-right" ng-repeat="deviceClass in devicesAdd.supportedDeviceClasses | orderBy: 'name' track by $index" ng-click="devicesAdd.selectDeviceClass(deviceClass)">
             {{ deviceClass.name }}
             <i class="icon ion-ios-arrow-right"></i>
           </p>
         </div>
       </ion-content>
+
     </ion-slide>
+
 
     <!-- Show createMethod -->
     <ion-slide guh-wizard-step>
       <ion-content>
-        <!-- <ng-include src="devices.createMethod.template" ng-show="devices.deviceClass && devices.createMethod"></ng-include> -->
-        <ng-include src="devices.createMethod.addTemplate"></ng-include>
+
+        <ng-include src="devicesAdd.createMethod.addTemplate" ng-if="devicesAdd.selectedDeviceClass && devicesAdd.createMethod"></ng-include>
+
       </ion-content>
     </ion-slide>
 
     <!-- Show setupMethod -->
     <!-- <ion-slide ion-wizard-step>
+
       <ng-include src="devices.setupMethod.addTemplate"></ng-include>
+
     </ion-slide> -->
 
   </ion-slide-box>
-
-  <!-- Footer -->
-  <!-- <ion-footer-bar>
-    <button class="button button-icon ion-ios-arrow-left pull-left" guh-wizard-prev="addDeviceWizard"></button>
-    <button class="button button-icon ion-ios-arrow-right pull-right" guh-wizard-next="addDeviceWizard"></button>
-  </ion-footer-bar> -->
 
 </ion-modal-view>
