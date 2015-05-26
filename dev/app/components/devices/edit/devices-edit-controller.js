@@ -29,9 +29,9 @@
     .module('guh.devices')
     .controller('DevicesEditCtrl', DevicesEditCtrl);
 
-  DevicesEditCtrl.$inject = ['$log', '$scope', '$ionicModal', 'libs', 'appModalService', 'parameters', 'DSDevice'];
+  DevicesEditCtrl.$inject = ['$log', '$scope', 'libs', 'DSDevice', 'parameters'];
 
-  function DevicesEditCtrl($log, $scope, $ionicModal, libs, appModalService, parameters, DSDevice) {
+  function DevicesEditCtrl($log, $scope, libs, DSDevice, parameters) {
 
     // Use data that was passed to modal for the view
     var vm = this;
@@ -49,7 +49,6 @@
     function _init() {
       // Map param values to paramType values
       angular.forEach(currentDevice.deviceClass.paramTypes, function(paramType) {
-        $log.log('paramType', paramType);
         var param = libs._.find(currentDevice.params, function(param) { return param.name === paramType.name });
         paramType.value = (param) ? param.value : paramType.value;
       });

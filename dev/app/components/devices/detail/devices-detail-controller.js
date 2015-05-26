@@ -174,7 +174,7 @@
      */
     function editSettings() {
       appModalService
-        .show('app/components/devices/detail/edit/devices-edit-modal.html', 'DevicesEditCtrl as devicesEdit', currentDevice)
+        .show('app/components/devices/edit/devices-edit-modal.html', 'DevicesEditCtrl as devicesEdit', currentDevice)
         .then(function(response) {
           if(response.updated) {
             _loadViewData();
