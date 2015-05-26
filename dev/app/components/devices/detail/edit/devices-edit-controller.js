@@ -70,7 +70,10 @@
      * Public method: cancel()
      */
     function cancel() {
-      vm.closeModal(false);
+      vm.closeModal({
+        updated: false,
+        removed: false
+      });
     }
 
     /*
@@ -103,7 +106,10 @@
       DSDevice
         .edit(vm.id, deviceData)
         .then(function() {
-          vm.closeModal(true);
+          vm.closeModal({
+            updated: true,
+            removed: false
+          });
         })
         .catch(function(error) {
           $log.error(error);
@@ -138,7 +144,10 @@
       currentDevice
         .remove()
         .then(function(response) {
-          $log.log(currentDevice.name + ' is now removed.', response);
+          vm.closeModal({
+            updated: false,
+            removed: true
+          });
         })
         .catch(function(error) {
           // TODO: Build general error handler

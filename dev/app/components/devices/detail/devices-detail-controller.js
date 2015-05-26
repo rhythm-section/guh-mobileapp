@@ -29,9 +29,9 @@
     .module('guh.devices')
     .controller('DevicesDetailCtrl', DevicesDetailCtrl);
 
-  DevicesDetailCtrl.$inject = ['$log', '$rootScope', '$scope', '$stateParams', '$ionicModal', 'libs', 'appModalService', 'DSDeviceClass', 'DSDevice', 'DSState'];
+  DevicesDetailCtrl.$inject = ['$log', '$rootScope', '$scope', '$state', '$stateParams', '$ionicModal', 'libs', 'appModalService', 'DSDeviceClass', 'DSDevice', 'DSState'];
 
-  function DevicesDetailCtrl($log, $rootScope, $scope, $stateParams, $ionicModal, libs, appModalService, DSDeviceClass, DSDevice, DSState) {
+  function DevicesDetailCtrl($log, $rootScope, $scope, $state, $stateParams, $ionicModal, libs, appModalService, DSDeviceClass, DSDevice, DSState) {
     
     var vm = this;
     var currentDevice = {};
@@ -94,7 +94,11 @@
           // Subscribe to websocket messages
           _subscribeToWebsocket();
         })
-        .catch(_showError);
+        .catch(function(error) {
+          _showError(error);
+
+          $state.go('guh.devices.master');
+        });
     }
 
     /*
@@ -171,10 +175,11 @@
     function editSettings() {
       appModalService
         .show('app/components/devices/detail/edit/devices-edit-modal.html', 'DevicesEditCtrl as devicesEdit', currentDevice)
-        .then(function(deviceUpdated) {
-          $log.log('deviceUpdated', deviceUpdated);
-          if(deviceUpdated) {
+        .then(function(response) {
+          if(response.updated) {
             _loadViewData();
+          } else if(response.removed) {
+            $state.go('guh.devices.master');
           }
         }, function(error) {
           $log.error(error);
