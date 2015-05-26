@@ -1,4 +1,4 @@
-<!-- 
+<!--
   Copyright (c) 2015 guh
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,35 +20,4 @@
   SOFTWARE.
 -->
 
-<ion-view>
-  <!-- Override nav-bar title -->
-  <ion-nav-title>{{ device.name }}</ion-nav-title>
-
-  <!-- Override nav-bar buttons -->
-  <ion-nav-buttons side="primary">
-    <button class="button button-icon icon ion-ios-arrow-back" ui-sref="guh.devices.master">&nbsp;Devices</button>
-  </ion-nav-buttons>
-
-  <ion-nav-buttons side="secondary">
-    <button class="button button-icon icon ion-ios-compose-outline" ng-click="device.editSettings()"></button>
-  </ion-nav-buttons>
-
-  <ion-content>
-    
-    <!-- Setup Warning -->
-    <!-- <div class="card" ng-show="!device.SetupComplete">
-
-      <div class="item">
-        <h2>Warning</h2>
-        <p>Device is not properbly set up.</p>
-      </div>
-
-    </div> -->
-
-    <!-- <guh-action model="paramType" change="device.execute(actionType)" disabled="true/false" state="matchingState"></guh-action> -->
-
-    <ng-include src="device.deviceClass.templateUrl"></ng-include>
-
-  </ion-content>
-
-</ion-view>
+<p class="padding">Color Picker Action</p>

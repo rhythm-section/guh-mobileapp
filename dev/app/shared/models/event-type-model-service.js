@@ -102,7 +102,7 @@
 
       // paramTypes
       angular.forEach(paramTypes, function(paramType) {
-        paramType = modelsHelper.addUiData(paramType);
+        paramType = modelsHelper.addUiData('input', paramType);
       });
     }
 

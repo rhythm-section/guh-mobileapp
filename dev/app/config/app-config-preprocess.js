@@ -35,8 +35,9 @@
       // var wsProtocol = (isCordovaApp || window.location.protocol === 'http:') ? 'ws' : 'wss';
       var httpProtocol = 'http';
       var wsProtocol = 'ws';
+      var host = 'localhost';
       // var host = '10.0.0.2';
-      var host = '192.168.0.124';
+      // var host = '192.168.0.124';
       var port = '3000';
 
       // @if NODE_ENV = 'DEVELOPMENT'
@@ -63,11 +64,12 @@
 
         // API, Websockets
         apiUrl: url + '/api/v1',
-        // websocketUrl: wsProtocol + '://' + host + ':' + port + '/ws',
-        websocketUrl: wsProtocol + '://localhost' + ':' + port + '/ws',
+        websocketUrl: wsProtocol + '://' + host + ':' + port + '/ws',
+        // websocketUrl: wsProtocol + '://localhost' + ':' + port + '/ws',
 
         // Basepaths
         basePaths: {
+          devices: 'app/components/devices/',
           ui: 'app/shared/ui/'
         },
 
@@ -78,15 +80,15 @@
 
         // Input types
         inputTypes: {
-          InputTypeIPv4Address: 'input-ipV4',
-          InputTypeIPv6Address: 'input-ipV6',
-          InputTypeMacAddress: 'input-mac',
-          InputTypeMail: 'input-mail',
-          InputTypePassword: 'input-password',
-          InputTypeSearch: 'input-search',
-          InputTypeTextLine: 'input-text',
-          InputTypeTextArea: 'input-textarea',
-          InputTypeUrl: 'input-url'
+          InputTypeIPv4Address: '-ipV4',
+          InputTypeIPv6Address: '-ipV6',
+          InputTypeMacAddress: '-mac',
+          InputTypeMail: '-mail',
+          InputTypePassword: '-password',
+          InputTypeSearch: '-search',
+          InputTypeTextLine: '-text',
+          InputTypeTextArea: '-textarea',
+          InputTypeUrl: '-url'
         },
 
         // Notification types

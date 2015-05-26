@@ -73,7 +73,9 @@
       },
 
       // Computed properties
-      computed: {},
+      computed: {
+        templateUrl: ['name', _addUiTemplate]
+      },
 
       // Instance methods
       methods: {
@@ -101,6 +103,30 @@
 
 
     /*
+     * Private method: _getInputPath(filename)
+     */
+    function _getInputPath(filename) {
+      return app.basePaths.devices + 'detail/device-class-templates/' + filename + app.fileExtensions.html;
+    }
+
+    /*
+     * Private method: _addUiTemplate(name)
+     */
+    function _addUiTemplate(name) {
+      // Example: 'Elro Remote' => 'elro-remote'
+      var templateName = this
+        .name
+        .toLowerCase()
+        .replace(/\s/g, '-')
+        .replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '');
+      var templateUrl = _getInputPath('device-class-' + templateName);
+
+      $log.log('deviceClass template', templateUrl);
+
+      return modelsHelper.checkTemplateUrl(templateUrl);
+    }
+
+    /*
      * Private method: _addUiData(resource, attrs)
      */
     function _addUiData(resource, attrs) {
@@ -110,17 +136,17 @@
 
       // discoveryParamTypes
       angular.forEach(discoveryParamTypes, function(paramType) {
-        paramType = modelsHelper.addUiData(paramType);
+        paramType = modelsHelper.addUiData('input', paramType);
       });
 
       // paramTypes
       angular.forEach(paramTypes, function(paramType) {
-        paramType = modelsHelper.addUiData(paramType);
+        paramType = modelsHelper.addUiData('input', paramType);
       });
 
       // stateTypes
       angular.forEach(stateTypes, function(stateType) {
-        stateType = modelsHelper.addUiData(stateType);
+        stateType = modelsHelper.addUiData('input', stateType);
       });
     }
 
@@ -184,8 +210,8 @@
      */
     function getCreateMethod() {
       var self = this;
-      var addBasePath = 'app/components/devices/master/pairing-templates/';
-      var editBasePath = 'app/components/devices/detail/edit/pairing-templates/';
+      var addBasePath = 'app/components/devices/add/pairing-templates/';
+      var editBasePath = 'app/components/devices/edit/pairing-templates/';
       var createMethodData = null;
 
       if(self.createMethods.indexOf('CreateMethodDiscovery') > -1) {
@@ -203,8 +229,10 @@
       } else if(self.createMethods.indexOf('CreateMethodAuto') > -1) {
         createMethodData = {
           title: 'Auto',
-          addTemplate: null,
-          ediTemplate: null
+          addTemplate: addBasePath + 'devices-add-create-user.html',
+          editTemplate: editBasePath + 'devices-edit-create-user.html'
+          // addTemplate: null,
+          // ediTemplate: null
         };
       } else {
         $log.error('CreateMethod "' + createMethod + '" not implemented.');

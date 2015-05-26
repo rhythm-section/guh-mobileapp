@@ -35,6 +35,7 @@
 
     var modelsHelper = {
       addUiData: addUiData,
+      checkTemplateUrl: checkTemplateUrl,
       getTemplateUrl: getTemplateUrl,
       getUnit: getUnit,
       setBasePath: setBasePath
@@ -44,36 +45,21 @@
 
 
     /*
-     * Private method: _getInputPath(filename)
+     * Private method: _getInputPath(directiveName, filename)
      */
-    function _getInputPath(filename) {
-      return app.basePaths.ui + 'input/templates/' + filename + app.fileExtensions.html;
-    }
-
-    /*
-     * Private method: _checkTemplateUrl(templateUrl)
-     */
-    function _checkTemplateUrl(templateUrl) {
-      var pathElements = templateUrl.split('/');
-      var file = pathElements.pop();
-      var path = pathElements.join('/') + '/';
-
-      if(templateUrl !== undefined && templateUrl !== '') {
-        if(File.checkFile(path, file)) {
-          return templateUrl;
-        } else {
-          return path + 'input-not-available.html'; 
-        }
-      } else {
-        return path + 'input-not-defined.html';
-      }
+    function _getInputPath(directiveName, filename) {
+      var template = app.basePaths.ui + directiveName + '/templates/' + filename + app.fileExtensions.html;
+      $log.log('template', template);
+      return template;
+      // return app.basePaths.ui + 'input/templates/' + filename + app.fileExtensions.html;
     }
 
 
     /*
-     * Public method: addUiData(guhType)
+     * Public method: addUiData(directiveName, guhType)
+     * guhType can be from type ParamType or StateType
      */
-    function addUiData(guhType) {
+    function addUiData(directiveName, guhType) {
       var templateUrl = '';
 
       var allowedValues = (guhType.allowedValues === undefined) ? null : guhType.allowedValues;
@@ -84,46 +70,65 @@
 
       switch(type) {
         case 'bool':
-          if(angular.isString(name) && name === 'power') {
-            templateUrl = _getInputPath('input-toggle-button');
+          if(angular.isString(name) && (name === 'power' || name === 'state')) {
+            templateUrl = _getInputPath(directiveName, directiveName + '-toggle-button');
           } else {
-            templateUrl = _getInputPath('input-checkbox');
+            templateUrl = _getInputPath(directiveName, directiveName + '-checkbox');
           }
           value = guhType.defaultValue || false;
           break;
         case 'int':
         case 'uint':
-          templateUrl = _getInputPath('input-number-integer');
+          templateUrl = _getInputPath(directiveName, directiveName + '-number-integer');
           value = guhType.defaultValue || 0;
           break;
         case 'double':
-          templateUrl = _getInputPath('input-number-decimal');
+          templateUrl = _getInputPath(directiveName, directiveName + '-number-decimal');
           value = guhType.defaultValue || 0.0;
           break;
         case 'QString':
           if(allowedValues) {
-            templateUrl = _getInputPath('input-select');
+            templateUrl = _getInputPath(directiveName, directiveName + '-select');
           } else if(inputType) {
-            templateUrl = _getInputPath(app.inputTypes[inputType])
+            templateUrl = _getInputPath(directiveName, directiveName + app.inputTypes[inputType])
           } else {
-            templateUrl = _getInputPath('input-text');
+            templateUrl = _getInputPath(directiveName, directiveName + '-text');
           }
           value = guhType.defaultValue || '';
       }
 
       guhType.operator = app.valueOperator.is.operators[0];
-      guhType.templateUrl = _checkTemplateUrl(templateUrl);
+      guhType.templateUrl = checkTemplateUrl(templateUrl);
       guhType.value = value;
 
       return guhType;
     }
 
     /*
-     * Public method: getTemplateurl(filename)
+     * Public method: checkTemplateUrl(templateUrl)
      */
-    function getTemplateUrl(filename) {
-      var templateUrl = _getInputPath(filename);
-      return _checkTemplateUrl(templateUrl);
+    function checkTemplateUrl(templateUrl) {
+      var pathElements = templateUrl.split('/');
+      var file = pathElements.pop();
+      var path = pathElements.join('/') + '/';
+
+      if(templateUrl !== undefined && templateUrl !== '') {
+        if(File.checkFile(path, file)) {
+          return templateUrl;
+        } else {
+          return path + 'template-not-available.html'; 
+        }
+      } else {
+        return path + 'template-not-defined.html';
+      }
+    }
+
+    /*
+     * Public method: getTemplateurl(directiveName, filename)
+     */
+    function getTemplateUrl(directiveName, filename) {
+      var templateUrl = _getInputPath(directiveName, filename);
+      return checkTemplateUrl(templateUrl);
     }
 
     /*

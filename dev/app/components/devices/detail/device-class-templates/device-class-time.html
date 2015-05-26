@@ -1,4 +1,4 @@
-<!-- 
+<!--
   Copyright (c) 2015 guh
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,35 +20,15 @@
   SOFTWARE.
 -->
 
-<ion-view>
-  <!-- Override nav-bar title -->
-  <ion-nav-title>{{ device.name }}</ion-nav-title>
+<!-- Device states -->
+<div ng-show="device.SetupComplete && device.states.length > 0">
 
-  <!-- Override nav-bar buttons -->
-  <ion-nav-buttons side="primary">
-    <button class="button button-icon icon ion-ios-arrow-back" ui-sref="guh.devices.master">&nbsp;Devices</button>
-  </ion-nav-buttons>
+  <div class="padding">
+    <span ng-repeat="state in device.states" ng-if="state.stateType.name === 'weekday name'">{{ state.value }}</span>, <span ng-repeat="state in device.states" ng-if="state.stateType.name === 'month'">{{ state.value }}</span> / <span ng-repeat="state in device.states" ng-if="state.stateType.name === 'day'">{{ state.value }}</span> / <span ng-repeat="state in device.states" ng-if="state.stateType.name === 'year'">{{ state.value }}</span>
+  </div>
+  
+  <div class="padding">
+    <span ng-repeat="state in device.states" ng-if="state.stateType.name === 'hour'">{{ state.value }}</span>:<span ng-repeat="state in device.states" ng-if="state.stateType.name === 'minute'">{{ state.value }}</span>
+  </div>
 
-  <ion-nav-buttons side="secondary">
-    <button class="button button-icon icon ion-ios-compose-outline" ng-click="device.editSettings()"></button>
-  </ion-nav-buttons>
-
-  <ion-content>
-    
-    <!-- Setup Warning -->
-    <!-- <div class="card" ng-show="!device.SetupComplete">
-
-      <div class="item">
-        <h2>Warning</h2>
-        <p>Device is not properbly set up.</p>
-      </div>
-
-    </div> -->
-
-    <!-- <guh-action model="paramType" change="device.execute(actionType)" disabled="true/false" state="matchingState"></guh-action> -->
-
-    <ng-include src="device.deviceClass.templateUrl"></ng-include>
-
-  </ion-content>
-
-</ion-view>
+</div>

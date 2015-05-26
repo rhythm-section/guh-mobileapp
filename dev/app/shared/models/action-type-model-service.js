@@ -93,11 +93,11 @@
 
       if(angular.isArray(paramTypes) && paramTypes.length === 0) {
         // actionType
-        attrs.templateUrl = modelsHelper.getTemplateUrl('input-button');
+        attrs.templateUrl = modelsHelper.getTemplateUrl('action', 'action-button');
       } else {
         // paramTypes
         angular.forEach(paramTypes, function(paramType) {
-          paramType = modelsHelper.addUiData(paramType);
+          paramType = modelsHelper.addUiData('action', paramType);
           paramType.dependsOnTrigger = false;
         });
       }
