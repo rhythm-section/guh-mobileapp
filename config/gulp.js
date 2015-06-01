@@ -81,6 +81,9 @@ module.exports = {
       '**/*.html',
       '!index-preprocess.html'
     ],
+    images: [
+      '**/*.{png, jpg}'
+    ],
     index: 'index.html',
     indexPreprocess: 'index-preprocess.html',
     js: [
@@ -95,6 +98,8 @@ module.exports = {
       'app/**/app-config.js',
 
       // Shared: Filters
+      'app/**/filters-module.js',
+      'app/**/*-filter.js',
 
       // Shared: Utils
       'app/**/utils-module.js',

@@ -130,6 +130,15 @@ gulp.task('markup', function() {
     .pipe(browserSync.reload({stream: true}));
 });
 
+/* Images
+ * Copy image files. */
+gulp.task('images', function() {
+  return gulp
+    .src(config.appFiles.images, { cwd: config.dev.root })
+    .pipe(gulp.dest(dest.root))
+    .pipe(browserSync.reload({stream: true}));
+});
+
 /* Styles
  * Process SCSS files, minify CSS files and revisioning. Add sourcemaps to processed and minified styles. */
 gulp.task('styles', function() {
@@ -335,6 +344,7 @@ gulp.task('default', function(done) {
       'environment',
       [
         'bower',
+        'images',
         'styles',
         'scripts',
       ],
