@@ -59,9 +59,7 @@
       },
 
       // Computed properties
-      computed: {
-        // templateUrl: ['paramTypes', _addUiData]
-      },
+      computed: {},
 
       // Instance methods
       methods: {
@@ -70,7 +68,16 @@
       },
 
       // Lifecycle hooks
-      afterInject: _addUiData
+      afterInject: function(resource, attrs) {
+        if(angular.isArray(attrs)) {
+          var arrayOfAttrs = attrs;
+          angular.forEach(arrayOfAttrs, function(attrs) {
+            _addUiData(resource, attrs);
+          });
+        } else {
+          _addUiData(resource, attrs);
+        }
+      }
 
     });
 
@@ -91,16 +98,12 @@
         attrs.phrase = phrase + ' with following Parameters.';
       }
 
-      if(angular.isArray(paramTypes) && paramTypes.length === 0) {
-        // actionType
-        attrs.templateUrl = modelsHelper.getTemplateUrl('action', 'action-button');
-      } else {
-        // paramTypes
-        angular.forEach(paramTypes, function(paramType) {
-          paramType = modelsHelper.addUiData('action', paramType);
-          paramType.dependsOnTrigger = false;
-        });
-      }
+      // paramTypes
+      angular.forEach(paramTypes, function(paramType) {
+        paramType = modelsHelper.addUiData('action', paramType);
+        paramType.dependsOnTrigger = false;
+        // $log.log('_addUiData paramType', paramType);
+      });
     }
 
 
@@ -134,6 +137,7 @@
         if(actionParamType !== undefined && eventParamType !== undefined) {
           if(paramType.name === actionParamType.name) {
             ruleActionParams.push({
+              name: paramType.name,
               eventParamName: eventParamType.name,
               eventTypeId: eventParamType.eventDescriptor.eventTypeId
             });

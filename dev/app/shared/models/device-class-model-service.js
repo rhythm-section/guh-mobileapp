@@ -53,7 +53,7 @@
           vendor: {
             localField: 'vendor',
             localKey: 'vendorId',
-            parent: true
+            // parent: true
           }
         },
         hasMany: {
@@ -90,11 +90,12 @@
           var arrayOfAttrs = attrs;
           angular.forEach(arrayOfAttrs, function(attrs) {
             _addUiData(resource, attrs);
+            _mapStates(resource, attrs);
           });
         } else {
           _addUiData(resource, attrs);
+          _mapStates(resource, attrs);
         }
-        _mapStates(resource, attrs);
       }
 
     });
@@ -120,8 +121,6 @@
         .replace(/\s/g, '-')
         .replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '');
       var templateUrl = _getInputPath('device-class-' + templateName);
-
-      $log.log('deviceClass template', templateUrl);
 
       return modelsHelper.checkTemplateUrl(templateUrl);
     }
@@ -171,7 +170,7 @@
 
       // Map eventTypes
       angular.forEach(eventTypes, function(eventType) {
-        // Check if current actionType belongs to a stateType
+        // Check if current eventType belongs to a stateType
         if(libs._.contains(stateIds, eventType.id)) {
           eventType.hasState = true;
         } else {
@@ -229,14 +228,16 @@
       } else if(self.createMethods.indexOf('CreateMethodAuto') > -1) {
         createMethodData = {
           title: 'Auto',
-          addTemplate: addBasePath + 'devices-add-create-user.html',
-          editTemplate: editBasePath + 'devices-edit-create-user.html'
-          // addTemplate: null,
-          // ediTemplate: null
+          // addTemplate: addBasePath + 'devices-add-create-user.html',
+          // editTemplate: editBasePath + 'devices-edit-create-user.html'
+          addTemplate: null,
+          ediTemplate: null
         };
       } else {
         $log.error('CreateMethod "' + createMethod + '" not implemented.');
       }
+
+      // createMethodData.addTemplate = modelsHelper.checkTemplateUrl(createMethodData.addTemplate);
 
       return createMethodData;
     }
@@ -246,8 +247,8 @@
      */
     function getSetupMethod() {
       var self = this;
-      var addBasePath = 'app/components/devices/master/pairing-templates/';
-      var editBasePath = 'app/components/devices/detail/edit/pairing-templates/';
+      var addBasePath = 'app/components/devices/add/pairing-templates/';
+      var editBasePath = 'app/components/devices/edit/pairing-templates/';
       var setupMethodData = {};
 
       switch(self.setupMethod) {
@@ -256,22 +257,22 @@
         case 'SetupMethodDisplayPin':
           setupMethodData = {
             title: 'Display Pin',
-            addTemplate: basePath + 'devices-add-setup-display-pin.html',
-            editTemplate: basePath + 'devices-edit-setup-display-pin.html'
+            addTemplate: addBasePath + 'devices-add-setup-display-pin.html',
+            editTemplate: editBasePath + 'devices-edit-setup-display-pin.html'
           };
           break;
         case 'SetupMethodEnterPin':
           setupMethodData = {
             title: 'Enter Pin',
-            addTemplate: basePath + 'devices-add-setup-enter-pin.html',
-            editTemplate: basePath + 'devices-edit-setup-enter-pin.html'
+            addTemplate: addBasePath + 'devices-add-setup-enter-pin.html',
+            editTemplate: editBasePath + 'devices-edit-setup-enter-pin.html'
           };
           break;
         case 'SetupMethodPushButton':
           setupMethodData = {
-            title: 'Enter Pin',
-            addTemplate: basePath + 'devices-add-setup-push-button.html',
-            editTemplate: basePath + 'devices-edit-setup-push-button.html'
+            title: 'Push Button',
+            addTemplate: addBasePath + 'devices-add-setup-push-button.html',
+            editTemplate: editBasePath + 'devices-edit-setup-push-button.html'
           };
           break;
         default:

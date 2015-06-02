@@ -29,9 +29,9 @@
     .module('guh.utils')
     .factory('File', FileFactory);
 
-  FileFactory.$inject = ['$log', '$cordovaSplashscreen', '$cordovaFile', 'app'];
+  FileFactory.$inject = ['$log', '$q', '$cordovaSplashscreen', '$cordovaFile', 'app'];
 
-  function FileFactory($log, $cordovaSplashscreen, $cordovaFile, app) {
+  function FileFactory($log, $q, $cordovaSplashscreen, $cordovaFile, app) {
     
     var File = {
       checkFile: checkFile
@@ -44,20 +44,39 @@
      * Public method: checkFile(path, file)
      */
     function checkFile(path, file) {
+      // $log.log('checkFile', path, file);
+
       if(ionic.Platform.isWebView()) {
         if(app.isCordovaApp) {
+
           // iOS, Android
-          if($cordovaFile.checkFile(path, file)) {
-            return true;
-          } else {
-            return false;
-          }
+          var checkFile = $cordovaFile
+            .checkFile(cordova.file.applicationDirectory + '/www/' + path, file)
+            .then(function() {
+              return true;
+            })
+            .catch(function(error) {
+              // Error codes: http://ngcordova.com/docs/plugins/file/
+              if(error.code === 1) {
+                // Error: File does not exist
+                return false;
+              } else {
+                $log.error('guh.factory.File', error);
+                return false;
+              }
+            });
+
+          return checkFile;
+
         } else {
+
           // Ionic View App
           $log.warn('Can\'t check if file exists inside Ionic View app');
           return true;
+
         }
       } else {
+
         // Browser
         var request = new XMLHttpRequest();
 
@@ -69,6 +88,7 @@
         } else {
           return false;
         }
+
       }
     }
   }

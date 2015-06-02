@@ -29,9 +29,9 @@
     .module('guh.models')
     .factory('modelsHelper', modelsHelper);
 
-  modelsHelper.$inject = ['$log', '$cordovaFile', 'DS', 'DSParamType', 'File', 'app'];
+  modelsHelper.$inject = ['$log', '$q', '$cordovaFile', 'DS', 'DSParamType', 'File', 'app'];
 
-  function modelsHelper($log, $cordovaFile, DS, DSParamType, File, app) {
+  function modelsHelper($log, $q, $cordovaFile, DS, DSParamType, File, app) {
 
     var modelsHelper = {
       addUiData: addUiData,
@@ -48,10 +48,122 @@
      * Private method: _getInputPath(directiveName, filename)
      */
     function _getInputPath(directiveName, filename) {
-      var template = app.basePaths.ui + directiveName + '/templates/' + filename + app.fileExtensions.html;
-      $log.log('template', template);
+      return app.basePaths.ui + directiveName + '/templates/' + filename + app.fileExtensions.html;
+    }
+
+    /*
+     * Private method: _getActionTemplate(guhType)
+     */
+    function _getActionTemplate(guhType) {
+      var allowedValues = (guhType.allowedValues === undefined) ? null : guhType.allowedValues;
+      var inputType = (guhType.inputType === undefined) ? null : guhType.inputType;
+      var name = (guhType.name === undefined) ? null : guhType.name;
+      var type = (guhType.type === undefined) ? null : guhType.type;
+      var directiveNameAction = 'action-param';
+      var directiveNameInput = 'input';
+      var template;
+
+      switch(type) {
+        case 'bool':
+          template = _getInputPath(directiveNameAction, directiveNameAction + '-toggle-button');
+          break;
+        case 'int':
+        case 'uint':
+          template = _getInputPath(directiveNameAction, directiveNameAction + '-slider');
+          break;
+        case 'double':
+          template = _getInputPath(directiveNameAction, directiveNameAction + '-slider');
+          break;
+        case 'QColor':
+          template = _getInputPath(directiveNameAction, directiveNameAction + '-color-picker');
+          break;
+        case 'QString':
+          if(allowedValues) {
+            template = _getInputPath(directiveNameInput, directiveNameInput + '-select');
+          } else if(inputType) {
+            template = _getInputPath(directiveNameInput, directiveNameInput + app.inputTypes[inputType])
+          } else {
+            template = _getInputPath(directiveNameInput, directiveNameInput + '-text');
+          }
+          break;
+        default:
+          template = _getInputPath(directiveNameAction, 'template-not-available');
+      }
+
       return template;
-      // return app.basePaths.ui + 'input/templates/' + filename + app.fileExtensions.html;
+    }
+
+    /*
+     * Private method: _getInputTemplate(guhType)
+     */
+    function _getInputTemplate(guhType) {
+      var allowedValues = (guhType.allowedValues === undefined) ? null : guhType.allowedValues;
+      var inputType = (guhType.inputType === undefined) ? null : guhType.inputType;
+      var name = (guhType.name === undefined) ? null : guhType.name;
+      var type = (guhType.type === undefined) ? null : guhType.type;
+      var directiveName = 'input';
+      var template;
+
+      switch(type) {
+        case 'bool':
+          template = _getInputPath(directiveName, directiveName + '-checkbox');
+          break;
+        case 'int':
+        case 'uint':
+          template = _getInputPath(directiveName, directiveName + '-number-integer');
+          break;
+        case 'double':
+          template = _getInputPath(directiveName, directiveName + '-number-decimal');
+          break;
+        case 'QColor':
+          template = _getInputPath(directiveName, directiveName + '-color');
+          break;
+        case 'QString':
+          if(allowedValues) {
+            template = _getInputPath(directiveName, directiveName + '-select');
+          } else if(inputType) {
+            template = _getInputPath(directiveName, directiveName + app.inputTypes[inputType])
+          } else {
+            template = _getInputPath(directiveName, directiveName + '-text');
+          }
+          break;
+        default:
+          template = _getInputPath(directiveName, 'template-not-available');
+      }
+
+      return template;
+    }
+
+    /*
+     * Private method: _getValue(guhType)
+     */
+    function _getValue(guhType) {
+      var type = (guhType.type === undefined) ? null : guhType.type;
+      var value;
+
+      switch(type) {
+        case 'bool':
+          value = guhType.defaultValue || false;
+          break;
+        case 'int':
+        case 'uint':
+          value = guhType.defaultValue || 0;
+          break;
+        case 'double':
+          value = guhType.defaultValue || 0.0;
+          break;
+        case 'QColor':
+          value = guhType.defaultValue || '0,0,0';
+          break;
+        case 'QString':
+          value = guhType.defaultValue || '';
+          break;
+        default:
+          value = guhType.defaultValue || undefined;
+          break;
+      }
+
+      return value;
     }
 
 
@@ -60,46 +172,52 @@
      * guhType can be from type ParamType or StateType
      */
     function addUiData(directiveName, guhType) {
-      var templateUrl = '';
+      // var templateUrl = '';
 
-      var allowedValues = (guhType.allowedValues === undefined) ? null : guhType.allowedValues;
-      var inputType = (guhType.inputType === undefined) ? null : guhType.inputType;
-      var name = (guhType.name === undefined) ? null : guhType.name;
-      var type = (guhType.type === undefined) ? null : guhType.type;
-      var value = null;
+      // switch(type) {
+      //   case 'bool':
+      //     if(angular.isString(name) && (name === 'power' || name === 'state')) {
+      //       templateUrl = _getInputPath(directiveName, directiveName + '-toggle-button');
+      //     } else {
+      //       templateUrl = _getInputPath(directiveName, directiveName + '-checkbox');
+      //     }
+      //     value = guhType.defaultValue || false;
+      //     break;
+      //   case 'int':
+      //   case 'uint':
+      //     if(directiveName === 'param') {
+      //       templateUrl = _getInputPath(directiveName, directiveName + '-slider');
+      //     } else {
+      //       templateUrl = _getInputPath(directiveName, directiveName + '-number-integer');
+      //     }
+      //     value = guhType.defaultValue || 0;
+      //     break;
+      //   case 'double':
+      //     templateUrl = _getInputPath(directiveName, directiveName + '-number-decimal');
+      //     value = guhType.defaultValue || 0.0;
+      //     break;
+      //   case 'QColor':
+      //     templateUrl = _getInputPath(directiveName, directiveName + '-color-picker');
+      //     value = guhType.defaultValue || '0,0,0';
+      //     break;
+      //   case 'QString':
+      //     if(allowedValues) {
+      //       templateUrl = _getInputPath(directiveName, directiveName + '-select');
+      //     } else if(inputType) {
+      //       templateUrl = _getInputPath(directiveName, directiveName + app.inputTypes[inputType])
+      //     } else {
+      //       templateUrl = _getInputPath(directiveName, directiveName + '-text');
+      //     }
+      //     value = guhType.defaultValue || '';
+      //     // break;
+      // }
 
-      switch(type) {
-        case 'bool':
-          if(angular.isString(name) && (name === 'power' || name === 'state')) {
-            templateUrl = _getInputPath(directiveName, directiveName + '-toggle-button');
-          } else {
-            templateUrl = _getInputPath(directiveName, directiveName + '-checkbox');
-          }
-          value = guhType.defaultValue || false;
-          break;
-        case 'int':
-        case 'uint':
-          templateUrl = _getInputPath(directiveName, directiveName + '-number-integer');
-          value = guhType.defaultValue || 0;
-          break;
-        case 'double':
-          templateUrl = _getInputPath(directiveName, directiveName + '-number-decimal');
-          value = guhType.defaultValue || 0.0;
-          break;
-        case 'QString':
-          if(allowedValues) {
-            templateUrl = _getInputPath(directiveName, directiveName + '-select');
-          } else if(inputType) {
-            templateUrl = _getInputPath(directiveName, directiveName + app.inputTypes[inputType])
-          } else {
-            templateUrl = _getInputPath(directiveName, directiveName + '-text');
-          }
-          value = guhType.defaultValue || '';
-      }
+      // guhType.templateUrl = checkTemplateUrl(templateUrl);
 
       guhType.operator = app.valueOperator.is.operators[0];
-      guhType.templateUrl = checkTemplateUrl(templateUrl);
-      guhType.value = value;
+      guhType.actionTemplateUrl = _getActionTemplate(guhType);
+      guhType.inputTemplateUrl = _getInputTemplate(guhType);
+      guhType.value = _getValue(guhType);
 
       return guhType;
     }
@@ -113,11 +231,18 @@
       var path = pathElements.join('/') + '/';
 
       if(templateUrl !== undefined && templateUrl !== '') {
-        if(File.checkFile(path, file)) {
-          return templateUrl;
-        } else {
-          return path + 'template-not-available.html'; 
-        }
+        var fileExists = $q.when(File.checkFile(path, file))
+          .then(function(fileExists) {
+            if(fileExists) {
+              // $log.log('Template available', templateUrl);
+              return templateUrl;
+            } else {
+              // $log.warn('Template NOT available', templateUrl);
+              return path + 'template-not-available.html'; 
+            }
+          });
+
+        return fileExists;
       } else {
         return path + 'template-not-defined.html';
       }
