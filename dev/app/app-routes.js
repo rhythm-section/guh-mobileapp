@@ -35,7 +35,7 @@
 
     $urlRouterProvider
       .otherwise('/dashboard');
-
+    
     // App
     $stateProvider.state('guh', {
       abstract: true,
@@ -62,7 +62,7 @@
 
           function _findDeviceRelations(devices) {
             return angular.forEach(devices, function(device) {
-              return DSDevice.loadRelations(device, ['actionTypes', 'states']);
+              return DSDevice.loadRelations(device, ['states']);
             });
           }
 
