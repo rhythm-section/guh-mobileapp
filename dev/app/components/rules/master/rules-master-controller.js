@@ -56,6 +56,7 @@
       return _findAllRules(bypassCache)
         .then(function(rules) {
           vm.configured = rules;
+          $log.log('rules', rules);
         });
     }
 
@@ -86,7 +87,7 @@
      */
     function addRule() {
       appModalService
-        .show('app/components/rules/master/add/rules-add-modal.html', 'RulesAddCtrl as rulesAdd', {})
+        .show('app/components/rules/add/rules-add-modal.html', 'RulesAddCtrl as rulesAdd', {})
         .then(function(rule) {
           if(rule !== undefined) {
             DSRule.create({

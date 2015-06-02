@@ -59,7 +59,7 @@
         <!-- ActionType -->
         <div ng-if="rulesAddAction.selectedType.paramTypes.length > 0" ng-repeat="paramType in rulesAddAction.selectedType.paramTypes">
           <!-- Input -->
-          <guh-input model="paramType" disabled="paramType.dependsOnTrigger"></guh-input>
+          <guh-input param-type="paramType" disabled="paramType.dependsOnTrigger"></guh-input>
 
           <!-- Event paramTypes -->
           <ng-form>

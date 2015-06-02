@@ -110,7 +110,7 @@
     function addTrigger() {
       // Show modal
       appModalService
-        .show('app/components/rules/master/add/rules-add-trigger-modal.html', 'RulesAddTriggerCtrl as rulesAddTrigger', {})
+        .show('app/components/rules/add/rules-add-trigger-modal.html', 'RulesAddTriggerCtrl as rulesAddTrigger', {})
         .then(function(trigger) {
           if(trigger !== undefined) {
             vm.addedTrigger.push(trigger);
@@ -141,7 +141,7 @@
     function addAction(actionType) {
       // Show modal
       appModalService
-        .show('app/components/rules/master/add/rules-add-action-modal.html', 'RulesAddActionCtrl as rulesAddAction', vm.addedTrigger)
+        .show('app/components/rules/add/rules-add-action-modal.html', 'RulesAddActionCtrl as rulesAddAction', vm.addedTrigger)
         .then(function(action) {
           if(action !== undefined) {
             _updateActions(action, actionType);       
@@ -168,6 +168,8 @@
       }
 
       delete vm.rule.eventDescriptors;
+
+      $log.log('vm.rule', vm.rule);
 
       vm.closeModal(vm.rule);
     }

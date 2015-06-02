@@ -39,7 +39,7 @@
 
         <!-- List of added trigger(s) -->
         <ion-list>
-          <ion-item class="item" ng-repeat="trigger in rulesAdd.addedTrigger track by $index">
+          <ion-item class="item" ng-repeat="trigger in rulesAdd.addedTrigger | orderBy: 'type.phrase' track by $index">
             <h2>{{ trigger.type.phrase }}</h2>
           </ion-item>
         </ion-list>

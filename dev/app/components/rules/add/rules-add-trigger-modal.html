@@ -36,21 +36,21 @@
     <ion-slide guh-wizard-step>
       <ion-content>
         <!-- Devices -->
-        <div class="list" ng-if="triggerDevice.deviceClass.eventTypes.length > 0 || triggerDevice.deviceClass.stateTypes.length > 0" ng-repeat="triggerDevice in rulesAddTrigger.availableTriggerDevices | orderBy: 'name' track by $index">
+        <div class="list" ng-if="triggerDevice.deviceClass.eventTypes.length > 0 || triggerDevice.deviceClass.stateTypes.length > 0" ng-repeat="triggerDevice in rulesAddTrigger.availableTriggerDevices | orderBy: 'deviceClass.name' track by $index">
           <p class="item item-divider">{{ triggerDevice.deviceClass.name }}</p>
 
           <!-- Events -->
-          <p class="item item-icon-right" ng-if="!eventType.hasState && eventType.paramTypes.length == 0" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes">
+          <p class="item item-icon-right" ng-if="!eventType.hasState && eventType.paramTypes.length == 0" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes | orderBy: 'phrase' track by $index">
             {{ eventType.phrase }}
           </p>
 
-          <p class="item item-icon-right" ng-if="!eventType.hasState && eventType.paramTypes.length > 0" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes">
+          <p class="item item-icon-right" ng-if="!eventType.hasState && eventType.paramTypes.length > 0" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes | orderBy: 'phrase' track by $index">
             {{ eventType.phrase }}
             <i class="icon ion-ios-arrow-right"></i>
           </p>
 
           <!-- States -->
-          <p class="item item-icon-right" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, stateType)" ng-repeat="stateType in triggerDevice.deviceClass.stateTypes">
+          <p class="item item-icon-right" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, stateType)" ng-repeat="stateType in triggerDevice.deviceClass.stateTypes | orderBy: 'phrase' track by $index">
             {{ stateType.phrase }}
             <i class="icon ion-ios-arrow-right"></i>
           </p>
@@ -62,7 +62,7 @@
     <ion-slide guh-wizard-step>
       <ion-content>
         <!-- EventType -->
-        <guh-input model="paramType" ng-if="rulesAddTrigger.isEventType && rulesAddTrigger.selectedType.paramTypes.length > 0" ng-repeat="paramType in rulesAddTrigger.selectedType.paramTypes"></guh-input>
+        <guh-input param-type="paramType" ng-if="rulesAddTrigger.isEventType && rulesAddTrigger.selectedType.paramTypes.length > 0" ng-repeat="paramType in rulesAddTrigger.selectedType.paramTypes | orderBy: 'name' track by $index"></guh-input>
         
         <!-- StateType -->
         <div ng-if="rulesAddTrigger.isStateType">
@@ -73,13 +73,13 @@
           </label>
 
           <!-- Is (is not) -->
-          <guh-input ng-if="rulesAddTrigger.selectedTypeIs" model="rulesAddTrigger.selectedTypeIs"></guh-input>
+          <guh-input ng-if="rulesAddTrigger.selectedTypeIs" param-type="rulesAddTrigger.selectedTypeIs"></guh-input>
 
           <!-- From -->
-          <guh-input ng-if="rulesAddTrigger.selectedTypeFrom" model="rulesAddTrigger.selectedTypeFrom"></guh-input>
+          <guh-input ng-if="rulesAddTrigger.selectedTypeFrom" param-type="rulesAddTrigger.selectedTypeFrom"></guh-input>
 
           <!-- To -->
-          <guh-input ng-if="rulesAddTrigger.selectedTypeTo" model="rulesAddTrigger.selectedTypeTo"></guh-input>
+          <guh-input ng-if="rulesAddTrigger.selectedTypeTo" param-type="rulesAddTrigger.selectedTypeTo"></guh-input>
         </div>
 
         <!-- Save -->
