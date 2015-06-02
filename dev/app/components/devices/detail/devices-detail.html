@@ -20,7 +20,7 @@
   SOFTWARE.
 -->
 
-<ion-view>
+<ion-view can-swipe-back="false">
   <!-- Override nav-bar title -->
   <ion-nav-title>{{ device.name }}</ion-nav-title>
 
@@ -35,19 +35,21 @@
 
   <ion-content>
     
+    <!-- Device information -->
+    <h1 class="text-center">
+      {{ device.name }}
+      <span>{{ device.deviceClass.vendor.name }} / {{ device.deviceClass.name }}</span>
+    </h1>
+
     <!-- Setup Warning -->
-    <!-- <div class="card" ng-show="!device.SetupComplete">
-
-      <div class="item">
-        <h2>Warning</h2>
-        <p>Device is not properbly set up.</p>
-      </div>
-
-    </div> -->
-
-    <!-- <guh-action model="paramType" change="device.execute(actionType)" disabled="true/false" state="matchingState"></guh-action> -->
-
-    <ng-include src="device.deviceClass.templateUrl"></ng-include>
+    <div ng-show="!device.SetupComplete">
+      <p class="padding warning">Warning: The device is not properbly set up.</p>
+    </div>
+    
+    <!-- DeviceClass template -->
+    <div ng-if="device.templateReady">
+      <ng-include src="device.templateUrl"></ng-include>
+    </div>
 
   </ion-content>
 

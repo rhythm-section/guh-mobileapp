@@ -30,7 +30,7 @@
 
   <ion-content>
 
-    <ng-include src="devicesEdit.createMethod.editTemplate"></ng-include>
+    <ng-include ng-if="devicesEdit.createMethod.editTemplate" src="devicesEdit.createMethod.editTemplate"></ng-include>
 
     <button class="button button-full" ng-click="devicesEdit.remove()">Remove device</button>
 

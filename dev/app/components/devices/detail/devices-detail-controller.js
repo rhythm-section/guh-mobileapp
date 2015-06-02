@@ -29,13 +29,12 @@
     .module('guh.devices')
     .controller('DevicesDetailCtrl', DevicesDetailCtrl);
 
-  DevicesDetailCtrl.$inject = ['$log', '$rootScope', '$scope', '$state', '$stateParams', '$ionicModal', 'libs', 'appModalService', 'DSDeviceClass', 'DSDevice', 'DSState'];
+  DevicesDetailCtrl.$inject = ['$log', '$rootScope', '$scope', '$state', '$stateParams', '$ionicModal', 'libs', 'appModalService', 'DSDeviceClass', 'DSDevice', 'DSState', 'DSActionType', 'modelsHelper'];
 
-  function DevicesDetailCtrl($log, $rootScope, $scope, $state, $stateParams, $ionicModal, libs, appModalService, DSDeviceClass, DSDevice, DSState) {
+  function DevicesDetailCtrl($log, $rootScope, $scope, $state, $stateParams, $ionicModal, libs, appModalService, DSDeviceClass, DSDevice, DSState, DSActionType, modelsHelper) {
     
     var vm = this;
     var currentDevice = {};
-    var editModal = {};
 
     // Public methods
     vm.execute = execute;
@@ -74,17 +73,34 @@
           vm.params = currentDevice.params;
           vm.states = currentDevice.states;
 
-          $log.log('vm', vm);
+          // Wait for templateUrl check
+          device.deviceClass.templateUrl
+            .then(function(fileExists) {
+              vm.templateUrl = fileExists;
+            })
+            .catch(function(error) {
+              $log.error('guh.controller.DevicesDetailCtrl', error);
+            })
+            .finally(function() {
+              vm.templateReady = true;
+            });
+
+          $log.log('currentDevice.deviceClass.actionTypes', currentDevice.deviceClass.actionTypes);
 
           // Actions & States
           angular.forEach(currentDevice.deviceClass.actionTypes, function(actionType) {
             var action = {};
             action.actionType = actionType;
 
+            $log.log('actionType', actionType);
+
             if(actionType.hasState) {  
               var state = libs._.find(currentDevice.states, function(state) { return state.stateTypeId === actionType.id });
 
+              // Add state to action
               action.state = state;
+
+              // Remove state from sates array
               vm.states = libs._.without(vm.states, state);
             }
 
@@ -93,6 +109,8 @@
 
           // Subscribe to websocket messages
           _subscribeToWebsocket();
+
+          $log.log('vm', vm);
         })
         .catch(function(error) {
           _showError(error);
@@ -109,6 +127,11 @@
         angular.forEach(currentDevice.states, function(state, index) {
           if(message.params.stateTypeId === state.stateTypeId && message.params.deviceId === vm.id) {
             DSState.inject([{stateTypeId: message.params.stateTypeId, value: message.params.value}]);
+
+            $log.log('Inject value.');
+
+            // TODO: Check why js-data event DS.inject is not working
+            $rootScope.$emit('guh.injectState', {stateTypeId: message.params.stateTypeId, value: message.params.value});
           }
         });
       });

@@ -62,6 +62,9 @@
       if(vm.createMethod.title === 'Discovery' && vm.deviceClass.discoveryParamTypes.length === 0) {
         vm.discoverDevices();
       }
+
+      $log.log('vm', vm);
+      $log.log('vm.createMethod', vm.createMethod);
     }
 
 

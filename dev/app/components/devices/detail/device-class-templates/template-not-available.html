@@ -20,30 +20,32 @@
   SOFTWARE.
 -->
 
-<!-- Device information -->
-<div ng-show="device.SetupComplete">
-
-  <h1>{{ device.name }}, {{ device.deviceClass.vendor.name }}</h1>
-
-</div>
-
 <!-- Device states -->
-<div class="list" ng-show="device.SetupComplete && device.states.length > 0">
-
-  <p class="item item-text-wrap" ng-repeat="state in device.states | orderBy: 'stateType.name' track by $index">{{ state.stateType.name }}: {{ state.value }}</p>
-
+<!-- <div class="list" ng-show="device.SetupComplete && device.states.length > 0 "> -->
+<div>
+  <p class="item item-text-wrap" ng-repeat="state in device.states | orderBy: 'name' track by $index">{{ state.stateType.name }}: {{ state.value }}</p>
 </div>
 
 <!-- Device actions -->
-<div ng-show="device.SetupComplete && device.deviceClass.actionTypes.length > 0 ">
-  
+<div ng-if="device.deviceClass.actionTypes.length > 0">
   <div ng-repeat="action in device.actions | orderBy: 'action.actionType.name' track by $index">
-    <!-- If there are no paramTypes -->
-    <!-- <guh-input model="action.actionType" change="device.execute(action.actionType)" state="action.state" ng-if="action.actionType.paramTypes.length <= 0">{{ paramType.name }}</guh-input> -->
-    
-    <!-- If there are paramTypes -->
-    <!-- <guh-input model="paramType" change="device.execute(action.actionType)" state="action.state" ng-repeat="paramType in action.actionType.paramTypes | orderBy: 'paramType.name' track by $index" ng-if="action.actionType.paramTypes.length > 0">{{ paramType.name }}</guh-input> -->
 
-    <guh-action model="paramType" change="device.execute(action.actionType)" state="action.state" ng-repeat="paramType in action.actionType.paramTypes | orderBy: 'paramType.name' track by $index" ng-if="action.actionType.paramTypes.length > 0">{{ paramType.name }}</guh-action>
+    <!-- Action without paramTypes -->
+    <button class="button button-full" ng-click="device.execute(action.actionType)" ng-if="action.actionType.paramTypes.length === 0">{{ action.actionType.name }}</button>
+
+    <!-- Action with one paramType -->
+    <guh-action-param action-state="action" change="device.execute(action.actionType)" param-type="paramType" ng-repeat="paramType in action.actionType.paramTypes | orderBy: 'name' track by $index" ng-if="action.actionType.paramTypes.length === 1"></guh-action-param>
+
+    <!-- Action with more than one paramTypes -->
+    <ng-form ng-if="action.actionType.paramTypes.length > 1">
+      <guh-action-param action-state="action" change="device.execute(action.actionType)" param-type="paramType" ng-repeat="paramType in action.actionType.paramTypes | orderBy: 'name' track by $index"></guh-action-param>
+
+      <button class="button button-full" ng-click="device.execute(action.actionType)">{{ action.actionType.name }}</button>
+    </ng-form>
+
+    <!-- <guh-action action-type="action.actionType" execute-fn="device.execute(action.actionType)">
+      <guh-param disabled="false" param-type="paramType" state="action.state" ng-repeat="paramType in action.actionType.paramTypes | orderBy: 'name' track by $index"></guh-param>
+    </guh-action> -->
+
   </div>
 </div>
