@@ -40,6 +40,9 @@
       // Utilities
       'guh.utils',
 
+      // Filters
+      'guh.filters',
+
       // Services
       'guh.api',
       'guh.models',
