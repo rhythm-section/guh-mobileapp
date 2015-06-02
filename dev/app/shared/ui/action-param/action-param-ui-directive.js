@@ -27,103 +27,89 @@
 
   angular
     .module('guh.ui')
-    .directive('guhAction', action);
+    .directive('guhActionParam', actionParam);
 
-  action.$inject = ['$log', '$http', '$compile', '$timeout', 'DSState', 'libs'];
+  actionParam.$inject = ['$log', '$rootScope', '$http', '$compile', '$timeout', 'DSState', 'libs'];
 
-  function action($log, $http, $compile, $timeout, DSState, libs) {
+  function actionParam($log, $rootScope, $http, $compile, $timeout, DSState, libs) {
     var directive = {
-      controller: actionCtrl,
-      controllerAs: 'guhAction',
-      link: actionLink,
+      controller: actionParamCtrl,
+      controllerAs: 'guhActionParam',
+      link: actionParamLink,
       restrict: 'E',
       scope: {
+        actionState: '=?',
         change: '&?',
         disabled: '=?',
-        model: '=',
-        state: '=?'
+        paramType: '='
       }
     };
 
     return directive;
 
 
-    function actionCtrl($scope, $element) {
+    /*
+     * Controller method: actionParamCtrl(scope, element)
+     */
+    function actionParamCtrl($scope, $element) {
       var vm = this;
 
       vm.change = change;
 
+      /*
+       * Public method: cahnge(value)
+       */
       function change(value) {
-        // Toggle value
-        $scope.model.value = !$scope.model.value; // move to toggle-button directive
-
-        // Set loading animation
-        $scope.loading = true;
-
-        // Call change function defined in current directive instance
-        $scope
-          .change()
-          .then(function() {
-            $scope.error = false;
-
-            // Wait 2 sec. and check if notification was received during this time
-            $scope.timeout = $timeout(function() {
-              // TODO: Use code below to refresh state (wait for new endpoint in guh-webserver)
-              $scope.loading = false;
-
-              DSState
-                .find($scope.state.stateTypeId, { bypassCache: true })
-                .then(function(state) {
-                  $scope.state = state;
-                  $scope.loading = false;
-                });
-            }, 2000);
-          })
-          .catch(function(error) {
-            // Reset value
-            $scope.model.value = !$scope.model.value;
-
-            $scope.error = error;
-            $scope.loading = false;
-          });
+        $log.log('change');
       }
+      
     }
 
-    function actionLink(scope, element, attrs) {
-      // Initialize with current value
-      if(angular.isObject(scope.state)) {
-        scope.model.value = scope.state.value;
-        scope.loading = false;
-        scope.error = false;
-        scope.timeout = false;
+
+    /*
+     * Link method: actionParamLink(scope, element, attrs)
+     */
+    function actionParamLink(scope, element, attrs) {
+
+      // Initialization
+      if(angular.isObject(scope.actionState) && angular.isObject(scope.actionState.state)) {
+        scope.paramType.value = scope.actionState.state.value;
       }
 
-      scope.disabled = (scope.disabled) ? scope.disabled : false;
 
+      // Clean up
       scope.$on('$destroy', function() {
         // Remove only element, scope needed afterwards
+        // scope.$destroy();
         element.remove();
       });
 
-      scope.$watch('model', function(newValue, oldValue) {
-        var templateUrl = scope.model.templateUrl;
 
-        $http.get(templateUrl).success(function(template) {
-          // Replace guhInput-directive with proper HTML input
-          element.html(template);
-          $compile(element.contents())(scope);
-        });
-      });
+      // Check templateUrl and set template
+      scope.$watch('paramType', function(newValue, oldValue) {
+        var templateUrl = scope.paramType.actionTemplateUrl;
 
-      scope.$watch('state.value', function(newValue, oldValue) {
-        if(scope.timeout) {
-          $timeout.cancel(scope.timeout);
-        }
-
-        if(scope.loading) {
-          scope.loading = false;
+        // Get template
+        if(angular.isString(templateUrl)) {
+          $http.get(templateUrl).success(function(template) {
+            // Replace guhInput-directive with proper HTML input
+            element.html(template);
+            $compile(element.contents())(scope);
+          });
+        } else {
+          $log.error('guh.directive.guhActionParam', 'TemplateURL is not set.');
         }
       });
+
+
+      // Event: guh.injectState
+      $rootScope.$on('guh.injectState', function(event, state) {
+        if(scope.actionState.state && scope.actionState.state.stateTypeId === state.stateTypeId) {
+          scope.paramType.value = state.value;
+          $log.log('Inject value', scope.paramType.value, state.value);
+        }
+      });
+
     }
   }
 
