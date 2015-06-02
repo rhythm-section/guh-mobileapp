@@ -37,7 +37,7 @@
 
 <p class="padding" ng-show="devicesAdd.discoveredDevices.length > 0">Didn't find what your are looking for? Retry the search.</p>
 <form ng-show="devicesAdd.selectedDeviceClass.discoveryParamTypes.length > 0">
-  <guh-input model="paramType" ng-repeat="paramType in devicesAdd.selectedDeviceClass.discoveryParamTypes track by $index"></guh-input>
+  <guh-input param-type="paramType" ng-repeat="paramType in devicesAdd.selectedDeviceClass.discoveryParamTypes track by $index"></guh-input>
 </form>
 
 <button class="button-full button" ng-click="devicesAdd.discoverDevices()" ng-disabled="devicesAdd.loading">Start search</button>
