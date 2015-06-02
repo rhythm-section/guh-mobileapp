@@ -22,39 +22,49 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-@import "bourbon";
+.modal {
+  color: $guh-grey;
+  @include linear-gradient(to top, rgba($light, 0.7), rgba($light, 0.9));
 
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../libs/ionic/fonts" !default;
+  .bar-header {
+    background-color: $white;
+    box-shadow: none;
+    color: $guh-grey;
 
-// Variables - guh
-@import "../assets/scss/shared/variables";
+    .button {
+      background-color: $white;
+      border-color: $white;
+      color: $guh-grey;
+    }
+  }
 
-// Variables - ionic
-@import "../assets/scss/ionic/variables";
+  .button {
+    background-color: $guh-light;
+    border-color: $guh-dark;
+    color: $white;
+  }
 
-// Variables - guh
-// @import "../assets/scss/shared/variables";
+  .item {
+    border-color: rgba($guh-grey, 0.1);
+    color: $guh-grey;
 
-// Ionic
-@import "./bower_components/ionic/scss/ionic.scss";
+    .icon {
+      color: rgba($guh-grey, 0.4);
+    }
 
-// Core
-@import "../assets/scss/core/base";
+    h2,
+    p {
+      color: $guh-grey;
+    }
+  }
 
-// Ionic
-// @import "../assets/scss/ionic/bar";
-@import "../assets/scss/ionic/items";
-@import "../assets/scss/ionic/modal";
-// @import "../assets/scss/ionic/scaffolding";
-@import "../assets/scss/ionic/spinner";
-@import "../assets/scss/ionic/type";
+  .item-divider {
+    background-color: $guh-light;
+    color: $white;
+  }
 
-// Shared
-// @import "../assets/scss/shared/bar";
-@import "../assets/scss/shared/button";
-// @import "../assets/scss/shared/modal";
-
-// Directives
-@import "shared/ui/color-picker/color-picker.scss";
-@import "shared/ui/wizard/wizard.scss";
+  .spinner {
+    display: block;
+    text-align: center;
+  }
+}

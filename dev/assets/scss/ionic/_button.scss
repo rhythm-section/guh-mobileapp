@@ -22,39 +22,7 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-@import "bourbon";
-
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../libs/ionic/fonts" !default;
-
-// Variables - guh
-@import "../assets/scss/shared/variables";
-
-// Variables - ionic
-@import "../assets/scss/ionic/variables";
-
-// Variables - guh
-// @import "../assets/scss/shared/variables";
-
-// Ionic
-@import "./bower_components/ionic/scss/ionic.scss";
-
-// Core
-@import "../assets/scss/core/base";
-
-// Ionic
-// @import "../assets/scss/ionic/bar";
-@import "../assets/scss/ionic/items";
-@import "../assets/scss/ionic/modal";
-// @import "../assets/scss/ionic/scaffolding";
-@import "../assets/scss/ionic/spinner";
-@import "../assets/scss/ionic/type";
-
-// Shared
-// @import "../assets/scss/shared/bar";
-@import "../assets/scss/shared/button";
-// @import "../assets/scss/shared/modal";
-
-// Directives
-@import "shared/ui/color-picker/color-picker.scss";
-@import "shared/ui/wizard/wizard.scss";
+// font-size: floor($font-size-base * 1.40);   // 14px
+// font-weight: bold;
+// letter-spacing: 0.02em;
+// text-transform: uppercase;

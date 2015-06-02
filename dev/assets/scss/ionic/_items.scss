@@ -22,39 +22,49 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-@import "bourbon";
+.item {
+  background-color: transparent;
+  border-color: rgba($white, 0.2);
+  color: $white;
 
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../libs/ionic/fonts" !default;
+  .item-content {
+    background-color: rgba($white, 0.1);
+  }
 
-// Variables - guh
-@import "../assets/scss/shared/variables";
+  h1, .h1,
+  h2, .h2,
+  h3, .h3,
+  h4, .h4,
+  h5, .h5,
+  h6, .h6,
+  p {
+    color: $white;
+  }
 
-// Variables - ionic
-@import "../assets/scss/ionic/variables";
+  h2, .h2 {
+    letter-spacing: none;
+    padding-top: 0px;
+    text-transform: capitalize;
+  }
+}
 
-// Variables - guh
-// @import "../assets/scss/shared/variables";
 
-// Ionic
-@import "./bower_components/ionic/scss/ionic.scss";
+// .item {
+//   background-color: transparent;
+//   // background-color: rgba($light, 0.2);
+//   // border-bottom: none;
+//   border-bottom-color: rgba($light, 0.2);
+//   border-top: none;
+//   color: $light;
+//   // margin-bottom: 1px;
+//   // margin-top: 0px;
 
-// Core
-@import "../assets/scss/core/base";
+//   .item-content {
+//     background-color: transparent;
+//   }
 
-// Ionic
-// @import "../assets/scss/ionic/bar";
-@import "../assets/scss/ionic/items";
-@import "../assets/scss/ionic/modal";
-// @import "../assets/scss/ionic/scaffolding";
-@import "../assets/scss/ionic/spinner";
-@import "../assets/scss/ionic/type";
-
-// Shared
-// @import "../assets/scss/shared/bar";
-@import "../assets/scss/shared/button";
-// @import "../assets/scss/shared/modal";
-
-// Directives
-@import "shared/ui/color-picker/color-picker.scss";
-@import "shared/ui/wizard/wizard.scss";
+//   .item-content p,
+//   p {
+//     color: $light;
+//   }
+// }

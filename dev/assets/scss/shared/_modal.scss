@@ -22,39 +22,42 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-@import "bourbon";
+.modal {
+  p,
+  h2 {
+    color: $dark;
+  }
 
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../libs/ionic/fonts" !default;
+  .bar-header {
+    background-color: $light;
+    color: $dark;
 
-// Variables - guh
-@import "../assets/scss/shared/variables";
+    .button {
+      @include button-style($button-default-bg, $button-default-border, $button-default-active-bg, $button-default-active-border, $dark);
+    }
+  }
 
-// Variables - ionic
-@import "../assets/scss/ionic/variables";
+  .button {
+    @include button-style($button-default-bg, rgba($dark, 0.2), $button-default-active-bg, $button-default-active-border, $dark);
+  }
 
-// Variables - guh
-// @import "../assets/scss/shared/variables";
+  .item {
+    border-bottom-color: rgba($dark, 0.2);
+    color: $dark;
 
-// Ionic
-@import "./bower_components/ionic/scss/ionic.scss";
+    i {
+      color: rgba($dark, 0.4);
+    }
 
-// Core
-@import "../assets/scss/core/base";
-
-// Ionic
-// @import "../assets/scss/ionic/bar";
-@import "../assets/scss/ionic/items";
-@import "../assets/scss/ionic/modal";
-// @import "../assets/scss/ionic/scaffolding";
-@import "../assets/scss/ionic/spinner";
-@import "../assets/scss/ionic/type";
-
-// Shared
-// @import "../assets/scss/shared/bar";
-@import "../assets/scss/shared/button";
-// @import "../assets/scss/shared/modal";
-
-// Directives
-@import "shared/ui/color-picker/color-picker.scss";
-@import "shared/ui/wizard/wizard.scss";
+    h1, .h1,
+    h2, .h2,
+    h3, .h3,
+    h4, .h4,
+    h5, .h5,
+    h6, .h6,
+    .item-content p,
+    p {
+      color: $dark;
+    }
+  }
+}

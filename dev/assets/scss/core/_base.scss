@@ -22,25 +22,27 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-.slider {
-  position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important ;
-    right: 0 !important;
-    top: 0 !important;
+// .view-container,
+
+.pane,
+.view {
+  @include linear-gradient(to top, $guh-dark, $guh-light);
 }
 
-// .scroll-content {
-//   @include linear-gradient(to top, #57baae, #7cc09a);
-// }
+.bar-header {
+  background-color: mix($guh-light, $white, 70%);
+  box-shadow: 0px 1px 4px 0px rgba($black, 0.1);
+  color: $white;
+}
 
-// .bar-header {
-//   // background-color: #7cc09a;
-//   background-color: #bde1ce;
-//   color: #fff;
-// }
+.tab-nav {
+  background-color: mix($guh-dark, $white, 80%);
+  box-shadow: 0px -2px 6px 0px rgba($black, 0.1);
+  color: $white;
+}
 
-// .tabs {
-//   background-color: #8cc1b6;
-//   color: #fff;
-// }
+.warning {
+  background-color: rgba($white, 0.1);
+  border-bottom: 1px solid rgba($white, 0.2);
+  border-top: 1px solid rgba($white, 0.2);
+}

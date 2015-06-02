@@ -22,39 +22,41 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-@import "bourbon";
+// Colors
+// -------------------------------
 
-// The path for our ionicons font files, relative to the built CSS in www/css
-$ionicons-font-path: "../libs/ionic/fonts" !default;
+// $light:                           #7cc09a !default;
+// $stable:                          rgba(255, 255, 255, 0.2) !default;
+// // $positive:                        #f00 !default;
+// // $calm:                            #f00 !default;
+// $balanced:                        #fff !default;
+// // $energized:                       #f00 !default;
+// // $assertive:                       #f00 !default;
+// // $royal:                           #f00 !default;
+// $dark:                            #57baae !default;
 
-// Variables - guh
-@import "../assets/scss/shared/variables";
 
-// Variables - ionic
-@import "../assets/scss/ionic/variables";
+// Base
+// -------------------------------
 
-// Variables - guh
-// @import "../assets/scss/shared/variables";
+// $base-background-color:           #57baae !default;
+// $base-color:                      #fff !default;
 
-// Ionic
-@import "./bower_components/ionic/scss/ionic.scss";
 
-// Core
-@import "../assets/scss/core/base";
+// Buttons
+// -------------------------------
 
-// Ionic
-// @import "../assets/scss/ionic/bar";
-@import "../assets/scss/ionic/items";
-@import "../assets/scss/ionic/modal";
-// @import "../assets/scss/ionic/scaffolding";
-@import "../assets/scss/ionic/spinner";
-@import "../assets/scss/ionic/type";
+// $button-light-bg:                 transparent !default;
+// $button-light-text:               #fff !default;
+// $button-light-border:             mix(#fff, $stable, 2%) !default;
+// $button-light-active-bg:          mix(#fff, $stable, 2%) !default;
+// $button-light-active-border:      mix(#fff, $stable, 4%) !default;
 
-// Shared
-// @import "../assets/scss/shared/bar";
-@import "../assets/scss/shared/button";
-// @import "../assets/scss/shared/modal";
+// Bars
+// -------------------------------
 
-// Directives
-@import "shared/ui/color-picker/color-picker.scss";
-@import "shared/ui/wizard/wizard.scss";
+$bar-subheader-title-font-size:             12px !default;
+
+
+
+

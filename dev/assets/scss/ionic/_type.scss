@@ -22,16 +22,29 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-.button {
-  // border: none;
+// h1, .h1,
+// label.h2 {
+//   display: block;
+//   font-size: floor($font-size-base * 1.10);   // 11px
+//   letter-spacing: 0.02em;
+//   padding: floor($font-size-base * 3.30) 0 floor($font-size-base * 1.10);
+//   text-align: center;
+//   text-transform: uppercase;
+// }
 
-  .loading {
-    position: relative;
-      top: 3px;
+h1, .h1,
+h2, .h2 {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  padding-top: 48px;
+  text-transform: uppercase;
+}
 
-    svg {
-      height: 18px;
-      width: 18px;
-    }
+h1, .h1 {
+  span {
+    display: block;
+    padding: 12px 0 24px;
   }
 }
+
