@@ -26,82 +26,67 @@
   'use strict';
 
   angular
-    .module('guh.devices')
-    .controller('RulesDetailCtrl', RulesDetailCtrl);
+    .module('guh.rules')
+    .controller('RulesEditCtrl', RulesEditCtrl);
 
-  RulesDetailCtrl.$inject = ['$log', '$scope', '$state', '$stateParams', '$ionicModal', 'appModalService', 'DSRule', 'DSActionType'];
+  RulesEditCtrl.$inject = ['$log', '$scope', 'libs', 'DSRule', 'parameters'];
 
-  function RulesDetailCtrl($log, $scope, $state, $stateParams, $ionicModal, appModalService, DSRule, DSActionType) {
-    
+  function RulesEditCtrl($log, $scope, libs, DSRule, parameters) {
+
+    // Use data that was passed to modal for the view
     var vm = this;
-    var currentRule = {};
+    var currentRule = angular.copy(parameters);
 
     // Public methods
-    vm.editSettings = editSettings;
-
+    vm.cancel = cancel;
+    vm.save = save;
+    vm.remove = remove;
 
     /*
      * Private method: _init()
      */
     function _init() {
-      _loadViewData();
+      vm.id = currentRule.id;
+      vm.name = currentRule.name;
+
+      $log.log('vm', vm);
+    }
+
+
+    /*
+     * Public method: cancel()
+     */
+    function cancel() {
+      vm.closeModal({
+        updated: false,
+        removed: false
+      });
     }
 
     /*
-     * Private method: _loadViewData()
+     * Public method: save(rule)
      */
-    function _loadViewData() {
-      var ruleId = $stateParams.ruleId;
+    function save(rule) {
+      vm.closeModal({
+        updated: false,
+        removed: false
+      });
+    }
 
-      return DSRule
-        .find(ruleId)
-        .then(function(rule) {
-          currentRule = rule;
-          $log.log('rule', rule);
-
-          vm.name = rule.name;
-          vm.id = rule.id;
-          vm.enabled = rule.enabled;
-
-          angular.forEach(rule.actions, function(action) {
-            DSActionType
-              .find(action.actionTypeId)
-              .then(function(actionType) {
-                $log.log('actionType', actionType);
-              })
-              .catch(function(error) {
-                $log.error(error);
-              });
+    /*
+     * Public method: remove()
+     */
+    function remove() {
+      currentRule
+        .remove()
+        .then(function(response) {
+          vm.closeModal({
+            updated: false,
+            removed: true
           });
         })
-        .catch(function(error) {
-          _showError(error);
-        });
-    }
-
-    /*
-     * Private method: _showError(error)
-     */
-    function _showError(error) {
-      if(angular.isObject(error.data)) {
-        $log.error(error.data.errorMessage);
-      }
-    }
-
-
-    /*
-     * Public method: editSettings()
-     */
-    function editSettings() {
-      appModalService
-        .show('app/components/rules/edit/rules-edit-modal.html', 'RulesEditCtrl as rulesEdit', currentRule)
-        .then(function(response) {
-          if(response.updated) {
-            _loadViewData();
-          } else if(response.removed) {
-            $state.go('guh.rules.master');
-          }
-        }, function(error) {
+        .catch(function(error) {
+          // TODO: Build general error handler
           $log.error(error);
         });
     }
