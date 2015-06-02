@@ -62,6 +62,8 @@
      * Public method: connect()
      */
     function connect() {
+      $log.log('Connect to websocket.');
+
       if(websocketService.ws) {
         return;
       }
@@ -107,7 +109,7 @@
             cb(data);
           }
         } else {
-          $log.warn('Type of notification not handled:' + data.notification);
+          // $log.warn('Type of notification not handled:' + data.notification);
         }
       };
 
@@ -126,6 +128,8 @@
      * Public method: subscribe(id, cb)
      */
     function subscribe(id, cb) {
+      $log.log('Subscribe to websocket.');
+
       if(!websocketService.ws) {
         websocketService.connect();
       }
@@ -137,6 +141,7 @@
      * Public method: unsubscribe(id)
      */
     function unsubscribe(id) {
+      $log.log('Unsubscribe from websocket.', id);
       delete websocketService.callbacks[id];
     }
 
