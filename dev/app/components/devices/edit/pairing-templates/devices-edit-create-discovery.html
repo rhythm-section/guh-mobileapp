@@ -35,7 +35,7 @@
 </ion-list>
 
 <form ng-if="devicesEdit.deviceClass.discoveryParamTypes.length > 0">
-  <guh-input model="paramType" ng-repeat="paramType in devicesEdit.deviceClass.discoveryParamTypes track by $index"></guh-input>
+  <guh-input param-type="paramType" ng-repeat="paramType in devicesEdit.deviceClass.discoveryParamTypes track by $index"></guh-input>
 </form>
 
 <button class="button-full button" ng-click="devicesEdit.discoverDevices()" ng-disabled="devicesEdit.loading">Start search</button>
