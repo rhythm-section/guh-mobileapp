@@ -59,17 +59,13 @@
         .then(function(device) {
           currentDevice = device;
 
-          // Check if device has individual name
-          var params = currentDevice.params;
-          var nameParameter = libs._.find(params, function(param) { return (param.name === 'Name'); });
-
           // Set view variables
           vm.SetupComplete = currentDevice.SetupComplete;
           vm.actions = [];
           vm.deviceClass = currentDevice.deviceClass;
           vm.deviceClassId = currentDevice.deviceClassId;
           vm.id = currentDevice.id;
-          vm.name = currentDevice.name
+          vm.name = (currentDevice.name === 'Name') ? currentDevice.deviceClass.name : currentDevice.name;
           vm.params = currentDevice.params;
           vm.states = currentDevice.states;
 
@@ -85,14 +81,10 @@
               vm.templateReady = true;
             });
 
-          $log.log('currentDevice.deviceClass.actionTypes', currentDevice.deviceClass.actionTypes);
-
           // Actions & States
           angular.forEach(currentDevice.deviceClass.actionTypes, function(actionType) {
             var action = {};
             action.actionType = actionType;
-
-            $log.log('actionType', actionType);
 
             if(actionType.hasState) {  
               var state = libs._.find(currentDevice.states, function(state) { return state.stateTypeId === actionType.id });
@@ -109,8 +101,6 @@
 
           // Subscribe to websocket messages
           _subscribeToWebsocket();
-
-          $log.log('vm', vm);
         })
         .catch(function(error) {
           _showError(error);

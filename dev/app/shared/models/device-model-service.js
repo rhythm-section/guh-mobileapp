@@ -108,12 +108,8 @@
      * Private method: _addCustomName()
      */
     function _addCustomName(resource, attrs) {
-      $log.log('attrs', attrs);
-
       var nameParameter = libs._.find(attrs.params, function(param) { return (param.name === 'name'); });
       attrs.name = (nameParameter === undefined) ? 'Name' : nameParameter.value;
-
-      $log.log('nameParameter', nameParameter);
     }
 
 
