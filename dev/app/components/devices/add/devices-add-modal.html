@@ -73,11 +73,13 @@
     </ion-slide>
 
     <!-- Show setupMethod -->
-    <!-- <ion-slide ion-wizard-step>
+    <ion-slide guh-wizard-step>
+      <ion-content>
 
-      <ng-include src="devices.setupMethod.addTemplate"></ng-include>
+        <ng-include src="devicesAdd.setupMethod.addTemplate" ng-if="devicesAdd.selectedDeviceClass && devicesAdd.setupMethod"></ng-include>
 
-    </ion-slide> -->
+      </ion-content>
+    </ion-slide>
 
   </ion-slide-box>
 

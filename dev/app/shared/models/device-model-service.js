@@ -96,7 +96,9 @@
 
     angular.extend(DSDevice, {
       add: add,
-      edit: edit
+      edit: edit,
+      pair: pair,
+      confirmPairing: confirmPairing
     });
 
     return DSDevice;
@@ -106,8 +108,12 @@
      * Private method: _addCustomName()
      */
     function _addCustomName(resource, attrs) {
+      $log.log('attrs', attrs);
+
       var nameParameter = libs._.find(attrs.params, function(param) { return (param.name === 'name'); });
       attrs.name = (nameParameter === undefined) ? 'Name' : nameParameter.value;
+
+      $log.log('nameParameter', nameParameter);
     }
 
 
@@ -125,13 +131,13 @@
       return websocketService.unsubscribe(this.id);
     }
 
-
     /*
-     * Public method: add(deviceClassId, deviceData)
+     * Public method: pair(deviceClassId, deviceData)
      */
-    function add(deviceClassId, deviceData) {
+    function pair(deviceClassId, deviceData) {
       var deviceData = deviceData || {};
       var device = {};
+      var options = {};
 
       device.deviceClassId = deviceClassId || '';
       device.deviceDescriptorId = deviceData.id || '';
@@ -145,6 +151,55 @@
 
         device.deviceParams.push(deviceParam);
       });
+
+      options.device = device;
+
+      return DS
+        .adapters
+        .http
+        .POST(app.apiUrl + '/devices.json', options);
+    }
+
+    /*
+     * Public method: confirmPairing(pairingTransactionId)
+     */
+    function confirmPairing(pairingTransactionId) {
+      var options = {};
+      var params = {};
+      
+      params.pairingTransactionId = pairingTransactionId;
+
+      options.params = params;
+
+      return DS
+        .adapters
+        .http
+        .POST(app.apiUrl + '/devices/confirm_pairing.json', options);      
+    }
+
+    /*
+     * Public method: add(deviceClassId, deviceData)
+     */
+    function add(deviceClassId, deviceData) {
+      var deviceData = deviceData || {};
+      var device = {};
+
+      device.deviceClassId = deviceClassId || '';
+      device.deviceDescriptorId = deviceData.id || '';
+
+      device.deviceParams = [];
+      if(deviceData.deviceParamTypes) {
+        angular.forEach(deviceData.deviceParamTypes, function(deviceParamType) {
+          var deviceParam = {};
+
+          deviceParam.name = deviceParamType.name;
+          deviceParam.value = deviceParamType.value;
+
+          device.deviceParams.push(deviceParam);
+        });
+      } else if(deviceData.params) {
+        device.deviceParams = deviceData.params;
+      }
 
       return DSDevice.create({device: device});
     }

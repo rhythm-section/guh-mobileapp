@@ -57,6 +57,10 @@
       return _findAllDevices(bypassCache)
         .then(_findDeviceRelations)
         .then(function(devices) {
+          devices.forEach(function(device) {
+            device.name = (device.name === 'Name') ? device.deviceClass.name : device.name;
+          });
+
           vm.configured = devices;
         });;
     }
@@ -107,16 +111,21 @@
     function addDevice() {
       appModalService
         .show('app/components/devices/add/devices-add-modal.html', 'DevicesAddCtrl as devicesAdd', {})
-        .then(function(device) {
-          if(device !== undefined) {
-            DSDevice
-              .add(device.deviceClassId, device.deviceData)
-              .then(function(device) {
-                _loadViewData(true);
-              })
-              .catch(function(error) {
-                $log.error(error);
-              });
+        .then(function(data) {
+          if(data !== undefined) {
+            if(data.httpCreate) {
+              DSDevice
+                .add(data.device.deviceClassId, data.device.deviceData)
+                .then(function(device) {
+                  _loadViewData(true);
+                })
+                .catch(function(error) {
+                  $log.error(error);
+                });
+            } else {
+              DSDevice.inject(data.device);
+              _loadViewData(true);
+            }
           }
         }, function(error) {
           $log.error(error);

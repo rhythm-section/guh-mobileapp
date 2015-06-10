@@ -253,6 +253,7 @@
 
       switch(self.setupMethod) {
         case 'SetupMethodJustAdd':
+          setupMethodData = null;
           break;
         case 'SetupMethodDisplayPin':
           setupMethodData = {

@@ -29,7 +29,7 @@
 
 <p class="padding" ng-show="devicesAdd.discoveredDevices.length > 0">Select your desired device/plugin.</p>
 <ion-list ng-show="devicesAdd.discoveredDevices.length > 0">
-  <ion-item class="item item-text-wrap" ng-repeat="device in devicesAdd.discoveredDevices track by $index | orderBy: 'name'" ng-click="devicesAdd.save(device)">
+  <ion-item class="item item-text-wrap" ng-repeat="device in devicesAdd.discoveredDevices track by $index | orderBy: 'name'" ng-click="devicesAdd.add(device)">
     <h2>{{ device.title }}</h2>
     <p>{{ device.description }}</p>
   </ion-item>

@@ -29,18 +29,20 @@
     .module('guh.devices')
     .controller('DevicesAddCtrl', DevicesAddCtrl);
 
-  DevicesAddCtrl.$inject = ['$log', '$rootScope', '$scope', 'DSVendor'];
+  DevicesAddCtrl.$inject = ['$log', '$rootScope', '$scope', 'DSVendor', 'DSDeviceClass', 'DSDevice'];
 
-  function DevicesAddCtrl($log, $rootScope, $scope, DSVendor) {
+  function DevicesAddCtrl($log, $rootScope, $scope, DSVendor, DSDeviceClass, DSDevice) {
     
     var vm = this;
 
     // Public methods
     vm.cancel = cancel;
+    vm.add = add;
     vm.save = save;
     vm.selectVendor = selectVendor;
     vm.selectDeviceClass = selectDeviceClass;
     vm.discoverDevices = discoverDevices;
+    vm.confirmPairing = confirmPairing;
 
 
     /*
@@ -60,13 +62,6 @@
       return DSVendor.findAll();
     }
 
-    /*
-     * Private method: _findVendorRelations(vendor)
-     */
-    function _findVendorRelations(vendor) {
-      return DSVendor.loadRelations(vendor, ['deviceClasses']);
-    }
-
 
     /*
      * Public method: cancel()
@@ -76,10 +71,27 @@
     }
 
     /*
-     * Public method: save(deviceData)
+     * Public method: confirmPairing()
      */
-    function save(deviceData) {
-      var deviceData = angular.copy(deviceData);
+    function confirmPairing() {
+      DSDevice
+        .confirmPairing(vm.pairingTransactionId)
+        .then(function(device) {
+          vm.closeModal({
+            device: device.data,
+            httpCreate: false
+          });
+        })
+        .catch(function(error) {
+          $log.error(error);
+        });
+    }
+
+    /*
+     * Public method: add(device)
+     */
+    function add(device) {
+      var deviceData = (device) ? angular.copy(device) : null;
 
       if(deviceData) {
         // For discovered devices only
@@ -89,17 +101,45 @@
         
         delete deviceData.description;
         delete deviceData.title;
+
+        if(vm.setupMethod) {
+          DSDevice
+            .pair(vm.selectedDeviceClass.id, deviceData)
+            .then(function(pairingData) {
+              vm.displayMessage = pairingData.data.displayMessage;
+              vm.pairingTransactionId = pairingData.data.pairingTransactionId;
+
+              $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
+            })
+            .catch(function(error) {
+              $log.error(error);
+            });
+        } else {
+          // Without setupMethod the device can be saved directly
+          save(deviceData);
+        }
       } else {
         // For user created devices only
         var deviceData = {};
         
         var paramTypes = vm.selectedDeviceClass.paramTypes;
         deviceData.deviceParamTypes = (angular.isArray(paramTypes) && paramTypes.length > 0) ? paramTypes : []; 
-      }
 
+        // Without setupMethod the device can be saved directly
+        save(deviceData);
+      }
+    }
+
+    /*
+     * Public method: save(deviceData)
+     */
+    function save(deviceData) {
       vm.closeModal({
-        deviceClassId: vm.selectedDeviceClass.id,
-        deviceData: deviceData
+        device: {
+          deviceClassId: vm.selectedDeviceClass.id,
+          deviceData: deviceData
+        },
+        httpCreate: true
       });
     }
 
@@ -109,31 +149,26 @@
     function selectVendor(vendor) {
       vm.vendor = vendor;
 
-      _findVendorRelations(vendor)
-        .then(function(vendor) {
-          vm.selectedVendor = vendor;
-          vm.supportedDeviceClasses = [];
+      vm.selectedVendor = vendor;
+      vm.supportedDeviceClasses = [];
 
-          // Remove deviceClasses that are auto discovered
-          angular.forEach(vendor.deviceClasses, function(deviceClass, index) {
-            var createMethod = deviceClass.getCreateMethod();
+      // Remove deviceClasses that are auto discovered
+      angular.forEach(vendor.deviceClasses, function(deviceClass, index) {
+        var createMethod = deviceClass.getCreateMethod();
 
-            if(createMethod.title !== 'Auto') {
-              vm.supportedDeviceClasses.push(deviceClass);
-            }
-          });
-          
-          // Go to next wizard step
-          $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
-        });
+        if(createMethod.title !== 'Auto') {
+          vm.supportedDeviceClasses.push(deviceClass);
+        }
+      });
+      
+      // Go to next wizard step
+      $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
     }
 
     /*
      * Public method: selectDeviceClass(deviceClass)
      */
     function selectDeviceClass(deviceClass) {
-      $log.log('selectDeviceClass', deviceClass);
-
       // Reset view
       vm.discoveredDevices = [];
       vm.createMethod = null;
@@ -144,8 +179,6 @@
       vm.selectedDeviceClass = deviceClass;
       vm.createMethod = deviceClass.getCreateMethod();
       vm.setupMethod = deviceClass.getSetupMethod();
-
-      $log.log('vm.createMethod', vm.createMethod);
 
       // Go to next wizard step
       $rootScope.$broadcast('wizard.next', 'addDeviceWizard');
@@ -171,7 +204,6 @@
           $log.error(error);
         });
     }
-
 
     _init();
 
