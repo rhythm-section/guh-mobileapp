@@ -21,7 +21,6 @@
 -->
 
 <!-- Device states -->
-<!-- <div class="list" ng-show="device.SetupComplete && device.states.length > 0 "> -->
 <div>
   <p class="item item-text-wrap" ng-repeat="state in device.states | orderBy: 'name' track by $index">{{ state.stateType.name }}: {{ state.value }}</p>
 </div>
@@ -42,10 +41,6 @@
 
       <button class="button button-full" ng-click="device.execute(action.actionType)">{{ action.actionType.name }}</button>
     </ng-form>
-
-    <!-- <guh-action action-type="action.actionType" execute-fn="device.execute(action.actionType)">
-      <guh-param disabled="false" param-type="paramType" state="action.state" ng-repeat="paramType in action.actionType.paramTypes | orderBy: 'name' track by $index"></guh-param>
-    </guh-action> -->
 
   </div>
 </div>
