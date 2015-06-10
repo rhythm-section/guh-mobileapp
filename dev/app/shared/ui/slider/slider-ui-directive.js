@@ -56,15 +56,11 @@
       vm.change = change;
 
       var _setValue = Input.debounce(function(value) {
-        $log.log('changed to', value);
-        $log.log('$scope', $scope);
-
         // Execute action
         $scope.setValueFn(value);
       }, 100);
 
       function change(value) {
-        $log.log('change', value);
         _setValue(value);
       }
     }

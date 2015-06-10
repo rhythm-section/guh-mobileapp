@@ -107,15 +107,9 @@
     }
 
     function toggleButtonLink(scope, element, attrs) {
-      $log.log('toggleButtonLink', scope);
-
       scope.toggleValue = function(value) {
-        $log.log('toggleButtonLink toggleValue');
-
         // Toggle scope value
-        $log.log('scope.value', scope.value);
         scope.value = !scope.value;
-        $log.log('scope.value', scope.value);
         
         // Set toggled value
         // $scope.setValueFn({
