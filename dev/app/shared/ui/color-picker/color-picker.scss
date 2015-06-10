@@ -22,81 +22,64 @@
  *                                                                                     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-// .colors {
-//   background-color: $white;
-//   border-bottom: 14px solid rgba($white, 0.2);
-//   border-top: 14px solid rgba($white, 0.2);
-//   overflow: auto;
-// }
-
-// .color-field {
-//   background-color: $white;
-//   border: 2px solid rgba($white, 0.2);
-//   float: left;
-//   height: 52px;
-//   margin-left: 1px;
-//   width: 52px;
-
-//   &[data-color="white"] {
-//     background-color: $white;
-//     margin-left: 2px;
-//   }
-
-//   &[data-color="yellow"] {
-//     background-color: #fefe11;
-//   }
-
-//   &[data-color="red"] {
-//     background-color: #fe0d18;
-//   }
-
-//   &[data-color="green"] {
-//     background-color: #20ffdb;
-//   }
-
-//   &[data-color="blue"] {
-//     background-color: #1b08fe;
-//   }
-
-//   &[data-color="violette"] {
-//     background-color: #e408ff;
-//   }
-// }
-
-// @-webkit-keyframes myOrbit {
-//    from { -webkit-transform: rotate(0deg); }
-//    to   { -webkit-transform: rotate(360deg); }
-// }
-
-.color-picker {
-  margin: 24px 0 0;
+.color {
+  height: 300px;
+  margin: $content-padding;
   position: relative;
-  width: 100%;
+  width: 300px;
 
   canvas {
-    display: block;
-    height: 288px;
-    margin: 0 auto;
-    position: relative;
-    width: 288px;
+    height: 300px;
+    position: absolute;
+      left: 0px;
+      top: 0px;
+    width: 300px;
     z-index: 1;
   }
 
   .marker {
-    background-color: transparent;
-    border: 15px solid $light;
-    border-radius: 50%;
-    height: 42px;
-    margin-left: -21px;
-    margin-top: 2px;
+    height: 52px;
+    padding: 2px 0px 0px;
     position: absolute;
-      left: 50%;
+      left: 124px;      // 150px - (52/2)px
       top: 0;
-    -webkit-transform: rotate(0deg);
-    -webkit-transform-origin: 21px 144px;
-    width: 42px;
+    @include transform(rotate(0deg));
+    width: 52px;
     z-index: 2;
 
-    // -webkit-animation: myOrbit 4s linear infinite;
+    &> div {
+      border: 20px solid $white;
+      border-radius: 50%;
+      box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
+      height: 52px;
+      width: 52px;
+    }
   }
+}
+
+#show-color {
+  background-color: #fff;
+  height: 20px;
+  margin: 0 auto;
+  width: 20px;
+}
+
+#color-position,
+#marker-position {
+  position: relative;
+    left: 50%;
+    top: 28px;
+}
+
+#color-position {
+  background-color: #000;
+  height: 1px;
+  width: 1px;
+}
+
+#marker-position {
+  background-color: #222;
+  display: none;
+  height: 2px;
+  width: 2px;
 }

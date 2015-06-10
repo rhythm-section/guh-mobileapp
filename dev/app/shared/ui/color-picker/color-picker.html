@@ -21,16 +21,12 @@
 -->
 
 <h2 class="text-center">Color</h2>
-<!-- <div class="colors">
-  <div class="color-field" data-color="white"></div>
-  <div class="color-field" data-color="yellow"></div>
-  <div class="color-field" data-color="red"></div>
-  <div class="color-field" data-color="green"></div>
-  <div class="color-field" data-color="blue"></div>
-  <div class="color-field" data-color="violette"></div>
-</div> -->
-
-<div class="color-picker" data-tap-disabled="true">
+<div class="color" data-tap-disabled="true">
+  <!-- <canvas on-tap="onDrag($event)"></canvas> -->
   <canvas></canvas>
-  <div class="marker" on-drag="onDrag($event)"></div>
+  <div class="marker" on-drag="onDrag($event)"><div></div></div>
+  <!-- <div id="color-position"></div> -->
+  <!-- <div id="marker-position"></div> -->
 </div>
+
+<!-- <div id="show-color"></div> -->
