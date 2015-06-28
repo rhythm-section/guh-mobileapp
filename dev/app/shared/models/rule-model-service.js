@@ -68,6 +68,7 @@
      * Public method: remove()
      */
     function remove() {
+      /* jshint validthis: true */
       var self = this;
 
       return DSRule.destroy(self.id);

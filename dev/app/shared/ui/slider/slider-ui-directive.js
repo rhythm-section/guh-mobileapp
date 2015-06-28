@@ -51,6 +51,7 @@
 
 
     function sliderCtrl($scope, $element) {
+      /* jshint validthis: true */
       var vm = this;
 
       vm.change = change;

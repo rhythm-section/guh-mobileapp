@@ -62,7 +62,7 @@
           });
 
           vm.configured = devices;
-        });;
+        });
     }
 
     /*

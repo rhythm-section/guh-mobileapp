@@ -50,7 +50,7 @@
                               //   "single" : require single quotes
                               //   "double" : require double quotes
   "undef"         : true,     // true: Require all non-global variables to be declared (prevents global leaks)
-  "unused"        : true,     // true: Require all defined variables be used
+  "unused"        : false,     // true: Require all defined variables be used
   "strict"        : true,     // true: Requires all functions run in ES5 Strict Mode
   "maxparams"     : false,    // {int} Max number of formal params allowed per function
   "maxdepth"      : false,    // {int} Max depth of nested blocks (within functions)
@@ -107,6 +107,6 @@
   "yui"           : false,    // Yahoo User Interface
 
   // Custom Globals
-  "predef"        : ["angular", "expect"],
+  "predef"        : ["angular", "expect", "ionic", "cordova"],
   "globals"       : {}        // additional predefined global variables
 }

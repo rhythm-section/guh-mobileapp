@@ -29,9 +29,9 @@
     .module('guh.ui')
     .directive('guhActionParam', actionParam);
 
-  actionParam.$inject = ['$log', '$rootScope', '$http', '$compile', '$timeout', 'DSState', 'libs'];
+  actionParam.$inject = ['$log', '$rootScope', '$http', '$compile'];
 
-  function actionParam($log, $rootScope, $http, $compile, $timeout, DSState, libs) {
+  function actionParam($log, $rootScope, $http, $compile) {
     var directive = {
       controller: actionParamCtrl,
       controllerAs: 'guhActionParam',
@@ -49,21 +49,9 @@
 
 
     /*
-     * Controller method: actionParamCtrl(scope, element)
+     * Controller method: actionParamCtrl($scope, $element)
      */
-    function actionParamCtrl($scope, $element) {
-      var vm = this;
-
-      vm.change = change;
-
-      /*
-       * Public method: cahnge(value)
-       */
-      function change(value) {
-        $log.log('change');
-      }
-      
-    }
+    function actionParamCtrl($scope, $element) {}
 
 
     /*

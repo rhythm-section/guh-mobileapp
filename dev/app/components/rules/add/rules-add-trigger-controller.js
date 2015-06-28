@@ -63,7 +63,7 @@
         .then(_findDeviceRelations)
         .then(function(devices) {
           vm.availableTriggerDevices = devices;
-        });;
+        });
     }
 
     /*
@@ -110,7 +110,7 @@
           availableOperators = [
             app.valueOperator.is
           ];
-          name = name;
+          break;
         case 'QString':
           availableOperators = [
             app.valueOperator.is

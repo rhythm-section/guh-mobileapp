@@ -107,6 +107,7 @@
       }, 5000);
       
       // If connection is sucessful
+      /* jshint unused:false */
       $scope.$on('WebsocketConnected', function(event, args) {
         // Set new API url
         app.apiUrl = (app.apiUrl === '/api/v1') ? '/api/v1' : app.httpProtocol + '://' + app.host + ':' + app.port + '/api/v1';

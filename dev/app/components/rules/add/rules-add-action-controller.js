@@ -85,7 +85,7 @@
         .then(function(devices) {
           vm.availableActionDevices = devices;
           $log.log('devices', devices);
-        });;
+        });
     }
 
     /*

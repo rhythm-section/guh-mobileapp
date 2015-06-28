@@ -98,12 +98,13 @@
         attrs.phrase = phrase + ' with following Parameters.';
       }
 
-      // paramTypes
-      angular.forEach(paramTypes, function(paramType) {
+      function _handleParamType(paramType) {
         paramType = modelsHelper.addUiData('action', paramType);
         paramType.dependsOnTrigger = false;
-        // $log.log('_addUiData paramType', paramType);
-      });
+      }
+
+      // paramTypes
+      angular.forEach(paramTypes, _handleParamType);
     }
 
 
@@ -111,6 +112,7 @@
      * Public method: getParams()
      */
     function getParams() {
+      /* jshint validthis: true */
       var self = this;
       var params = [];
       var paramTypes = self.paramTypes;
@@ -129,6 +131,7 @@
      * Public method: getRuleActionParams(actionType, actionParamType, eventParamType)
      */
     function getRuleActionParams(actionType, actionParamType, eventParamType) {
+      /* jshint validthis: true */
       var self = this;
       var ruleActionParams = [];
       var paramTypes = self.paramTypes;

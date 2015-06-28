@@ -80,18 +80,6 @@
 
     return DSStateType;
 
-    // Get value inside Brackets []
-    var regExp = /\s\[([^)]+)\]/;
-    var searchUnit = name.replace(regExp, '');
-    var phrase = name;
-
-    // If name contains the unit in brackets []
-    if(regExp.test(name)) {
-      phrase = searchUnit;
-    }
-
-    return 'When value of ' + phrase + ' is...';
-
 
     /*
      * Private method: _addUiData(resource, attrs)

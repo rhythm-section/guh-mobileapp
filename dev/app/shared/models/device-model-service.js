@@ -117,26 +117,32 @@
      * Public method: subscribe(deviceId, cb)
      */
     function subscribe(deviceId, cb) {
-      return websocketService.subscribe(this.id, cb);
+      /* jshint validthis: true */
+      var self = this;
+
+      return websocketService.subscribe(self.id, cb);
     }
 
     /*
-     * Public method: unsubscribe(deviceId)
+     * Public method: unsubscribe()
      */
-    function unsubscribe(deviceId) {
-      return websocketService.unsubscribe(this.id);
+    function unsubscribe() {
+      /* jshint validthis: true */
+      var self = this;
+
+      return websocketService.unsubscribe(self.id);
     }
 
     /*
      * Public method: pair(deviceClassId, deviceData)
      */
     function pair(deviceClassId, deviceData) {
-      var deviceData = deviceData || {};
       var device = {};
       var options = {};
+      deviceData = deviceData || {};
 
       device.deviceClassId = deviceClassId || '';
-      device.deviceDescriptorId = deviceData.id || '';
+      device.deviceDescriptorId = deviceData.id || '';
 
       device.deviceParams = [];
       angular.forEach(deviceData.deviceParamTypes, function(deviceParamType) {
@@ -177,11 +183,11 @@
      * Public method: add(deviceClassId, deviceData)
      */
     function add(deviceClassId, deviceData) {
-      var deviceData = deviceData || {};
       var device = {};
+      deviceData = deviceData || {};
 
       device.deviceClassId = deviceClassId || '';
-      device.deviceDescriptorId = deviceData.id || '';
+      device.deviceDescriptorId = deviceData.id || '';
 
       device.deviceParams = [];
       if(deviceData.deviceParamTypes) {
@@ -204,10 +210,10 @@
      * Public method: edit(deviceId, deviceData)
      */
     function edit(deviceId, deviceData) {
-      var deviceData = deviceData || {};
       var device = {};
+      deviceData = deviceData || {};
 
-      device.deviceDescriptorId = deviceData.id || '';
+      device.deviceDescriptorId = deviceData.id || '';
 
       device.deviceParams = [];
       angular.forEach(deviceData.deviceParamTypes, function(deviceParamType) {
@@ -226,6 +232,7 @@
      * Public method: executeAction()
      */
     function executeAction(actionType) {
+      /* jshint validthis: true */
       var self = this;
       var options = {};
 
@@ -241,6 +248,7 @@
      * Public method: remove()
      */
     function remove() {
+      /* jshint validthis: true */
       var self = this;
 
       return DSDevice.destroy(self.id);
@@ -250,6 +258,7 @@
      * Public method: getEventDescriptor(eventType)
      */
     function getEventDescriptor(eventType) {
+      /* jshint validthis: true */
       var self = this;
       var eventDescriptor = {};
       var paramDescriptors = [];
@@ -269,6 +278,7 @@
      * Public method: getStateDescriptor(stateType)
      */
     function getStateDescriptor(stateType) {
+      /* jshint validthis: true */
       var self = this;
       var stateDescriptor = {};
 
@@ -284,6 +294,7 @@
      * Public method: getAction(actionType, actionParamType, eventParamType)
      */
     function getAction(actionType, actionParamType, eventParamType) {
+      /* jshint validthis: true */
       var self = this;
       var action = {};
       var ruleActionParams = [];

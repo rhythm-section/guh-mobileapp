@@ -115,8 +115,7 @@
      */
     function _addUiTemplate(name) {
       // Example: 'Elro Remote' => 'elro-remote'
-      var templateName = this
-        .name
+      var templateName = name
         .toLowerCase()
         .replace(/\s/g, '-')
         .replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '');
@@ -184,10 +183,11 @@
      * Public method: discover()
      */
     function discover() {
+      /* jshint validthis: true */
       var self = this;
       var discoveryParams = [];
 
-      angular.forEach(self.discoveryParamTypes, function(discoveryParamType, index) {
+      angular.forEach(self.discoveryParamTypes, function(discoveryParamType) {
         var discoveryParam = {};
 
         discoveryParam.name = discoveryParamType.name;
@@ -208,6 +208,7 @@
      * Public method: getCreateMethod()
      */
     function getCreateMethod() {
+      /* jshint validthis: true */
       var self = this;
       var addBasePath = 'app/components/devices/add/pairing-templates/';
       var editBasePath = 'app/components/devices/edit/pairing-templates/';
@@ -234,7 +235,7 @@
           ediTemplate: null
         };
       } else {
-        $log.error('CreateMethod "' + createMethod + '" not implemented.');
+        $log.error('CreateMethod not implemented.');
       }
 
       // createMethodData.addTemplate = modelsHelper.checkTemplateUrl(createMethodData.addTemplate);
@@ -246,6 +247,7 @@
      * Public method: getSetupMethod()
      */
     function getSetupMethod() {
+      /* jshint validthis: true */
       var self = this;
       var addBasePath = 'app/components/devices/add/pairing-templates/';
       var editBasePath = 'app/components/devices/edit/pairing-templates/';
@@ -277,7 +279,7 @@
           };
           break;
         default:
-          $log.error('SetupMethod "' + setupMethod + '" not implemented.');
+          $log.error('SetupMethod not implemented.');
           break;
       }
 

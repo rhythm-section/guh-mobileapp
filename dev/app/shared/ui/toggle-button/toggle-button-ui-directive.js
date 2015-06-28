@@ -50,6 +50,7 @@
 
 
     function toggleButtonCtrl($scope, $element) {
+      /* jshint validthis: true */
       var vm = this;
 
       vm.toggleValue = toggleValue;
@@ -117,7 +118,7 @@
         // });
 
         scope.setValueFn(value);
-      }
+      };
     }
   }
 

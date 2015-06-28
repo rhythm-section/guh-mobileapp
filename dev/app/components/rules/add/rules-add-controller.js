@@ -79,7 +79,7 @@
 
       if(vm.rule.stateEvaluator.childEvaluators) {
         vm.rule.stateEvaluator.childEvaluators.push(childEvaluator);
-      } else {
+      } else {
         vm.rule.stateEvaluator = childEvaluator;
         vm.rule.stateEvaluator.childEvaluators = [];
       }

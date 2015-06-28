@@ -156,7 +156,7 @@
       angular.forEach(vendor.deviceClasses, function(deviceClass, index) {
         var createMethod = deviceClass.getCreateMethod();
 
-        if(createMethod.title !== 'Auto') {
+        if(createMethod.title !== 'Auto') {
           vm.supportedDeviceClasses.push(deviceClass);
         }
       });

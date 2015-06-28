@@ -29,9 +29,9 @@
     .module('guh.ui')
     .directive('guhInput', input);
 
-  input.$inject = ['$log', '$http', '$compile', '$timeout', 'DSState', 'libs'];
+  input.$inject = ['$log', '$http', '$compile'];
 
-  function input($log, $http, $compile, $timeout, DSState, libs) {
+  function input($log, $http, $compile) {
     var directive = {
       link: inputLink,
       restrict: 'E',

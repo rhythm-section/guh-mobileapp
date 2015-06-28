@@ -44,13 +44,11 @@
      * Public method: checkFile(path, file)
      */
     function checkFile(path, file) {
-      // $log.log('checkFile', path, file);
-
       if(ionic.Platform.isWebView()) {
         if(app.isCordovaApp) {
 
           // iOS, Android
-          var checkFile = $cordovaFile
+          var isFile = $cordovaFile
             .checkFile(cordova.file.applicationDirectory + '/www/' + path, file)
             .then(function() {
               return true;
@@ -66,7 +64,7 @@
               }
             });
 
-          return checkFile;
+          return isFile;
 
         } else {
 

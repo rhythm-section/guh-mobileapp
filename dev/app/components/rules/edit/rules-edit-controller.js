@@ -85,7 +85,7 @@
             removed: true
           });
         })
-        .catch(function(error) {
+        .catch(function(error) {
           // TODO: Build general error handler
           $log.error(error);
         });

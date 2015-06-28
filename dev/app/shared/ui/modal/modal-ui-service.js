@@ -37,7 +37,7 @@ function appModalService($log, $ionicModal, $rootScope, $q, $injector, $controll
 
     return {
       show: show
-    }
+    };
 
     function show(templateUrl, controller, parameters) {
       // Grab the injector and create a new scope

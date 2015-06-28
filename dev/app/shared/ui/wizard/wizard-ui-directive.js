@@ -47,6 +47,7 @@
 
 
     function wizardCtrl($scope, $element) {
+      /* jshint validthis: true */
       var vm = this;
       var conditions = [];
 
