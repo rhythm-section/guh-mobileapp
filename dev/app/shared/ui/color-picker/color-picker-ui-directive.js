@@ -77,7 +77,7 @@
 
     function componentToHex(c) {
       var hex = parseInt(c).toString(16);
-      return hex.length == 1 ? '0' + hex : hex;
+      return hex.length === 1 ? '0' + hex : hex;
     }
 
     function _getHexFromRgb(rgb) {
@@ -86,42 +86,49 @@
     }
 
     function _getHslFromRgb(r, g, b) {
-        var rr, gg, bb,
-            r = r / 255,
-            g = g / 255,
-            b = b / 255,
-            h, s,
-            v = Math.max(r, g, b),
-            diff = v - Math.min(r, g, b),
-            diffc = function(c){
-                return (v - c) / 6 / diff + 1 / 2;
-            };
+        var rr;
+        var gg;
+        var bb;
+        var h;
+        var s;
 
-        if (diff == 0) {
-            h = s = 0;
+        r = r / 255;
+        g = g / 255;
+        b = b / 255;
+
+        var v = Math.max(r, g, b);
+        var diff = v - Math.min(r, g, b);
+        var diffc = function(c) {
+          return (v - c) / 6 / diff + 1 / 2;
+        };
+
+        if(diff === 0) {
+          h = s = 0;
         } else {
-            s = diff / v;
-            rr = diffc(r);
-            gg = diffc(g);
-            bb = diffc(b);
+          s = diff / v;
+          rr = diffc(r);
+          gg = diffc(g);
+          bb = diffc(b);
 
-            if (r === v) {
-                h = bb - gg;
-            }else if (g === v) {
-                h = (1 / 3) + rr - bb;
-            }else if (b === v) {
-                h = (2 / 3) + gg - rr;
-            }
-            if (h < 0) {
-                h += 1;
-            }else if (h > 1) {
-                h -= 1;
-            }
+          if (r === v) {
+            h = bb - gg;
+          } else if (g === v) {
+            h = (1 / 3) + rr - bb;
+          } else if (b === v) {
+            h = (2 / 3) + gg - rr;
+          }
+            
+          if(h < 0) {
+            h += 1;
+          } else if (h > 1) {
+            h -= 1;
+          }
         }
+
         return {
-            h: Math.round(h * 360),
-            s: Math.round(s * 100),
-            v: Math.round(v * 100)
+          h: Math.round(h * 360),
+          s: Math.round(s * 100),
+          v: Math.round(v * 100)
         };
     }
 
@@ -192,6 +199,7 @@
       var $marker = angular.element(marker);
       var $markerContainer = angular.element(markerContainer);
       var padding = 1;
+      var pixel;
 
       var colorPosition = {
         x: Math.floor(marker.getBoundingClientRect().left) - markerContainer.getBoundingClientRect().left + $marker.prop('offsetWidth') / 2,
@@ -203,18 +211,8 @@
 
         // Get current pixel
         var imageData = ctx.getImageData(colorPosition.x, colorPosition.y, 1, 1);
-        var pixel = imageData.data;
-
-        // var showColor = document.getElementById('show-color');
-        // angular.element(showColor).css({
-        //   'background-color': 'rgb(' + pixel[0] + ',' + pixel[1] + ',' + pixel[2] + ')'
-        // });
-
-        // var colorPositionElement = document.getElementById('color-position');
-        // angular.element(colorPositionElement).css({
-        //   'left': colorPosition.x + 'px',
-        //   'top': colorPosition.y + 'px'
-        // });
+        
+        pixel = imageData.data;
       }
 
       return pixel[0] + ',' + pixel[1] + ',' + pixel[2];
@@ -232,8 +230,7 @@
       });
     }
 
-    function colorPickerCompile(tElement, tAttrs) {
-
+    function colorPickerCompile(tElement, tAttrs) {
       var canvasContainer = tElement[0].getElementsByClassName('color')[0];
       var $canvasContainer = angular.element(canvasContainer);
       var canvas = $canvasContainer.find('canvas')[0];
@@ -331,7 +328,7 @@
           _setValue();
 
         };
-      }
+      };
 
     }
 
