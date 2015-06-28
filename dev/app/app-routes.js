@@ -29,9 +29,12 @@
     .module('guh')
     .config(config);
 
-  config.$inject = ['$urlRouterProvider', '$stateProvider'];
+  config.$inject = ['$urlRouterProvider', '$stateProvider', '$ionicConfigProvider'];
 
-  function config($urlRouterProvider, $stateProvider) {
+  function config($urlRouterProvider, $stateProvider, $ionicConfigProvider) {
+
+    // Ionic
+    $ionicConfigProvider.tabs.position('bottom');
 
     $urlRouterProvider
       .otherwise('/dashboard');
