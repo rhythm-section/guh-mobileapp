@@ -49,7 +49,9 @@
     function _init() {
       // Map param values to paramType values
       angular.forEach(currentDevice.deviceClass.paramTypes, function(paramType) {
-        var param = libs._.find(currentDevice.params, function(param) { return param.name === paramType.name });
+        var param = libs._.find(currentDevice.params, function(param) {
+          return param.name === paramType.name;
+        });
         paramType.value = (param) ? param.value : paramType.value;
       });
 
@@ -94,7 +96,7 @@
         delete deviceData.title;
       } else {
         // For user created devices only
-        var deviceData = {};
+        deviceData = {};
         
         var paramTypes = [];
         angular.forEach(vm.deviceClass.paramTypes, function(paramType) {
@@ -151,7 +153,7 @@
             removed: true
           });
         })
-        .catch(function(error) {
+        .catch(function(error) {
           // TODO: Build general error handler
           $log.error(error);
         });

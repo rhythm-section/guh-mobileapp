@@ -69,6 +69,8 @@
           vm.params = currentDevice.params;
           vm.states = currentDevice.states;
 
+          $log.log('vm', vm);
+
           // Wait for templateUrl check
           device.deviceClass.templateUrl
             .then(function(fileExists) {
@@ -86,8 +88,12 @@
             var action = {};
             action.actionType = actionType;
 
+            $log.log('action', action);
+
             if(actionType.hasState) {  
-              var state = libs._.find(currentDevice.states, function(state) { return state.stateTypeId === actionType.id });
+              var state = libs._.find(currentDevice.states, function(state) {
+                return state.stateTypeId === actionType.id;
+              });
 
               // Add state to action
               action.state = state;
@@ -114,11 +120,9 @@
      */
     function _subscribeToWebsocket() {
       currentDevice.subscribe(currentDevice.id, function(message) {
-        angular.forEach(currentDevice.states, function(state, index) {
+        angular.forEach(currentDevice.states, function(state) {
           if(message.params.stateTypeId === state.stateTypeId && message.params.deviceId === vm.id) {
             DSState.inject([{stateTypeId: message.params.stateTypeId, value: message.params.value}]);
-
-            $log.log('Inject value.');
 
             // TODO: Check why js-data event DS.inject is not working
             $rootScope.$emit('guh.injectState', {stateTypeId: message.params.stateTypeId, value: message.params.value});

@@ -57,7 +57,7 @@
     function _getActionTemplate(guhType) {
       var allowedValues = (guhType.allowedValues === undefined) ? null : guhType.allowedValues;
       var inputType = (guhType.inputType === undefined) ? null : guhType.inputType;
-      var name = (guhType.name === undefined) ? null : guhType.name;
+      // var name = (guhType.name === undefined) ? null : guhType.name;
       var type = (guhType.type === undefined) ? null : guhType.type;
       var directiveNameAction = 'action-param';
       var directiveNameInput = 'input';
@@ -81,7 +81,7 @@
           if(allowedValues) {
             template = _getInputPath(directiveNameInput, directiveNameInput + '-select');
           } else if(inputType) {
-            template = _getInputPath(directiveNameInput, directiveNameInput + app.inputTypes[inputType])
+            template = _getInputPath(directiveNameInput, directiveNameInput + app.inputTypes[inputType]);
           } else {
             template = _getInputPath(directiveNameInput, directiveNameInput + '-text');
           }
@@ -99,7 +99,7 @@
     function _getInputTemplate(guhType) {
       var allowedValues = (guhType.allowedValues === undefined) ? null : guhType.allowedValues;
       var inputType = (guhType.inputType === undefined) ? null : guhType.inputType;
-      var name = (guhType.name === undefined) ? null : guhType.name;
+      // var name = (guhType.name === undefined) ? null : guhType.name;
       var type = (guhType.type === undefined) ? null : guhType.type;
       var directiveName = 'input';
       var template;
@@ -122,7 +122,7 @@
           if(allowedValues) {
             template = _getInputPath(directiveName, directiveName + '-select');
           } else if(inputType) {
-            template = _getInputPath(directiveName, directiveName + app.inputTypes[inputType])
+            template = _getInputPath(directiveName, directiveName + app.inputTypes[inputType]);
           } else {
             template = _getInputPath(directiveName, directiveName + '-text');
           }
@@ -143,7 +143,7 @@
 
       switch(type) {
         case 'bool':
-          value = guhType.defaultValue || false;
+          value = guhType.defaultValue || false;
           break;
         case 'int':
         case 'uint':
@@ -172,48 +172,6 @@
      * guhType can be from type ParamType or StateType
      */
     function addUiData(directiveName, guhType) {
-      // var templateUrl = '';
-
-      // switch(type) {
-      //   case 'bool':
-      //     if(angular.isString(name) && (name === 'power' || name === 'state')) {
-      //       templateUrl = _getInputPath(directiveName, directiveName + '-toggle-button');
-      //     } else {
-      //       templateUrl = _getInputPath(directiveName, directiveName + '-checkbox');
-      //     }
-      //     value = guhType.defaultValue || false;
-      //     break;
-      //   case 'int':
-      //   case 'uint':
-      //     if(directiveName === 'param') {
-      //       templateUrl = _getInputPath(directiveName, directiveName + '-slider');
-      //     } else {
-      //       templateUrl = _getInputPath(directiveName, directiveName + '-number-integer');
-      //     }
-      //     value = guhType.defaultValue || 0;
-      //     break;
-      //   case 'double':
-      //     templateUrl = _getInputPath(directiveName, directiveName + '-number-decimal');
-      //     value = guhType.defaultValue || 0.0;
-      //     break;
-      //   case 'QColor':
-      //     templateUrl = _getInputPath(directiveName, directiveName + '-color-picker');
-      //     value = guhType.defaultValue || '0,0,0';
-      //     break;
-      //   case 'QString':
-      //     if(allowedValues) {
-      //       templateUrl = _getInputPath(directiveName, directiveName + '-select');
-      //     } else if(inputType) {
-      //       templateUrl = _getInputPath(directiveName, directiveName + app.inputTypes[inputType])
-      //     } else {
-      //       templateUrl = _getInputPath(directiveName, directiveName + '-text');
-      //     }
-      //     value = guhType.defaultValue || '';
-      //     // break;
-      // }
-
-      // guhType.templateUrl = checkTemplateUrl(templateUrl);
-
       guhType.operator = app.valueOperator.is.operators[0];
       guhType.actionTemplateUrl = _getActionTemplate(guhType);
       guhType.inputTemplateUrl = _getInputTemplate(guhType);
