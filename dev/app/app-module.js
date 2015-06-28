@@ -62,6 +62,6 @@
 
   run.$inject = [];
 
-  function run(AppInit) {}
+  function run() {}
 
 }());
