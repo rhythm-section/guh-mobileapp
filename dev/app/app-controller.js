@@ -29,9 +29,9 @@
     .module('guh')
     .controller('AppCtrl', AppCtrl);
 
-  AppCtrl.$inject = ['$log', '$scope', '$timeout', '$ionicModal', '$ionicLoading', 'app', 'websocketService', 'modelsHelper'];
+  AppCtrl.$inject = ['$log', '$scope', '$timeout', '$ionicModal', '$ionicLoading', '$state', 'app', 'firstStart', 'websocketService', 'modelsHelper'];
 
-  function AppCtrl($log, $scope, $timeout, $ionicModal, $ionicLoading, app, websocketService, modelsHelper) {
+  function AppCtrl($log, $scope, $timeout, $ionicModal, $ionicLoading, $state, app, firstStart, websocketService, modelsHelper) {
 
     var vm = this;
     var editModal = {};
@@ -58,6 +58,12 @@
         animation: 'slide-in-up'
       }).then(function(modal) {
         editModal = modal;
+
+        // If on intro page show editModal
+        if(firstStart) {
+          firstStart = false;
+          editModal.show();
+        }
       });
     }
 
