@@ -90,10 +90,12 @@
           var arrayOfAttrs = attrs;
           angular.forEach(arrayOfAttrs, function(attrs) {
             _addUiData(resource, attrs);
+            _mapClassType(resource, attrs);
             _mapStates(resource, attrs);
           });
         } else {
           _addUiData(resource, attrs);
+          _mapClassType(resource, attrs);
           _mapStates(resource, attrs);
         }
       }
@@ -147,6 +149,71 @@
         stateType = modelsHelper.addUiData('input', stateType);
       });
     }
+
+    /*
+     * Private method: _mapClassType(resource, attrs)
+     */
+    function _mapClassType(resource, attrs) {
+      var devServices = [
+        'Mock Device',
+        'Mock Device (Auto created)'
+      ];
+      var devices = [
+        'Elro Bulb (AB440L)',
+        'Elro outdoor socket (AB440WD)',
+        'Elro Socket (AB440D)',
+        'Elro Socket (AB440S)',
+        'Hue Light',
+        'Intertechno switch',
+        'IR receiver',
+        'Kodi',
+        'LG Smart Tv',
+        'Max! Cube LAN Gateway',
+        'Max! Radiator Thermostat',
+        'Max! Wall Thermostat',
+        'RF Controller (LN-CON-RF20B)',
+        'Shutter (RSM900R)',
+        'Tune',
+        'Unitec switch (48111)',
+        'WeMo Switch',
+        'WiFi Device'
+      ];
+      var gateways = [
+        'Hue Bridge'
+      ];
+      var moods = [
+        'Mood'
+      ];
+      var services = [
+        'Alarm',
+        'Application launcher',
+        'Bashscript launcher',
+        'Button',
+        'Countdown',
+        'Custom mail',
+        'Google mail',
+        'ON/OFF Button',
+        'Today',
+        'Toggle Button',
+        'UDP Commander',
+        'Wake On Lan',
+        'Weather from OpenWeatherMap',
+        'Yahoo mail'
+      ];
+
+      attrs.classType = 'device';
+
+      if(libs._.contains(devServices, attrs.name)) {
+        attrs.classType = 'dev-service';
+      } else if(libs._.contains(moods, attrs.name)) {
+        attrs.classType = 'mood';
+      } else if(libs._.contains(gateways, attrs.name)) {
+        attrs.classType = 'gateway';
+      } else if(libs._.contains(services, attrs.name)) {
+        attrs.classType = 'service';
+      }
+    }
+
 
     /*
      * Private method: _mapStates(resource, attrs)
