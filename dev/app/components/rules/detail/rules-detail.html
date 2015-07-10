@@ -35,33 +35,46 @@
 
   <ion-content>
 
-    <p class="padding">This feature is not available in the prototype.</p>
+    <!-- Trigger -->
+    <div ng-if="rule.events.length > 0 || rule.states.length > 0">
+      <h1 class="text-center">Trigger</h1>
 
-    <!-- <h1>{{ rule.name }} is {{ rule.enabled || 'enabled' && 'disabled' }}</h1>
-
-    <div ng-if="rule.eventDescriptors.length > 0 || rule.stateEvaluator.stateDescriptor">
-      <h1>Trigger</h1> -->
-
-      <!-- EventDescriptors -->
-      <!-- <div ng-if="rule.eventDescriptors.length > 0" ng-repeat="rule.eventDescriptor in eventDescriptors track by $index"></div> -->
-
-      <!-- State Evaluators -->
-      <!-- <div ng-if="rule.stateEvaluator.stateDescriptor"></div>
-    </div> -->
-
-    <!-- <div ng-if="rule.actions.length > 0">
-      <h1 ng-if="rule.exitActions.length == 0">Actions</h1>
-      <h1 ng-if="rule.exitActions.length > 0">Enter actions</h1> -->
-
-      <!-- (Enter)Actions -->
-
-      <!-- <h1 ng-if="rule.exitActions.length > 0"1>Exit actions</h1> -->
-
-      <!-- ExitActions -->
-      <!-- <div ng-if="rule.exitActions.length > 0" ng-repeat="action in rule.exitActions">
-
+      <!-- Events -->
+      <div class="padding" ng-repeat="event in rule.events | orderBy: 'name' track by $index">
+        <p>{{ event.phrase }}.</p>
+        <p ng-repeat="paramType in action.paramTypes | orderBy: 'name' track by $index">{{ paramType.name }}: {{ paramType.value }}</p>
       </div>
-    </div> -->
+
+      <!-- States -->
+      <div class="padding" ng-repeat="state in rule.states | orderBy: 'name' track by $index">
+        <p>{{ state.phrase }} {{ state.value }}.</p>
+      </div>
+    </div>
+    
+    <!-- Enter Actions -->
+    <div ng-if="rule.actions.length > 0">
+      <h1 class="text-center">Enter Actions</h1>
+
+      <div class="padding" ng-repeat="action in rule.actions | orderBy: 'name' track by $index">
+        <p ng-if="action.paramTypes.length <= 0">{{ action.phrase }}.</p>
+        <p ng-if="action.paramTypes.length > 0">{{ action.phrase }}:</p>
+        <p ng-repeat="paramType in action.paramTypes | orderBy: 'name' track by $index">{{ paramType.name }}: {{ paramType.value }}</p>
+      </div>
+    </div>
+
+    <!-- Exit Actions -->
+    <div ng-if="rule.exitActions.length > 0">
+      <h1 class="text-center">Exit Actions</h1>
+
+      <div class="padding" ng-repeat="action in rule.exitActions | orderBy: 'name' track by $index">
+        <p ng-if="action.paramTypes.length <= 0">{{ action.phrase }}.</p>
+        <p ng-if="action.paramTypes.length > 0">{{ action.phrase }}:</p>
+        <p ng-repeat="paramType in action.paramTypes | orderBy: 'name' track by $index">{{ paramType.name }}: {{ paramType.value }}</p>
+      </div>
+    </div>
+
+    <!-- Rule enabled/disabled -->
+    <p class="padding">This rule is {{ rule.enabled && 'enabled' || 'disabled' }}.</p>
 
   </ion-content>
 

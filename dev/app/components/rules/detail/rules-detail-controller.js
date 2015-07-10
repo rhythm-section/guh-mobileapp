@@ -29,9 +29,9 @@
     .module('guh.devices')
     .controller('RulesDetailCtrl', RulesDetailCtrl);
 
-  RulesDetailCtrl.$inject = ['$log', '$scope', '$state', '$stateParams', '$ionicModal', 'appModalService', 'DSRule', 'DSActionType'];
+  RulesDetailCtrl.$inject = ['$log', '$scope', '$state', '$stateParams', '$ionicModal', 'appModalService', 'DSRule', 'DSActionType', 'DSEventType', 'DSStateType'];
 
-  function RulesDetailCtrl($log, $scope, $state, $stateParams, $ionicModal, appModalService, DSRule, DSActionType) {
+  function RulesDetailCtrl($log, $scope, $state, $stateParams, $ionicModal, appModalService, DSRule, DSActionType, DSEventType, DSStateType) {
     
     var vm = this;
     var currentRule = {};
@@ -63,11 +63,84 @@
           vm.id = rule.id;
           vm.enabled = rule.enabled;
 
+          // Events
+          vm.events = [];
+          angular.forEach(rule.eventDescriptors, function(eventDescriptor) {
+            DSEventType
+              .find(eventDescriptor.eventTypeId)
+              .then(function(eventType) {
+                $log.log('eventDescriptor', eventDescriptor);
+                $log.log('eventType', eventType);
+
+                vm.events.push(eventType);
+              })
+              .catch(function(error) {
+                $log.error(error);
+              });
+          });
+
+          // States
+          vm.states = [];
+          if(rule.stateEvaluator.stateDescriptor.stateTypeID !== "") {
+            $log.log('stateDescriptor', rule.stateEvaluator.stateDescriptor);
+            $log.log('stateTypeId', rule.stateEvaluator.stateDescriptor.stateTypeID);
+
+            DSStateType
+              .find(rule.stateEvaluator.stateDescriptor.stateTypeID)
+              .then(function(stateType) {
+                $log.log('stateDescriptor', rule.stateEvaluator.stateDescriptor);
+                $log.log('stateType', stateType);
+
+                vm.states.push(stateType);
+              })
+              .catch(function(error) {
+                $log.error(error);
+              });
+          }
+
+          if(rule.stateEvaluator.childEvaluators) {
+            angular.forEach(rule.stateEvaluator.childEvaluators, function(childEvaluator) {
+              $log.log('stateDescriptor', childEvaluator.stateDescriptor);
+              DSStateType
+                .find(childEvaluator.stateDescriptor.stateTypeID)
+                .then(function(stateType) {
+                  $log.log('stateDescriptor', childEvaluator.stateDescriptor);
+                  $log.log('stateType', stateType);
+
+                  vm.states.push(stateType);
+                })
+                .catch(function(error) {
+                  $log.error(error);
+                });
+            });
+          }
+
+          // Enter Actions
+          vm.actions = [];
           angular.forEach(rule.actions, function(action) {
             DSActionType
               .find(action.actionTypeId)
               .then(function(actionType) {
+                $log.log('action', action);
                 $log.log('actionType', actionType);
+
+                vm.actions.push(actionType);
+              })
+              .catch(function(error) {
+                $log.error(error);
+              });
+          });
+
+          // Exit Actions
+          vm.exitActions = [];
+          angular.forEach(rule.exitActions, function(action) {
+            DSActionType
+              .find(action.actionTypeId)
+              .then(function(actionType) {
+                $log.log('action', action);
+                $log.log('actionType', actionType);
+
+                vm.exitActions.push(actionType);
               })
               .catch(function(error) {
                 $log.error(error);
