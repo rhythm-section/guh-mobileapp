@@ -95,7 +95,7 @@
       if(angular.isArray(paramTypes) && paramTypes.length === 0) {
         attrs.phrase = phrase + '.';
       } else {
-        attrs.phrase = phrase + ' with following Parameters.';
+        attrs.phrase = phrase + ' with parameters';
       }
 
       function _handleParamType(paramType) {

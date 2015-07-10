@@ -92,9 +92,9 @@
 
       // phrase
       if(angular.isArray(paramTypes) && paramTypes.length === 0) {
-        attrs.phrase = phrase + ' is detected.';
+        attrs.phrase = phrase + ' is detected';
       } else {
-        attrs.phrase = phrase + ' is detcted and Parameters are...';
+        attrs.phrase = phrase + ' is detcted and parameters are';
       }
 
       // unit
