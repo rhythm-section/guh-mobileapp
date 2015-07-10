@@ -37,7 +37,7 @@
       <ion-content>
         <!-- Devices -->
         <div class="list" ng-if="triggerDevice.deviceClass.eventTypes.length > 0 || triggerDevice.deviceClass.stateTypes.length > 0" ng-repeat="triggerDevice in rulesAddTrigger.availableTriggerDevices | orderBy: 'deviceClass.name' track by $index">
-          <p class="item item-divider">{{ triggerDevice.deviceClass.name }}</p>
+          <p class="item item-divider">{{ triggerDevice.name }} ({{ triggerDevice.deviceClass.name }})</p>
 
           <!-- Events -->
           <p class="item item-icon-right" ng-if="!eventType.hasState && eventType.paramTypes.length == 0" ng-click="rulesAddTrigger.selectTrigger(triggerDevice, eventType)" ng-repeat="eventType in triggerDevice.deviceClass.eventTypes | orderBy: 'phrase' track by $index">
